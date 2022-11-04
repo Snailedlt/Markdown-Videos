@@ -30,3 +30,15 @@ This lets you embed Youtube videos into GitHub markdown with ease!
 ## Techstack
 
 Made using [Python](https://www.python.org/)'s [FastAPI](https://fastapi.tiangolo.com/) framework
+
+## Building
+
+### Install Dependencies
+
+`pip install fastapi`
+`pip install "uvicorn[standard]"`
+ref: https://fastapi.tiangolo.com/#installation
+
+### Run Locally
+`uvicorn main:app --reload` or if that doesn't work: `python -m uvicorn main:app --reload`
+ref: https://fastapi.tiangolo.com/#run-it
