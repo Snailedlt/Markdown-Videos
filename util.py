@@ -9,7 +9,7 @@ def get_edited_thumbnail_img(video_id: str):
     thumbnail = read_img_from_url(f"https://i.ytimg.com/vi_webp/{video_id}/mqdefault.webp")
     thumbnail_w_play_btn = add_play_button_to_thumbnail(thumbnail)
     thumbnail_img = pil_img_to_html(thumbnail_w_play_btn)
-    return thumbnail_img
+    return thumbnail_img.format("base64")
 
 
 def pil_img_to_html(img: Image):

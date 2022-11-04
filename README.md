@@ -1,22 +1,14 @@
 # Youtube Thumbnail Embedder
 
 An open source API that adds a play button to a youtube video thumbnail, provided the video ID.
+Youtube Thumbnail Embedder lets you embed Youtube videos into GitHub markdown with ease!
 
-This lets you embed Youtube videos into GitHub markdown with ease!
 ## Showcase
-### Before
-![image](https://user-images.githubusercontent.com/43886029/200039001-212c6961-7220-472a-aa5d-1083a7770873.png)
-- Hard to see that it's a video
-- No play button
-- Black bars around thumbnail
 
-
-### After
-![image](https://user-images.githubusercontent.com/43886029/200038762-abd67dd6-d72d-43e9-94b7-9fd0d57b87a4.png)
-- Clearly shows it's a video
-- Play button and backdrop added
-- Black bars removed
-
+||Preview|Info|
+|--|--|--|
+|Before|![image](https://user-images.githubusercontent.com/43886029/200039001-212c6961-7220-472a-aa5d-1083a7770873.png)|<ul><li>Hard to see that it's a video</li><li>No play button</li><li>Black bars around thumbnail</li></ul>|
+|After|![image](https://user-images.githubusercontent.com/43886029/200038762-abd67dd6-d72d-43e9-94b7-9fd0d57b87a4.png)|<ul><li>Clearly shows it's a video</li><li>Play button and backdrop added</li><li>Black bars removed</li></ul>|
 
 ## Usage
 
@@ -49,10 +41,23 @@ Made using [Python](https://www.python.org/)'s [FastAPI](https://fastapi.tiangol
 
 ### Install Dependencies
 
-`pip install fastapi`
-`pip install "uvicorn[standard]"`
-ref: https://fastapi.tiangolo.com/#installation
+```sh
+pip install fastapi
+pip install "uvicorn[standard]"
+```
+
+ref: <https://fastapi.tiangolo.com/#installation>
 
 ### Run Locally
-`uvicorn main:app --reload` or if that doesn't work: `python -m uvicorn main:app --reload`
-ref: https://fastapi.tiangolo.com/#run-it
+
+```sh
+uvicorn main:app --reload
+```
+
+or if that doesn't work:
+
+```sh
+python -m uvicorn main:app --reload
+```
+
+ref: <https://fastapi.tiangolo.com/#run-it>
