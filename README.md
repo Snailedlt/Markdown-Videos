@@ -3,6 +3,20 @@
 An open source API that adds a play button to a youtube video thumbnail, provided the video ID.
 
 This lets you embed Youtube videos into GitHub markdown with ease!
+## Showcase
+### Before
+![image](https://user-images.githubusercontent.com/43886029/200039001-212c6961-7220-472a-aa5d-1083a7770873.png)
+- Hard to see that it's a video
+- No play button
+- Black bars around thumbnail
+
+
+### After
+![image](https://user-images.githubusercontent.com/43886029/200038762-abd67dd6-d72d-43e9-94b7-9fd0d57b87a4.png)
+- Clearly shows it's a video
+- Play button and backdrop added
+- Black bars removed
+
 
 ## Usage
 
