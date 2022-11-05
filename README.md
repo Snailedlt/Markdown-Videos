@@ -42,11 +42,8 @@ Made using [Python](https://www.python.org/)'s [FastAPI](https://fastapi.tiangol
 ### Install Dependencies
 
 ```sh
-pip install fastapi
-pip install "uvicorn[standard]"
+pip install -r requirements.txt
 ```
-
-ref: <https://fastapi.tiangolo.com/#installation>
 
 ### Run Locally
 
@@ -61,3 +58,13 @@ python -m uvicorn main:app --reload
 ```
 
 ref: <https://fastapi.tiangolo.com/#run-it>
+
+### Update dependencies
+
+*Needed only when new dependencies are added*
+
+```sh
+pip install pipreqs # https://pypi.org/project/pipreqs/
+# cd into the project
+pipreqs # updates requirements.txt
+```
