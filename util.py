@@ -4,13 +4,20 @@ import requests
 from io import BytesIO
 from base64 import b64encode
 
-def get_edited_thumbnail_bytes(video_id: str):
+
+def get_edited_thumbnail_img(video_id: str):
     thumbnail = read_img_from_url(f"https://i.ytimg.com/vi_webp/{video_id}/mqdefault.webp")
     thumbnail_w_play_btn = add_play_button_to_thumbnail(thumbnail)
+    return thumbnail_w_play_btn
+
+
+def get_edited_thumbnail_bytes(video_id: str):
+    thumbnail_w_play_btn = get_edited_thumbnail_img(video_id)
     thumbnail_b64 = pil_img_to_b64(thumbnail_w_play_btn)
     return thumbnail_b64
 
-def get_edited_thumbnail_img(video_id: str):
+
+def get_edited_thumbnail_html(video_id: str):
     thumbnail_b64 = get_edited_thumbnail_bytes(video_id)
     dataurl = 'data:image/png;base64,' + thumbnail_b64
     thumbnail_html = f"<img src='{dataurl}'/>".format("base64")

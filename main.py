@@ -1,7 +1,6 @@
 import util
 
 from bs4 import BeautifulSoup as bs
-from typing import Union
 
 from fastapi import FastAPI
 from fastapi.responses import HTMLResponse
@@ -26,7 +25,7 @@ app = FastAPI(
 
 
 @app.get("/{video_id}", response_class=HTMLResponse)
-async def read_items(video_id: str):
+def get_thumbnail_w_play_button(video_id: str):
     """
     Returns a thumbnail image inside an anchor tag:
     ```html
@@ -35,7 +34,7 @@ async def read_items(video_id: str):
     </a>
     ```
     """
-    thumbnail_img = util.get_edited_thumbnail_img(video_id)
+    thumbnail_img = util.get_edited_thumbnail_html(video_id)
     html_output = f"""<a href='https://youtu.be/{video_id}'>
     {thumbnail_img}
     </a>
