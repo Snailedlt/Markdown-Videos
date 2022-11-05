@@ -40,4 +40,4 @@ async def read_items(video_id: str):
     {thumbnail_img}
     </a>
     """
-    return bs(html_output).prettify()
+    return bs(html_output, features="html.parser").prettify()
