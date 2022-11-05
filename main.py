@@ -3,7 +3,7 @@ import util
 from bs4 import BeautifulSoup as bs
 
 from fastapi import FastAPI
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, FileResponse
 from fastapi.openapi.utils import get_openapi
 from pydantic import BaseModel
 
@@ -40,3 +40,11 @@ def get_thumbnail_w_play_button(video_id: str):
     </a>
     """
     return bs(html_output, features="html.parser").prettify()
+
+
+# Only working locally (not deployed)
+@app.get("/img/{video_id}", response_class=FileResponse)
+def main(video_id):
+    img = util.get_edited_thumbnail_img(video_id)
+    img.save(f"{video_id}.jpg", format='JPEG')
+    return FileResponse(f"{video_id}.jpg")
