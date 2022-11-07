@@ -1,9 +1,10 @@
+import io
 import util
 
 from bs4 import BeautifulSoup as bs
 
 from fastapi import FastAPI
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, StreamingResponse
 
 app = FastAPI(
     title="Youtube Thumbnail Embedder",
@@ -22,13 +23,39 @@ app = FastAPI(
 )
 
 
-@app.get("/{video_id}", response_class=HTMLResponse)
+@app.get('/{video_id}')
+def thumbnail_image (video_id: str):
+    """
+    Returns a thumbnail image as a file. Compatible with MarkDown.
+
+    ## How to use
+
+    `![]({video_id})` or if you want a link to the youtube video you can use `[![]({video_id})](https://youtu.be/{video_id})`
+
+    ## Examples 
+
+    Without link: `![](x7X9w_GIm1s)`
+
+    ![](x7X9w_GIm1s)
+
+    With link: `[![](x7X9w_GIm1s)](https://youtu.be/x7X9w_GIm1s)`
+
+    [![](x7X9w_GIm1s)](https://youtu.be/x7X9w_GIm1s)
+    """
+    image = util.get_edited_thumbnail_img(video_id)
+    imgio = io.BytesIO()
+    image.save(imgio, 'PNG')
+    imgio.seek(0)
+    return StreamingResponse(content=imgio, media_type="image/png")
+
+
+@app.get("/html/{video_id}", response_class=HTMLResponse)
 def get_thumbnail_w_play_button(video_id: str):
     """
-    Returns a thumbnail image inside an anchor tag:
+    Returns a thumbnail image as an <img> tag inside an <a> tag:
     ```html
     <a href='https://youtu.be/{video_id}'>
-        {thumbnail_img}
+        <img src="{thumbnail_img}"/>
     </a>
     ```
     """
