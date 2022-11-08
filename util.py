@@ -40,7 +40,7 @@ def add_play_button_to_thumbnail(thumbnail: Image):
     play = Image.open('img/youtube_play_button.png')
     backdrop = Image.open('img/backdrop.png')
     #resize, first image
-    play = play.resize((71, 50))
+    play = play.resize((68, 48)) #same size as on youtube
     #determine position of play button image
     play_x = int(thumbnail.width/2) - int(play.width/2)
     play_y = int(thumbnail.height/2) - int(play.height/2)
