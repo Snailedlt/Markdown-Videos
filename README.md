@@ -8,7 +8,7 @@ Youtube Thumbnail Embedder lets you embed Youtube videos into GitHub markdown wi
 ||Preview|Info|
 |--|--|--|
 |Before|![image](https://user-images.githubusercontent.com/43886029/200039001-212c6961-7220-472a-aa5d-1083a7770873.png)|<ul><li>Hard to see that it's a video</li><li>No play button</li><li>Black bars around thumbnail</li></ul>|
-|After|![image](https://user-images.githubusercontent.com/43886029/200038762-abd67dd6-d72d-43e9-94b7-9fd0d57b87a4.png)|<ul><li>Clearly shows it's a video</li><li>Play button and backdrop added</li><li>Black bars removed</li></ul>|
+|After|![image](https://youtube-to-markdown.deta.dev/WHyOHQ_GkNo)|<ul><li>Clearly shows it's a video</li><li>Play button and backdrop added</li><li>Black bars removed</li></ul>|
 
 ## Usage
 
