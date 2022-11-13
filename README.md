@@ -14,9 +14,8 @@ Showcase of what linking to a youtube video looks like:
 
 ||Preview|Info|
 |--|--|--|
-|Link|https://youtu.be/WHyOHQ_GkNo|<ul><li>No Preview</li></ul>|
-|Youtube Thumbnail + Link|[![image](https://user-images.githubusercontent.com/43886029/200039001-212c6961-7220-472a-aa5d-1083a7770873.png)](https://youtu.be/WHyOHQ_GkNo)|<ul><li>Hard to see that it's a video</li><li>No play button</li><li>Black bars around thumbnail</li></ul>|
-|Mardown Videos + Link|[![](https://markdown-videos.deta.dev/WHyOHQ_GkNo)](https://youtu.be/WHyOHQ_GkNo)|<ul><li>Clearly shows it's a youtube video</li><li>Play button and backdrop added</li><li>Black bars removed</li></ul>|
+|Before|https://youtu.be/WHyOHQ_GkNo|<ul><li>No Preview</li><li>Redirects to video</li></ul>|
+|After|[![](https://markdown-videos.deta.dev/WHyOHQ_GkNo)](https://youtu.be/WHyOHQ_GkNo)|<ul><li>Clearly shows it's a youtube video</li><li>Play button and backdrop added</li><li>Black bars removed</li><li>Redirects to video</li></ul>|
 
 ---
 ## Usage
