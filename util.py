@@ -7,14 +7,23 @@ from fastapi.responses import StreamingResponse
 from platforms import Platforms
 
 
-def get_edited_thumbnail_img(platform: Platforms, video_id: str):
+def get_edited_thumbnail_img(
+    platform: Platforms,
+    video_id: str,
+    width: int,
+    height: int,
+    ):
     if platform == Platforms.vimeo:
         thumbnail = get_vimeo_thumbnail(video_id)
-        thumbnail_w_play_btn = add_play_button_to_thumbnail(thumbnail, "img/vimeo_play_button.png")
     if platform == Platforms.youtube:
         thumbnail = get_youtube_thumbnail(video_id)
-        thumbnail_w_play_btn = add_play_button_to_thumbnail(thumbnail, "img/youtube_play_button.png")
-    return thumbnail_w_play_btn
+
+    resized_thumbnail = thumbnail.resize((width, height))
+
+    return add_play_button_to_thumbnail(
+        resized_thumbnail,
+        f"img/{platform}_play_button.png"
+        )
 
 
 def read_img_from_url(url: str):
@@ -26,19 +35,19 @@ def read_img_from_url(url: str):
 def add_play_button_to_thumbnail(thumbnail: Image, play_button_path: str):
     #Read images
     play = Image.open(play_button_path).convert("RGBA")
+    #Create backdrop
     backdrop = Image.open('img/backdrop.png')
-    #Resize
-    new_thumbnail = thumbnail.resize((320,180))
-    backdrop = backdrop.resize((new_thumbnail.width, new_thumbnail.height))
-    #determine position of play button image
-    play_x = int(new_thumbnail.width/2) - int(play.width/2)
-    play_y = int(new_thumbnail.height/2) - int(play.height/2)
-    play_pos = (play_x,play_y)
-    #add backdrop
-    new_thumbnail.paste(backdrop, (0,0), backdrop)
-    #add play button image
-    new_thumbnail.paste(play,(play_pos), play)
-    return new_thumbnail
+    #Resize backdrop
+    backdrop = backdrop.resize((thumbnail.width, thumbnail.height))
+    #Determine position of play button image
+    play_x = int(thumbnail.width/2) - int(play.width/2)
+    play_y = int(thumbnail.height/2) - int(play.height/2)
+    play_pos = (play_x, play_y)
+    #Add backdrop
+    thumbnail.paste(backdrop, (0,0), backdrop)
+    #Add play button image
+    thumbnail.paste(play,(play_pos), play)
+    return thumbnail
 
 
 def img_to_streaming_response(image: Image):

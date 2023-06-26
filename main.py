@@ -23,12 +23,22 @@ app = FastAPI(
 
 
 @app.get('/youtube/{video_id}')
-def youtube_thumbnail (video_id: str):
-    image = util.get_edited_thumbnail_img(Platforms.youtube, video_id)
+def youtube_thumbnail (video_id: str, width: int = 320, height: int = 180):
+    image = util.get_edited_thumbnail_img(
+        platform = Platforms.youtube,
+        video_id = video_id,
+        width = width,
+        height = height,
+        )
     return util.img_to_streaming_response(image)
 
 
 @app.get('/vimeo/{video_id}')
-def vimeo_thumbnail (video_id: str):
-    image = util.get_edited_thumbnail_img(Platforms.vimeo, video_id)
+def vimeo_thumbnail (video_id: str, width: int = 320, height: int = 180):
+    image = util.get_edited_thumbnail_img(
+        platform = Platforms.vimeo,
+        video_id = video_id,
+        width = width,
+        height = height,
+        )
     return util.img_to_streaming_response(image)

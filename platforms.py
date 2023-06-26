@@ -1,5 +1,5 @@
 from enum import Enum
 
-class Platforms(Enum):
-    youtube = 1
-    vimeo = 2
+class Platforms(str, Enum):
+    youtube = "youtube"
+    vimeo = "vimeo"
