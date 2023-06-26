@@ -1,4 +1,4 @@
-beautifulsoup4==4.11.1
+beautifulsoup4==4.12.2
 fastapi
 Pillow==9.3.0
 requests==2.28.1
