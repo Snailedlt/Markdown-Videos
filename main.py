@@ -32,4 +32,3 @@ def youtube_thumbnail (video_id: str):
 def vimeo_thumbnail (video_id: str):
     image = util.get_edited_thumbnail_img(Platforms.vimeo, video_id)
     return util.img_to_streaming_response(image)
-    
