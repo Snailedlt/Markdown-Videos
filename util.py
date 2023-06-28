@@ -63,7 +63,7 @@ def img_to_streaming_response(image: Image):
 
 
 def get_youtube_thumbnail(video_id: str):
-    return read_img_from_url(f"https://i.ytimg.com/vi_webp/{video_id}/mqdefault.webp")
+    return read_img_from_url(f"https://img.youtube.com/vi/{video_id}/maxresdefault.jpg")
 
 
 def get_vimeo_thumbnail(video_id: str):
