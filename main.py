@@ -1,9 +1,10 @@
+from io import BytesIO
 import util
 from platforms import Platforms
 
 from bs4 import BeautifulSoup as bs
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Response
 
 app = FastAPI(
     title="Youtube Thumbnail Embedder",
@@ -20,6 +21,17 @@ app = FastAPI(
         "url": "https://choosealicense.com/licenses/mit/",
     },
 )
+
+
+@app.get('/youtube/{video_id}.gif')
+def youtube_thumbnail (video_id: str):
+    first, *following = (
+        util.read_img_from_url(f"https://i.ytimg.com/vi/{video_id}/{i+1}.jpg")
+        for i in range(3)
+    )
+    buffer = BytesIO()
+    first.save(buffer, format='GIF', save_all=True, append_images=following, loop=0, duration=150)
+    return Response(buffer.getvalue(), media_type="image/gif")
 
 
 @app.get('/youtube/{video_id}')
