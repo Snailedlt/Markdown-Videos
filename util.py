@@ -35,6 +35,11 @@ def read_img_from_url(url: str):
 def add_play_button_to_thumbnail(thumbnail: Image, play_button_path: str):
     #Read images
     play = Image.open(play_button_path).convert("RGBA")
+    #Resize play button
+    play_size_ideal = (int(thumbnail.width/4.75), int(thumbnail.width/4.75*0.7))
+    play_size_max = (132, 84)
+    play_size_new = min(play_size_ideal[0], play_size_max[0]), min(play_size_ideal[1], play_size_max[1])
+    play = play.resize(play_size_new)
     #Create backdrop
     backdrop = Image.open('img/backdrop.png')
     #Resize backdrop
