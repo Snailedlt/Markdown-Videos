@@ -1,6 +1,7 @@
 from io import BytesIO
 import util
 from fastapi import FastAPI, Query, Response
+from starlette.responses import RedirectResponse
 
 app = FastAPI(
     title="Youtube Thumbnail Embedder",
@@ -62,3 +63,11 @@ def vimeo_thumbnail (video_id: str, width: int = 320, height: int = 180):
     buffer = BytesIO()
     image.save(buffer, format='PNG')
     return Response(buffer.getvalue(), media_type="image/png")
+
+
+@app.get('/')
+def root ():
+    """
+        Redirects to /docs
+    """
+    return RedirectResponse(url='/docs')

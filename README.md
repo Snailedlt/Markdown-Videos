@@ -1,4 +1,5 @@
 # Markdown Videos
+![Vercel](https://therealsujitk-vercel-badge.vercel.app/?app=markdown-videos) ![License](https://img.shields.io/badge/license-MIT-blue)
 
 An open source API that adds a play button to a youtube video thumbnail, provided the video ID.
 Markdown Videos lets you embed Youtube videos into GitHub markdown with ease!
@@ -7,9 +8,9 @@ Markdown Videos lets you embed Youtube videos into GitHub markdown with ease!
 
 ||Preview|Info|
 |--|--|--|
-|Before|https://youtu.be/WHyOHQ_GkNo|<ul><li>No Preview</li><li>Redirects to video</li></ul>|
-|After|[![](https://markdown-videos.vercel.app/youtube/WHyOHQ_GkNo)](https://youtu.be/WHyOHQ_GkNo)|<ul><li>Clearly shows it's a youtube video</li><li>Play button and backdrop added</li><li>Black bars removed</li><li>Redirects to video</li></ul>|
-|After (GIF)|[![](https://markdown-videos.vercel.app/youtube/WHyOHQ_GkNo.gif)](https://youtu.be/WHyOHQ_GkNo.gif)|<ul><li>Clearly shows it's a youtube video</li><li>Play button and backdrop added</li><li>Black bars removed</li><li>Redirects to video</li></ul>|
+|Before|https://youtu.be/8lGpZkjnkt4|<ul><li>No Preview</li><li>Redirects to video</li></ul>|
+|After|[![](https://markdown-videos.vercel.app/youtube/8lGpZkjnkt4)](https://youtu.be/8lGpZkjnkt4)|<ul><li>Clearly shows it's a youtube video</li><li>Play button and backdrop added</li><li>Black bars removed</li><li>Redirects to video</li></ul>|
+|After (GIF)|[![](https://markdown-videos.vercel.app/youtube/8lGpZkjnkt4.gif)](https://youtu.be/8lGpZkjnkt4.gif)|<ul><li>Clearly shows it's a youtube video</li><li>Play button and backdrop added</li><li>:sparkles: Animated GIF :sparkles: </li><li>Redirects to video</li></ul>|
 
 
 ## Supported video services
@@ -30,13 +31,13 @@ Markdown Videos lets you embed Youtube videos into GitHub markdown with ease!
 #### example
 
 ```markdown
-[![](https://markdown-videos.vercel.app/youtube/WHyOHQ_GkNo)](https://youtu.be/WHyOHQ_GkNo)
+[![](https://markdown-videos.vercel.app/youtube/8lGpZkjnkt4)](https://youtu.be/8lGpZkjnkt4)
 ```
 
 <details>
   <summary>Preview</summary>
 
-  [![](https://markdown-videos.vercel.app/youtube/WHyOHQ_GkNo)](https://youtu.be/WHyOHQ_GkNo)
+  [![](https://markdown-videos.vercel.app/youtube/8lGpZkjnkt4)](https://youtu.be/8lGpZkjnkt4)
 </details>
 
 ### How to use in HTML
@@ -50,13 +51,13 @@ Markdown Videos lets you embed Youtube videos into GitHub markdown with ease!
 #### example
 
 ```html
-<a href=https://youtu.be/WHyOHQ_GkNo><img src=https://markdown-videos.vercel.app/youtube/WHyOHQ_GkNo></a></img>
+<a href=https://youtu.be/8lGpZkjnkt4><img src=https://markdown-videos.vercel.app/youtube/8lGpZkjnkt4></a></img>
 ```
 
 <details>
   <summary>Preview</summary>
 
-  <a href=https://youtu.be/WHyOHQ_GkNo><img src=https://markdown-videos.vercel.app/youtube/WHyOHQ_GkNo></a></img>
+  <a href=https://youtu.be/8lGpZkjnkt4><img src=https://markdown-videos.vercel.app/youtube/8lGpZkjnkt4></a></img>
 </details>
 
 ---
@@ -67,13 +68,13 @@ For the full documentation see the Swagger and ReDoc docs
 ### Optional parameters
 |Name     |Data Type |Default Value             |Description                                                              |Example                                                             |Availability               |
 |---------|----------|--------------------------|-------------------------------------------------------------------------|--------------------------------------------------------------------|---------------------------|
-|width    |int       |320                       |The width of the thumbnail                                               |https://markdown-videos.vercel.app/youtube/WHyOHQ_GkNo?width=320    |All Endpoints              |
-|height   |int       |180                       |The height of the thumbnail                                              |https://markdown-videos.vercel.app/youtube/WHyOHQ_GkNo?height=180   |All Endpoints              |
-|duration |int       |500                       |The duration you want to display each image in the gif (in milliseconds) |https://markdown-videos.vercel.app/youtube/WHyOHQ_GkNo.gif?duration=500 |Endpoints ending with .gif |
+|width    |int       |320                       |The width of the thumbnail                                               |https://markdown-videos.vercel.app/youtube/8lGpZkjnkt4?width=320    |All Endpoints              |
+|height   |int       |180                       |The height of the thumbnail                                              |https://markdown-videos.vercel.app/youtube/8lGpZkjnkt4?height=180   |All Endpoints              |
+|duration |int       |500                       |The duration you want to display each image in the gif (in milliseconds) |https://markdown-videos.vercel.app/youtube/8lGpZkjnkt4.gif?duration=500 |Endpoints ending with .gif |
 
 Examples with multiple parameters:
-- normal -> https://markdown-videos.vercel.app/youtube/WHyOHQ_GkNo?width=320&height=180
-- GIF -> https://markdown-videos.vercel.app/youtube/WHyOHQ_GkNo.gif?width=320&height=180&duration=500
+- normal -> https://markdown-videos.vercel.app/youtube/8lGpZkjnkt4?width=320&height=180
+- GIF -> https://markdown-videos.vercel.app/youtube/8lGpZkjnkt4.gif?width=320&height=180&duration=500
 
 ## Contributing
 
