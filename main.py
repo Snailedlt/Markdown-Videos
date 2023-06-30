@@ -20,7 +20,7 @@ app = FastAPI(
 )
 
 
-@app.get('/youtube/{video_id}.gif')
+@app.get('/youtube/{video_id}.gif', tags=["Youtube"])
 def youtube_thumbnail (
     video_id: str,
     width: int = 320,
@@ -43,7 +43,7 @@ def youtube_thumbnail (
     return Response(buffer.getvalue(), media_type="image/gif")
 
 
-@app.get('/youtube/{video_id}')
+@app.get('/youtube/{video_id}', tags=["Youtube"])
 def youtube_thumbnail (video_id: str, width: int = 320, height: int = 180):
     image = util.add_play_button_to_thumbnail(
         util.read_img_from_url(f"https://img.youtube.com/vi/{video_id}/maxresdefault.jpg").resize((width, height)),
@@ -54,7 +54,7 @@ def youtube_thumbnail (video_id: str, width: int = 320, height: int = 180):
     return Response(buffer.getvalue(), media_type="image/png")
 
 
-@app.get('/vimeo/{video_id}')
+@app.get('/vimeo/{video_id}', tags=["Vimeo"])
 def vimeo_thumbnail (video_id: str, width: int = 320, height: int = 180):
     image = util.add_play_button_to_thumbnail(
         util.read_img_from_url(f"https://vumbnail.com/{video_id}.jpg").resize((width, height)),
@@ -65,9 +65,6 @@ def vimeo_thumbnail (video_id: str, width: int = 320, height: int = 180):
     return Response(buffer.getvalue(), media_type="image/png")
 
 
-@app.get('/')
+@app.get('/', include_in_schema=False)
 def root ():
-    """
-        Redirects to /docs
-    """
     return RedirectResponse(url='/docs')
