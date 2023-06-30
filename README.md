@@ -1,5 +1,8 @@
 # Markdown Videos
-[![wakatime](https://wakatime.com/badge/github/Snailedlt/Markdown-Videos.svg?style=flat-square)](https://wakatime.com/badge/github/Snailedlt/Markdown-Videos) ![Vercel](https://therealsujitk-vercel-badge.vercel.app/?app=markdown-videos&style=flat-square) ![License](https://img.shields.io/badge/license-MIT-blue?style=flat-square)
+[![wakatime](https://wakatime.com/badge/github/Snailedlt/Markdown-Videos.svg)](https://wakatime.com/badge/github/Snailedlt/Markdown-Videos)
+![Vercel](https://therealsujitk-vercel-badge.vercel.app/?app=markdown-videos)
+![License](https://img.shields.io/badge/license-MIT-blue)
+![Maintained](https://img.shields.io/badge/Maintained%3F-yes-green.svg)
 
 An open source API that adds a play button to a youtube video thumbnail, provided the video ID.
 Markdown Videos lets you embed Youtube videos into GitHub markdown with ease!
@@ -82,7 +85,12 @@ Markdown Videos is still under development, please open an [issue](https://githu
 
 ### Techstack
 
-Made using [Python](https://www.python.org/)'s [FastAPI](https://fastapi.tiangolo.com/) framework, and hosted by [Vercel](https://vercel.com/)
+Made using
+[![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)](https://www.python.org/)'s
+[![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi)](https://fastapi.tiangolo.com/)
+
+Hosted on
+[![Vercel](https://img.shields.io/badge/vercel-%23000000.svg?style=for-the-badge&logo=vercel&logoColor=white)](https://vercel.com/)
 
 ### Building
 
