@@ -3,13 +3,13 @@ import requests
 from io import BytesIO
 
 
-def read_img_from_url(url: str):
-    response = requests.get(url)
-    img = Image.open(BytesIO(response.content))
-    return img
+def read_img_from_url(url: str) -> Image.Image:
+    res = requests.get(url)
+    res.raise_for_status()
+    return Image.open(BytesIO(res.content))
 
 
-def add_play_button_to_thumbnail(thumbnail: Image, play_button_path: str):
+def add_play_button_to_thumbnail(thumbnail: Image, play_button_path: str) -> Image.Image:
     #Read images
     play = Image.open(play_button_path).convert("RGBA")
     #Resize play button

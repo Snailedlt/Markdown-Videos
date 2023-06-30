@@ -21,12 +21,12 @@ app = FastAPI(
 
 
 @app.get('/youtube/{video_id}.gif', tags=["Youtube"])
-def youtube_thumbnail (
+def youtube_gif_thumbnail (
     video_id: str,
     width: int = 320,
     height: int = 180,
     duration: int = Query(500, description="Duration for each image in the GIF (measured in milliseconds)"),
-    ):
+    ) -> Response:
     first = util.add_play_button_to_thumbnail(
                 util.read_img_from_url(f"https://img.youtube.com/vi/{video_id}/maxresdefault.jpg").resize((width, height)),
                 f"img/youtube_play_button.png"
@@ -44,7 +44,7 @@ def youtube_thumbnail (
 
 
 @app.get('/youtube/{video_id}', tags=["Youtube"])
-def youtube_thumbnail (video_id: str, width: int = 320, height: int = 180):
+def youtube_thumbnail (video_id: str, width: int = 320, height: int = 180) -> Response:
     image = util.add_play_button_to_thumbnail(
         util.read_img_from_url(f"https://img.youtube.com/vi/{video_id}/maxresdefault.jpg").resize((width, height)),
             f"img/youtube_play_button.png"
@@ -55,7 +55,7 @@ def youtube_thumbnail (video_id: str, width: int = 320, height: int = 180):
 
 
 @app.get('/vimeo/{video_id}', tags=["Vimeo"])
-def vimeo_thumbnail (video_id: str, width: int = 320, height: int = 180):
+def vimeo_thumbnail (video_id: str, width: int = 320, height: int = 180) -> Response:
     image = util.add_play_button_to_thumbnail(
         util.read_img_from_url(f"https://vumbnail.com/{video_id}.jpg").resize((width, height)),
             f"img/vimeo_play_button.png"
@@ -66,5 +66,5 @@ def vimeo_thumbnail (video_id: str, width: int = 320, height: int = 180):
 
 
 @app.get('/', include_in_schema=False)
-def root ():
+def root () -> RedirectResponse:
     return RedirectResponse(url='/docs')
