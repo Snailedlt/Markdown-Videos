@@ -1,4 +1,4 @@
 fastapi
-Pillow==9.3.0
+Pillow==9.5.0
 requests==2.28.1
 uvicorn[standard]
