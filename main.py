@@ -21,7 +21,7 @@ app = FastAPI(
 
 
 @app.get('/youtube/{video_id}.gif', tags=["Youtube"])
-def youtube_thumbnail (
+def youtube_gif_thumbnail (
     video_id: str,
     width: int = 320,
     height: int = 180,
