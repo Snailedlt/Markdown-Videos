@@ -55,34 +55,6 @@ def add_play_button_to_thumbnail(thumbnail: Image, play_button_path: str):
     return thumbnail
 
 
-def img_to_streaming_response(image: Image):
-    imgio = BytesIO()
-    image.save(imgio, 'PNG')
-    imgio.seek(0)
-    return StreamingResponse(content=imgio, media_type="image/png")
-
-
-def gif_to_streaming_response(image: Image):
-    imgio = BytesIO()
-    image.save(imgio, 'GIF')
-    imgio.seek(0)
-    return StreamingResponse(content=imgio, media_type="image/gif")
-
-
-def create_gif(images, duration):
-    gif = images[0]
-    output = BytesIO() # for some reason this doesn't work (it shows a still image), but if I save the image with output = "./file.gif" the animation works!
-    # this works
-    output = "./file.gif"
-    gif.save(output, format='GIF', save_all=True, append_images=images, loop=0, duration=duration)
-    return gif
-
-
-def create_youtube_gif_thumbnail(video_id: str):
-    images = [read_img_from_url(f"https://i.ytimg.com/vi/{video_id}/{i}.jpg") for i in range(1,3)]
-    return create_gif(images, 150)
-
-
 def get_youtube_thumbnail(video_id: str):
     return read_img_from_url(f"https://img.youtube.com/vi/{video_id}/maxresdefault.jpg")
 

@@ -42,7 +42,9 @@ def youtube_thumbnail (video_id: str, width: int = 320, height: int = 180):
         width = width,
         height = height,
         )
-    return util.img_to_streaming_response(image)
+    buffer = BytesIO()
+    image.save(buffer, format='PNG')
+    return Response(buffer.getvalue(), media_type="image/png")
 
 
 @app.get('/vimeo/{video_id}')
@@ -53,4 +55,6 @@ def vimeo_thumbnail (video_id: str, width: int = 320, height: int = 180):
         width = width,
         height = height,
         )
-    return util.img_to_streaming_response(image)
+    buffer = BytesIO()
+    image.save(buffer, format='PNG')
+    return Response(buffer.getvalue(), media_type="image/png")
