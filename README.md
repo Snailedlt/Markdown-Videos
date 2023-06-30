@@ -1,4 +1,5 @@
 # Markdown Videos
+![Vercel](https://therealsujitk-vercel-badge.vercel.app/?app=markdown-videos) ![License](https://img.shields.io/badge/license-MIT-blue)
 
 An open source API that adds a play button to a youtube video thumbnail, provided the video ID.
 Markdown Videos lets you embed Youtube videos into GitHub markdown with ease!
