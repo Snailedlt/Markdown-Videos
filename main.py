@@ -24,7 +24,7 @@ def youtube_thumbnail (
     video_id: str,
     width: int = 320,
     height: int = 180,
-    duration: str = Query(500, description="Duration for each image in the GIF (measured in milliseconds)"),
+    duration: int = Query(500, description="Duration for each image in the GIF (measured in milliseconds)"),
     ):
     first, *following = (
         util.add_play_button_to_thumbnail(
