@@ -1,10 +1,6 @@
 from io import BytesIO
 import util
-from platforms import Platforms
-
-from bs4 import BeautifulSoup as bs
-
-from fastapi import FastAPI, Response
+from fastapi import FastAPI, Query, Response
 
 app = FastAPI(
     title="Youtube Thumbnail Embedder",
@@ -24,24 +20,30 @@ app = FastAPI(
 
 
 @app.get('/youtube/{video_id}.gif')
-def youtube_thumbnail (video_id: str):
+def youtube_thumbnail (
+    video_id: str,
+    width: int = 320,
+    height: int = 180,
+    duration: str = Query(500, description="Duration for each image in the GIF (measured in milliseconds)"),
+    ):
     first, *following = (
-        util.read_img_from_url(f"https://i.ytimg.com/vi/{video_id}/{i+1}.jpg")
+        util.add_play_button_to_thumbnail(
+            util.read_img_from_url(f"https://i.ytimg.com/vi/{video_id}/{i+1}.jpg").resize((width, height)),
+            f"img/youtube_play_button.png"
+        )
         for i in range(3)
     )
     buffer = BytesIO()
-    first.save(buffer, format='GIF', save_all=True, append_images=following, loop=0, duration=150)
+    first.save(buffer, format='GIF', save_all=True, append_images=following, loop=0, duration=duration)
     return Response(buffer.getvalue(), media_type="image/gif")
 
 
 @app.get('/youtube/{video_id}')
 def youtube_thumbnail (video_id: str, width: int = 320, height: int = 180):
-    image = util.get_edited_thumbnail_img(
-        platform = Platforms.youtube,
-        video_id = video_id,
-        width = width,
-        height = height,
-        )
+    image = util.add_play_button_to_thumbnail(
+        util.read_img_from_url(f"https://img.youtube.com/vi/{video_id}/maxresdefault.jpg").resize((width, height)),
+            f"img/youtube_play_button.png"
+    )
     buffer = BytesIO()
     image.save(buffer, format='PNG')
     return Response(buffer.getvalue(), media_type="image/png")
@@ -49,12 +51,10 @@ def youtube_thumbnail (video_id: str, width: int = 320, height: int = 180):
 
 @app.get('/vimeo/{video_id}')
 def vimeo_thumbnail (video_id: str, width: int = 320, height: int = 180):
-    image = util.get_edited_thumbnail_img(
-        platform = Platforms.vimeo,
-        video_id = video_id,
-        width = width,
-        height = height,
-        )
+    image = util.add_play_button_to_thumbnail(
+        util.read_img_from_url(f"https://vumbnail.com/{video_id}.jpg").resize((width, height)),
+            f"img/vimeo_play_button.png"
+    )
     buffer = BytesIO()
     image.save(buffer, format='PNG')
     return Response(buffer.getvalue(), media_type="image/png")
