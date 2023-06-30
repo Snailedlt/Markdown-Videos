@@ -10,5 +10,6 @@
         "src": "/(.*)",
         "dest": "main.py"
       }
-    ]
+    ],
+    "redirects": [{ "source": "/", "destination": "/docs" }]
   }
