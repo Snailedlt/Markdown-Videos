@@ -24,9 +24,13 @@ def youtube_thumbnail (
     video_id: str,
     width: int = 320,
     height: int = 180,
-    duration: str = Query(500, description="Duration for each image in the GIF (measured in milliseconds)"),
+    duration: int = Query(500, description="Duration for each image in the GIF (measured in milliseconds)"),
     ):
-    first, *following = (
+    first = util.add_play_button_to_thumbnail(
+                util.read_img_from_url(f"https://img.youtube.com/vi/{video_id}/maxresdefault.jpg").resize((width, height)),
+                f"img/youtube_play_button.png"
+            )
+    following = (
         util.add_play_button_to_thumbnail(
             util.read_img_from_url(f"https://i.ytimg.com/vi/{video_id}/{i+1}.jpg").resize((width, height)),
             f"img/youtube_play_button.png"
