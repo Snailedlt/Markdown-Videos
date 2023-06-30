@@ -123,3 +123,5 @@ pip install pipreqs # https://pypi.org/project/pipreqs/
 # cd into the project
 pipreqs # updates requirements.txt
 ```
+
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/H2H0GY0OU)
