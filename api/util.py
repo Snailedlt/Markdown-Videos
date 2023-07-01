@@ -18,7 +18,7 @@ def add_play_button_to_thumbnail(thumbnail: Image, play_button_path: str) -> Ima
     play_size_new = min(play_size_ideal[0], play_size_max[0]), min(play_size_ideal[1], play_size_max[1])
     play = play.resize(play_size_new)
     #Create backdrop
-    backdrop = Image.open('img/backdrop.png')
+    backdrop = Image.open('api/img/backdrop.png')
     #Resize backdrop
     backdrop = backdrop.resize((thumbnail.width, thumbnail.height))
     #Determine position of play button image
