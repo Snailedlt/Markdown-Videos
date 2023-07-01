@@ -97,19 +97,19 @@ Hosted on
 #### Install Dependencies
 
 ```sh
-pip install -r requirements.txt
+pip install -r api/requirements.txt
 ```
 
 #### Run Locally
 
 ```sh
-uvicorn main:app --reload
+uvicorn api.main:app --reload
 ```
 
 or if that doesn't work:
 
 ```sh
-python -m uvicorn main:app --reload
+python -m uvicorn api.main:app --reload
 ```
 
 ref: <https://fastapi.tiangolo.com/#run-it>
@@ -120,7 +120,7 @@ Needed only when new dependencies are added
 
 ```sh
 pip install pipreqs # https://pypi.org/project/pipreqs/
-# cd into the project
+# cd into the /api directory
 pipreqs # updates requirements.txt
 ```
 
