@@ -10,10 +10,19 @@
       "request": "launch",
       "module": "uvicorn",
       "args": [
-        "main:app"
+        "api.main:app"
       ],
       "jinja": true,
       "justMyCode": true
-    }
+    },
+    {
+      "name": "Python: Pytest",
+      "type": "python",
+      "request": "test",  // <----- this is for tests
+      "args": [
+        "-v" // verbose
+      ],
+      "console": "integratedTerminal"
+      }
   ]
 }
