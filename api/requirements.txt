@@ -2,3 +2,5 @@ fastapi
 Pillow==9.5.0
 requests==2.31.0
 uvicorn[standard]
+pytest==7.4.0
+httpx==0.24.1
