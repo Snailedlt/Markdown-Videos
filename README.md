@@ -114,14 +114,17 @@ python -m uvicorn api.main:app --reload
 
 ref: <https://fastapi.tiangolo.com/#run-it>
 
-#### Update dependencies
+#### Running tests
+For detailed instructions see the Fast API tutorial for [Testing](https://fastapi.tiangolo.com/tutorial/testing/)
 
-Needed only when new dependencies are added
-
+Install pytest and httpx
 ```sh
-pip install pipreqs # https://pypi.org/project/pipreqs/
-# cd into the /api directory
-pipreqs # updates requirements.txt
+pip install httpx
+pip install pytest
+```
+Run the tests
+```sh
+pytest
 ```
 
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/H2H0GY0OU)
