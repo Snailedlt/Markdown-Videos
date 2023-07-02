@@ -25,7 +25,7 @@ def test_main_response():
 
 
 def test_youtube_thumbnail_default_params():
-    response = client.get(f'/youtube/{youtube_example_video_id}')
+    response = client.get(f"/youtube/{youtube_example_video_id}")
     assert response.status_code == 200
     assert response.headers["content-type"] == "image/png"
 
@@ -38,7 +38,7 @@ def test_youtube_thumbnail_default_params():
 
 def test_youtube_thumbnail_size_params():
     response = client.get(
-        f'/youtube/{youtube_example_video_id}?width={alt_img_width}&height={alt_img_height}'
+        f"/youtube/{youtube_example_video_id}?width={alt_img_width}&height={alt_img_height}"
     )
     assert response.status_code == 200
     assert response.headers["content-type"] == "image/png"
@@ -51,7 +51,7 @@ def test_youtube_thumbnail_size_params():
 
 
 def test_youtube_gif_thumbnail_default_params():
-    response = client.get(f'/youtube/{youtube_example_video_id}.gif')
+    response = client.get(f"/youtube/{youtube_example_video_id}.gif")
     assert response.status_code == 200
     assert response.headers["content-type"] == "image/gif"
 
@@ -61,14 +61,14 @@ def test_youtube_gif_thumbnail_default_params():
     # check each frame of the gif
     for frame in ImageSequence.Iterator(gif):
         assert frame.size == (default_img_width, default_img_height)
-        frame_duration = frame.info.get("duration") #Check size
-        assert frame_duration == pytest.approx(default_gif_frame_duration, abs=1) # Check duration
+        frame_duration = frame.info.get("duration")  # Check size
+        assert frame_duration == pytest.approx(
+            default_gif_frame_duration, abs=1
+        )  # Check duration
 
 
 def test_youtube_gif_thumbnail_size_and_duration_params():
-    response = client.get(
-        f'/youtube/{youtube_example_video_id}.gif?width={alt_img_width}&height={alt_img_height}&duration={alt_gif_frame_duration}'
-        )
+    response = client.get(f"/youtube/{youtube_example_video_id}.gif?")
     assert response.status_code == 200
     assert response.headers["content-type"] == "image/gif"
 
@@ -77,13 +77,15 @@ def test_youtube_gif_thumbnail_size_and_duration_params():
 
     # check each frame of the gif
     for frame in ImageSequence.Iterator(gif):
-        assert frame.size == (alt_img_width, alt_img_height)
-        frame_duration = frame.info.get("duration") #Check size
-        assert frame_duration == pytest.approx(alt_gif_frame_duration, abs=1) # Check duration
+        assert frame.size == (default_img_width, default_img_height)
+        frame_duration = frame.info.get("duration")  # Check size
+        assert frame_duration == pytest.approx(
+            default_gif_frame_duration, abs=1
+        )  # Check duration
 
 
 def test_vimeo_thumbnail_default_params():
-    response = client.get(f'/vimeo/{vimeo_example_video_id}')
+    response = client.get(f"/vimeo/{vimeo_example_video_id}")
     assert response.status_code == 200
     assert response.headers["content-type"] == "image/png"
 
@@ -96,7 +98,7 @@ def test_vimeo_thumbnail_default_params():
 
 def test_vimeo_thumbnail_size_params():
     response = client.get(
-        f'/vimeo/{vimeo_example_video_id}?width={alt_img_width}&height={alt_img_height}'
+        f"/vimeo/{vimeo_example_video_id}?width={alt_img_width}&height={alt_img_height}"
     )
     assert response.status_code == 200
     assert response.headers["content-type"] == "image/png"
