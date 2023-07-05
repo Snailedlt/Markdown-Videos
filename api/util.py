@@ -9,7 +9,6 @@ class Supported_Filetype(str, Enum):
     JPEG = "jpeg"
     PNG = "png"
     WEBP = "webp"
-    BMP = "bmp"
     GIF = "gif"
 
 
