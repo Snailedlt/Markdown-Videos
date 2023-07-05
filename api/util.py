@@ -1,11 +1,17 @@
+import typing
 from PIL import Image
 import requests
 from io import BytesIO
 
 
-def read_img_from_url(url: str) -> Image.Image:
+def read_img_from_url(url: str, alt_url: typing.Optional[str] = None) -> Image.Image:
     res = requests.get(url)
-    res.raise_for_status()
+    try:
+        res.raise_for_status()
+    except requests.exceptions.HTTPError:
+        if alt_url is not None and res.status_code == 404:
+            res = requests.get(alt_url)
+            res.raise_for_status()
     return Image.open(BytesIO(res.content))
 
 
