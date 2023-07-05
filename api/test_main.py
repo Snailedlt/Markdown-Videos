@@ -4,6 +4,8 @@ import io
 
 import pytest
 
+from api.util import Supported_Filetype
+
 from .main import app
 
 client = TestClient(app)
@@ -29,7 +31,7 @@ def test_youtube_thumbnail_default_params():
     for video_id in youtube_example_video_ids:
         response = client.get(f"/youtube/{video_id}")
         assert response.status_code == 200
-        assert response.headers["content-type"] == "image/png"
+        assert response.headers["content-type"] == "image/jpeg"
 
         # Read the image from the response content
         image = Image.open(io.BytesIO(response.content))
@@ -38,19 +40,20 @@ def test_youtube_thumbnail_default_params():
         assert image.size == (default_img_width, default_img_height)
 
 
-def test_youtube_thumbnail_size_params():
+def test_youtube_thumbnail_all_params():
     for video_id in youtube_example_video_ids:
-        response = client.get(
-            f"/youtube/{video_id}?width={alt_img_width}&height={alt_img_height}"
-        )
-        assert response.status_code == 200
-        assert response.headers["content-type"] == "image/png"
+        for filetype in Supported_Filetype:
+            response = client.get(
+                f"/youtube/{video_id}?width={alt_img_width}&height={alt_img_height}&filetype={filetype}"
+            )
+            assert response.status_code == 200
+            assert response.headers["content-type"] == f"image/{filetype}"
 
-        # Read the image from the response content
-        image = Image.open(io.BytesIO(response.content))
+            # Read the image from the response content
+            image = Image.open(io.BytesIO(response.content))
 
-        # Check the size of the image
-        assert image.size == (alt_img_width, alt_img_height)
+            # Check the size of the image
+            assert image.size == (alt_img_width, alt_img_height)
 
 
 def test_youtube_gif_thumbnail_default_params():
@@ -71,9 +74,11 @@ def test_youtube_gif_thumbnail_default_params():
             )  # Check duration
 
 
-def test_youtube_gif_thumbnail_size_and_duration_params():
+def test_youtube_gif_thumbnail_all_params():
     for video_id in youtube_example_video_ids:
-        response = client.get(f"/youtube/{video_id}.gif?")
+        response = client.get(
+            f"/youtube/{video_id}.gif?duration={alt_gif_frame_duration}"
+        )
         assert response.status_code == 200
         assert response.headers["content-type"] == "image/gif"
 
@@ -85,14 +90,14 @@ def test_youtube_gif_thumbnail_size_and_duration_params():
             assert frame.size == (default_img_width, default_img_height)
             frame_duration = frame.info.get("duration")  # Check size
             assert frame_duration == pytest.approx(
-                default_gif_frame_duration, abs=1
+                alt_gif_frame_duration, abs=1
             )  # Check duration
 
 
 def test_vimeo_thumbnail_default_params():
     response = client.get(f"/vimeo/{vimeo_example_video_id}")
     assert response.status_code == 200
-    assert response.headers["content-type"] == "image/png"
+    assert response.headers["content-type"] == "image/jpeg"
 
     # Read the image from the response content
     image = Image.open(io.BytesIO(response.content))
@@ -101,15 +106,16 @@ def test_vimeo_thumbnail_default_params():
     assert image.size == (default_img_width, default_img_height)
 
 
-def test_vimeo_thumbnail_size_params():
-    response = client.get(
-        f"/vimeo/{vimeo_example_video_id}?width={alt_img_width}&height={alt_img_height}"
-    )
-    assert response.status_code == 200
-    assert response.headers["content-type"] == "image/png"
+def test_vimeo_thumbnail_all_params():
+    for filetype in Supported_Filetype:
+        response = client.get(
+            f"/vimeo/{vimeo_example_video_id}?width={alt_img_width}&height={alt_img_height}&filetype={filetype}"
+        )
+        assert response.status_code == 200
+        assert response.headers["content-type"] == f"image/{filetype}"
 
-    # Read the image from the response content
-    image = Image.open(io.BytesIO(response.content))
+        # Read the image from the response content
+        image = Image.open(io.BytesIO(response.content))
 
-    # Check the size of the image
-    assert image.size == (alt_img_width, alt_img_height)
+        # Check the size of the image
+        assert image.size == (alt_img_width, alt_img_height)

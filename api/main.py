@@ -1,4 +1,5 @@
 from io import BytesIO
+from typing import Literal
 from . import util
 from fastapi import FastAPI, Query, Response
 from starlette.responses import RedirectResponse
@@ -64,7 +65,12 @@ def youtube_gif_thumbnail(
 
 
 @app.get("/youtube/{video_id}", tags=["Youtube"])
-def youtube_thumbnail(video_id: str, width: int = 320, height: int = 180) -> Response:
+def youtube_thumbnail(
+    video_id: str,
+    width: int = 320,
+    height: int = 180,
+    filetype: util.Supported_Filetype = "jpeg",
+) -> Response:
     base_url = f"https://img.youtube.com/vi/{video_id}"
     image = util.add_play_button_to_thumbnail(
         util.read_img_from_url(
@@ -74,12 +80,17 @@ def youtube_thumbnail(video_id: str, width: int = 320, height: int = 180) -> Res
         "api/img/youtube_play_button.png",
     )
     buffer = BytesIO()
-    image.save(buffer, format="PNG")
-    return Response(buffer.getvalue(), media_type="image/png")
+    image.save(buffer, format=filetype.upper())
+    return Response(buffer.getvalue(), media_type=f"image/{filetype}")
 
 
 @app.get("/vimeo/{video_id}", tags=["Vimeo"])
-def vimeo_thumbnail(video_id: str, width: int = 320, height: int = 180) -> Response:
+def vimeo_thumbnail(
+    video_id: str,
+    width: int = 320,
+    height: int = 180,
+    filetype: util.Supported_Filetype = "jpeg",
+) -> Response:
     image = util.add_play_button_to_thumbnail(
         util.read_img_from_url(f"https://vumbnail.com/{video_id}.jpg").resize(
             (width, height)
@@ -87,8 +98,8 @@ def vimeo_thumbnail(video_id: str, width: int = 320, height: int = 180) -> Respo
         "api/img/vimeo_play_button.png",
     )
     buffer = BytesIO()
-    image.save(buffer, format="PNG")
-    return Response(buffer.getvalue(), media_type="image/png")
+    image.save(buffer, format=filetype.upper())
+    return Response(buffer.getvalue(), media_type=f"image/{filetype}")
 
 
 @app.get("/", include_in_schema=False)

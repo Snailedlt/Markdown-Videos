@@ -69,14 +69,15 @@ For the full documentation see the Swagger and ReDoc docs
 - [Swagger UI](https://github.com/swagger-api/swagger-ui) documentation: <https://markdown-videos.vercel.app/docs>
 - [ReDoc](https://github.com/Rebilly/ReDoc) documentation: <https://markdown-videos.vercel.app/redoc>
 ### Optional parameters
-|Name     |Data Type |Default Value             |Description                                                              |Example                                                             |Availability               |
-|---------|----------|--------------------------|-------------------------------------------------------------------------|--------------------------------------------------------------------|---------------------------|
-|width    |int       |320                       |The width of the thumbnail                                               |https://markdown-videos.vercel.app/youtube/8lGpZkjnkt4?width=320    |All Endpoints              |
-|height   |int       |180                       |The height of the thumbnail                                              |https://markdown-videos.vercel.app/youtube/8lGpZkjnkt4?height=180   |All Endpoints              |
-|duration |int       |500                       |The duration you want to display each image in the gif (in milliseconds) |https://markdown-videos.vercel.app/youtube/8lGpZkjnkt4.gif?duration=500 |Endpoints ending with .gif |
+|Name     |Data Type |Default Value             |Description                                                              |Example                                                                  |Availability               |
+|---------|----------|--------------------------|-------------------------------------------------------------------------|-------------------------------------------------------------------------|---------------------------|
+|width    |int       |320                       |The width of the thumbnail                                               |https://markdown-videos.vercel.app/youtube/8lGpZkjnkt4?width=320         |All Endpoints              |
+|height   |int       |180                       |The height of the thumbnail                                              |https://markdown-videos.vercel.app/youtube/8lGpZkjnkt4?height=180        |All Endpoints              |
+|duration |int       |500                       |The duration you want to display each image in the gif (in milliseconds) |https://markdown-videos.vercel.app/youtube/8lGpZkjnkt4.gif?duration=500  |Endpoints ending with .gif |
+|filetype |str       |jpeg                      |Valid filetypes are: `jpeg`, `jpg`, `png`, `webp`, `bmp`, `gif`          |https://markdown-videos.vercel.app/youtube/8lGpZkjnkt4.gif?filetype=jpeg |All still-image endpoints  |
 
 Examples with multiple parameters:
-- normal -> https://markdown-videos.vercel.app/youtube/8lGpZkjnkt4?width=320&height=180
+- normal -> https://markdown-videos.vercel.app/youtube/8lGpZkjnkt4?width=320&height=180&filetype=jpeg
 - GIF -> https://markdown-videos.vercel.app/youtube/8lGpZkjnkt4.gif?width=320&height=180&duration=500
 
 ## Contributing
