@@ -2,6 +2,14 @@ import typing
 from PIL import Image
 import requests
 from io import BytesIO
+from enum import Enum
+
+
+class Supported_Filetype(str, Enum):
+    JPEG = "jpeg"
+    PNG = "png"
+    WEBP = "webp"
+    GIF = "gif"
 
 
 def read_img_from_url(url: str, alt_url: typing.Optional[str] = None) -> Image.Image:
