@@ -1,5 +1,4 @@
 from io import BytesIO
-from typing import Literal
 from . import util
 from fastapi import FastAPI, Query, Response
 from starlette.responses import RedirectResponse
