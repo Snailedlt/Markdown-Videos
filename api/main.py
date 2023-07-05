@@ -9,7 +9,7 @@ app = FastAPI(
         "An open source API that adds a play button and a backdrop to a video"
         " thumbnail, provided the video ID.<br/>"
         "[MardownVideos](https://github.com/Snailedlt/Youtube-Thumbnail-Embedder)"
-        "lets you embed videos into GitHub markdown with ease!"
+        " lets you embed videos into GitHub markdown with ease!"
     ),
     version="0.0.1-alpha",
     terms_of_service="https://choosealicense.com/licenses/mit/",
@@ -34,9 +34,11 @@ def youtube_gif_thumbnail(
         500, description="Duration for each image in the GIF (measured in milliseconds)"
     ),
 ) -> Response:
+    base_url = f"https://img.youtube.com/vi/{video_id}"
     first = util.add_play_button_to_thumbnail(
         util.read_img_from_url(
-            f"https://img.youtube.com/vi/{video_id}/maxresdefault.jpg"
+            url=f"{base_url}/maxresdefault.jpg",
+            alt_url=f"{base_url}/0.jpg",
         ).resize((width, height)),
         "api/img/youtube_play_button.png",
     )
@@ -63,9 +65,11 @@ def youtube_gif_thumbnail(
 
 @app.get("/youtube/{video_id}", tags=["Youtube"])
 def youtube_thumbnail(video_id: str, width: int = 320, height: int = 180) -> Response:
+    base_url = f"https://img.youtube.com/vi/{video_id}"
     image = util.add_play_button_to_thumbnail(
         util.read_img_from_url(
-            f"https://img.youtube.com/vi/{video_id}/maxresdefault.jpg"
+            url=f"{base_url}/maxresdefault.jpg",
+            alt_url=f"{base_url}/0.jpg",
         ).resize((width, height)),
         "api/img/youtube_play_button.png",
     )
