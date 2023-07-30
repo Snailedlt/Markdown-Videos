@@ -24,9 +24,10 @@ app = FastAPI(
         "url": "https://choosealicense.com/licenses/mit/",
     },
 )
-app.add_middleware(
-    Analytics, api_key=get_settings().analytics_api_key
-)  # Add middleware
+if get_settings().analytics_api_key is not None:
+    app.add_middleware(
+        Analytics, api_key=get_settings().analytics_api_key
+    )  # Add middleware
 
 
 @app.get("/youtube/{video_id}.gif", tags=["Youtube"])
