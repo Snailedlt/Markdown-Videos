@@ -1,28 +1,33 @@
+from . import util, config
+
+from functools import lru_cache
 from io import BytesIO
-from . import util
-from fastapi import FastAPI, Query, Response
+from fastapi import Depends, FastAPI, Query, Response
+from typing_extensions import Annotated
+from api_analytics.fastapi import Analytics
 from starlette.responses import RedirectResponse
 
+
+@lru_cache()
+def get_settings():
+    return config.Settings()
+
+
 app = FastAPI(
-    title="Youtube Thumbnail Embedder",
-    description=(
-        "An open source API that adds a play button and a backdrop to a video"
-        " thumbnail, provided the video ID.<br/>"
-        "[MardownVideos](https://github.com/Snailedlt/Youtube-Thumbnail-Embedder)"
-        " lets you embed videos into GitHub markdown with ease!"
-    ),
+    title=get_settings().app_name,
+    description=get_settings().app_description,
     version="0.0.1-alpha",
     terms_of_service="https://choosealicense.com/licenses/mit/",
-    contact={
-        "name": "Jørgen Kalsnes Hagen",
-        "url": "https://github.com/Snailedlt",
-        "email": "jorgenkalsnes.hagen@gmail.com",
-    },
+    contact=get_settings().contact,
     license_info={
         "name": "MIT License",
         "url": "https://choosealicense.com/licenses/mit/",
     },
 )
+if get_settings().analytics_api_key is not None:
+    app.add_middleware(
+        Analytics, api_key=get_settings().analytics_api_key
+    )  # Add middleware
 
 
 @app.get("/youtube/{video_id}.gif", tags=["Youtube"])
@@ -99,6 +104,15 @@ def vimeo_thumbnail(
     buffer = BytesIO()
     image.save(buffer, format=filetype.upper())
     return Response(buffer.getvalue(), media_type=f"image/{filetype}")
+
+
+@app.get("/info", tags=["Meta"])
+async def info(settings: Annotated[config.Settings, Depends(get_settings)]):
+    return {
+        "app_name": settings.app_name,
+        "app_description": settings.app_description,
+        "contact": settings.contact,
+    }
 
 
 @app.get("/", include_in_schema=False)
