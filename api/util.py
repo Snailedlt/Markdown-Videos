@@ -3,6 +3,7 @@ from PIL import Image
 import requests
 from io import BytesIO
 from enum import Enum
+import re
 
 
 class Supported_Filetype(str, Enum):
@@ -10,6 +11,19 @@ class Supported_Filetype(str, Enum):
     PNG = "png"
     WEBP = "webp"
     GIF = "gif"
+
+
+def get_youtube_video_id_by_url(url):
+    reg = r"^((https?://(?:www\.)?(?:m\.)?youtube\.com))/((?:oembed\?url=https?%3A//(?:www\.)youtube.com/watch\?(?:v%3D)(?P<video_id_1>[\w\-]{10,20})&format=json)|(?:attribution_link\?a=.*watch(?:%3Fv%3D|%3Fv%3D)(?P<video_id_2>[\w\-]{10,20}))(?:%26feature.*))|(https?:)?(\/\/)?((www\.|m\.)?youtube(-nocookie)?\.com\/((watch)?\?(app=desktop&)?(feature=\w*&)?v=|embed\/|v\/|e\/)|youtu\.be\/)(?P<video_id_3>[\w\-]{10,20})"
+    match = re.match(reg, url, re.IGNORECASE)
+    if match:
+        return (
+            match.group("video_id_1")
+            or match.group("video_id_2")
+            or match.group("video_id_3")
+        )
+    else:
+        return None
 
 
 def read_img_from_url(url: str, alt_url: typing.Optional[str] = None) -> Image.Image:

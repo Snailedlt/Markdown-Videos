@@ -6,7 +6,7 @@ class Settings(BaseSettings):
     app_description: str = (
         "An open source API that adds a play button and a backdrop to a video"
         " thumbnail, provided the video ID.<br/>"
-        "[MardownVideos](https://github.com/Snailedlt/Youtube-Thumbnail-Embedder)"
+        "[Markdown-Videos](https://github.com/Snailedlt/Youtube-Thumbnail-Embedder)"
         " lets you embed videos into GitHub markdown with ease!"
     )
     contact: object = {
