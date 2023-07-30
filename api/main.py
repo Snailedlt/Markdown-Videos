@@ -115,6 +115,29 @@ async def info(settings: Annotated[config.Settings, Depends(get_settings)]):
     }
 
 
+@app.get("/url", tags=["URL"], description="Get a thumbnail from a URL (YouTube only)")
+def url_to_thumbnail(
+    url: str,
+    width: int = 320,
+    height: int = 180,
+    filetype: util.Supported_Filetype = "jpeg",
+) -> Response:
+    if util.get_video_id_by_url(url, util.URL_Regex.YOUTUBE) is not None:
+        video_id = util.get_video_id_by_url(url, util.URL_Regex.YOUTUBE)
+        return youtube_thumbnail(video_id, width, height, filetype)
+    elif util.get_video_id_by_url(url, util.URL_Regex.VIMEO) is not None:
+        video_id = util.get_video_id_by_url(url, util.URL_Regex.VIMEO)
+        return vimeo_thumbnail(video_id, width, height, filetype)
+    else:
+        return Response(
+            status_code=400,
+            content=(
+                "The URL provided is not supported or is invalid, make sure you're"
+                " using a valid youtube or vimeo URL."
+            ),
+        )
+
+
 @app.get("/", include_in_schema=False)
 def root() -> RedirectResponse:
     return RedirectResponse(url="/docs")
