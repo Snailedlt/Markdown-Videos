@@ -5,3 +5,6 @@ uvicorn[standard]
 pytest==7.4.0
 httpx==0.24.1
 ruff==0.0.277
+fastapi-analytics==1.1.4
+python-dotenv
+pydantic-settings
