@@ -7,6 +7,7 @@ import pytest
 from api.util import Supported_Filetype
 
 from .main import app
+from . import config
 
 client = TestClient(app)
 
@@ -25,6 +26,17 @@ alt_gif_frame_duration = 1000
 def test_main_response():
     response = client.get("/")
     assert response.status_code == 200
+
+
+def test_info():
+    response = client.get("/info")
+    assert response.status_code == 200
+    assert response.headers["content-type"] == "application/json"
+    assert response.json() == {
+        "app_name": config.Settings().app_name,
+        "app_description": config.Settings().app_description,
+        "contact": config.Settings().contact,
+    }
 
 
 def test_youtube_thumbnail_default_params():
