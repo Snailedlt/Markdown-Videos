@@ -29,15 +29,6 @@ app.add_middleware(
 )  # Add middleware
 
 
-@app.get("/info")
-async def info(settings: Annotated[config.Settings, Depends(get_settings)]):
-    return {
-        "app_name": settings.app_name,
-        "app_description": settings.app_description,
-        "contact": settings.contact,
-    }
-
-
 @app.get("/youtube/{video_id}.gif", tags=["Youtube"])
 def youtube_gif_thumbnail(
     video_id: str,
@@ -112,6 +103,15 @@ def vimeo_thumbnail(
     buffer = BytesIO()
     image.save(buffer, format=filetype.upper())
     return Response(buffer.getvalue(), media_type=f"image/{filetype}")
+
+
+@app.get("/info", tags=["Meta"])
+async def info(settings: Annotated[config.Settings, Depends(get_settings)]):
+    return {
+        "app_name": settings.app_name,
+        "app_description": settings.app_description,
+        "contact": settings.contact,
+    }
 
 
 @app.get("/", include_in_schema=False)
