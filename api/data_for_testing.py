@@ -297,3 +297,27 @@ active_youtube_array_url_formats = [
     ("https://youtube.com/e/dQw4w9WgXcQ", "dQw4w9WgXcQ"),
     ("https://m.youtube.com/e/dQw4w9WgXcQ", "dQw4w9WgXcQ"),
 ]
+
+active_vimeo_array_url_formats = [
+    ("https://vimeo.com/375468729", "375468729"),
+    ("http://vimeo.com/375468729", "375468729"),
+    ("https://www.vimeo.com/375468729", "375468729"),
+    ("http://www.vimeo.com/375468729", "375468729"),
+    ("https://vimeo.com/groups/motion/videos/849951172", "849951172"),
+    ("http://vimeo.com/groups/motion/videos/849951172", "849951172"),
+    ("https://vimeo.com/375468729?param=test", "375468729"),
+    ("http://vimeo.com/375468729?param=test", "375468729"),
+    ("https://vimeo.com/showcase/7322948/video/436158188", "436158188"),
+    ("http://vimeo.com/showcase/7322948/video/436158188", "436158188"),
+    ("http://vimeo.com/6701902", "6701902"),
+    ("http://vimeo.com/670190233", "670190233"),
+    ("http://player.vimeo.com/video/67019023", "67019023"),
+    ("http://player.vimeo.com/video/6701902", "6701902"),
+    ("http://player.vimeo.com/video/67019022?title=0&byline=0&portrait=0", "67019022"),
+    ("http://player.vimeo.com/video/6719022?title=0&byline=0&portrait=0", "6719022"),
+    ("http://vimeo.com/channels/vimeogirls/6701902", "6701902"),
+    ("http://vimeo.com/channels/vimeogirls/67019023", "67019023"),
+    ("http://vimeo.com/channels/staffpicks/67019026", "67019026"),
+    ("http://vimeo.com/15414122", "15414122"),
+    ("http://vimeo.com/channels/vimeogirls/66882931", "66882931"),
+]
