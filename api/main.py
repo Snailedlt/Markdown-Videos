@@ -115,9 +115,13 @@ async def info(settings: Annotated[config.Settings, Depends(get_settings)]):
     }
 
 
-@app.get("/url", tags=["URL"], description="Get a thumbnail from a URL (YouTube only)")
+@app.get(
+    "/url",
+    tags=["URL"],
+    description="Get a thumbnail from a URL (YouTube and Vimeo only)",
+)
 def url_to_thumbnail(
-    url: str,
+    url: str = "https://youtu.be/dQw4w9WgXcQ",
     width: int = 320,
     height: int = 180,
     filetype: util.Supported_Filetype = "jpeg",
