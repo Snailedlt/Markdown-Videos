@@ -2,7 +2,7 @@ from . import util, config
 
 from functools import lru_cache
 from io import BytesIO
-from fastapi import Depends, FastAPI, Query, Response
+from fastapi import Depends, FastAPI, HTTPException, Query, Response
 from typing_extensions import Annotated
 from api_analytics.fastapi import Analytics
 from starlette.responses import RedirectResponse
@@ -113,6 +113,49 @@ async def info(settings: Annotated[config.Settings, Depends(get_settings)]):
         "app_description": settings.app_description,
         "contact": settings.contact,
     }
+
+
+@app.get(
+    "/url",
+    tags=["URL"],
+    description="Get a thumbnail from a URL (YouTube and Vimeo only)",
+)
+def url_to_thumbnail(
+    url: str = "https://youtu.be/dQw4w9WgXcQ",
+    width: int = 320,
+    height: int = 180,
+    filetype: util.Supported_Filetype = "jpeg",
+) -> Response:
+    try:
+        if util.get_video_id_by_url(url, util.URL_Regex.YOUTUBE) is not None:
+            video_id = util.get_video_id_by_url(url, util.URL_Regex.YOUTUBE)
+            return youtube_thumbnail(video_id, width, height, filetype)
+        elif util.get_video_id_by_url(url, util.URL_Regex.VIMEO) is not None:
+            video_id = util.get_video_id_by_url(url, util.URL_Regex.VIMEO)
+            return vimeo_thumbnail(video_id, width, height, filetype)
+        else:
+            return HTTPException(
+                status_code=400,
+                detail=(
+                    f"{url} is an unsupported or invalid url, make sure you're using a"
+                    " valid Youtube or Vimeo URL."
+                ),
+            )
+    except Exception:
+        return HTTPException(
+            status_code=406,
+            detail={
+                "attempted url": url,
+                "found video_id": video_id,
+                "message": (
+                    f"{url} is not supported, is invalid or was parsed incorrectly,"
+                    " make sure you're using a valid Youtube or Vimeo URL. Here's the"
+                    f" video_id that was parsed from the url: {video_id} <br> If you"
+                    " think this is a mistake, please open an issue here:"
+                    " https://github.com/Snailedlt/Markdown-Videos/issues"
+                ),
+            },
+        )
 
 
 @app.get("/", include_in_schema=False)

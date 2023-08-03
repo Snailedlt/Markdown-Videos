@@ -5,9 +5,11 @@ class Settings(BaseSettings):
     app_name: str = "Markdown-Videos"
     app_description: str = (
         "An open source API that adds a play button and a backdrop to a video"
-        " thumbnail, provided the video ID.<br/>"
-        "[MardownVideos](https://github.com/Snailedlt/Youtube-Thumbnail-Embedder)"
-        " lets you embed videos into GitHub markdown with ease!"
+        " thumbnail, provided the video"
+        " ID.<br/>[Markdown-Videos](https://github.com/Snailedlt/Youtube-Thumbnail-Embedder)"
+        " lets you embed videos into GitHub markdown with ease! <br/> <br/>"
+        " Documentation alternatives: [Redoc](/redoc) | [Swagger](/docs) | [GitHub"
+        " README](https://github.com/Snailedlt/Youtube-Thumbnail-Embedder#readme) "
     )
     contact: object = {
         "name": "Jørgen Kalsnes Hagen",

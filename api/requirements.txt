@@ -1,4 +1,4 @@
-fastapi
+fastapi==0.100.1
 Pillow==10.0.0
 requests==2.31.0
 uvicorn[standard]
@@ -6,5 +6,5 @@ pytest==7.4.0
 httpx==0.24.1
 ruff==0.0.282
 fastapi-analytics==1.1.4
-python-dotenv
-pydantic-settings
+python-dotenv==1.0.0
+pydantic-settings==2.0.2
