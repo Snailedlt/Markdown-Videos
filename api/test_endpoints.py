@@ -1,4 +1,3 @@
-from time import sleep
 from fastapi.testclient import TestClient
 from PIL import Image, ImageSequence
 import io
