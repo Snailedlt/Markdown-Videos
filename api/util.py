@@ -14,7 +14,7 @@ class Supported_Filetype(str, Enum):
 
 
 class URL_Regex(str, Enum):
-    YOUTUBE = r"^((https?://(?:www\.)?(?:m\.)?youtube\.com))/((?:oembed\?url=https?%3A//(?:www\.)youtube.com/watch\?(?:v%3D)(?P<video_id_1>[\w\-]{10,20})&format=json)|(?:attribution_link\?a=.*watch(?:%3Fv%3D|%3Fv%3D)(?P<video_id_2>[\w\-]{10,20}))(?:%26feature.*))|(https?:)?(\/\/)?((www\.|m\.)?youtube(-nocookie)?\.com\/((watch)?\?(app=desktop&)?(feature=\w*&)?v=|embed\/|v\/|e\/)|youtu\.be\/)(?P<video_id_3>[\w\-]{10,20})"
+    YOUTUBE = r"^(?:(?:https?://(?:www\.)?(?:m\.)?youtube\.com))/(?:(?:oembed\?url=https?%3A//(?:www\.)youtube.com/watch\?(?:v%3D)(?P<video_id_1>[A-Za-z0-9_\-]{11}))|(?:attribution_link\?a=.*watch(?:%3Fv%3D|%3Fv%3D)(?P<video_id_2>[A-Za-z0-9_\-]{11}))).*|(?:https?:)?(?:\/\/)?(?:(?:www\.|m\.)?youtube(?:-nocookie)?\.com\/(?:(?:watch)?\?(?:app=desktop&)?(?:feature=\w*&)?v=|embed\/|v\/|e\/)|youtu\.be\/)(?P<video_id_3>[A-Za-z0-9_\-]{11}).*$"
     """Matches all valid youtube url formats in this list: https://gist.github.com/Snailedlt/d54514e37dda68fefe15e6e056b30747"""
     VIMEO = r"(https?://)?(www.)?(player.)?vimeo.com/([a-z]*/)*(.*/)?(?P<video_id>[0-9]{6,11})[?]?.*"
 
@@ -26,7 +26,9 @@ def get_video_id_by_url(url, regex) -> typing.Optional[str]:
             if group_name.startswith("video_id"):
                 if group_value:
                     return group_value
-    return None
+    else:
+        return None
+    raise Exception("Something went wrong while trying to get the video id.")
 
 
 def read_img_from_url(url: str, alt_url: typing.Optional[str] = None) -> Image.Image:

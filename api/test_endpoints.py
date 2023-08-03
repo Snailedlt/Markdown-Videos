@@ -1,13 +1,13 @@
+from time import sleep
 from fastapi.testclient import TestClient
 from PIL import Image, ImageSequence
 import io
-
 import pytest
-
-from api.util import Supported_Filetype
+import requests
+import urllib
 
 from .main import app
-from . import config
+from . import config, util, data_for_testing
 
 client = TestClient(app)
 
@@ -54,7 +54,7 @@ def test_youtube_thumbnail_default_params():
 
 def test_youtube_thumbnail_all_params():
     for video_id in youtube_example_video_ids:
-        for filetype in Supported_Filetype:
+        for filetype in util.Supported_Filetype:
             response = client.get(
                 f"/youtube/{video_id}?width={alt_img_width}&height={alt_img_height}&filetype={filetype}"
             )
@@ -119,7 +119,7 @@ def test_vimeo_thumbnail_default_params():
 
 
 def test_vimeo_thumbnail_all_params():
-    for filetype in Supported_Filetype:
+    for filetype in util.Supported_Filetype:
         response = client.get(
             f"/vimeo/{vimeo_example_video_id}?width={alt_img_width}&height={alt_img_height}&filetype={filetype}"
         )
@@ -131,3 +131,26 @@ def test_vimeo_thumbnail_all_params():
 
         # Check the size of the image
         assert image.size == (alt_img_width, alt_img_height)
+
+
+@pytest.mark.parametrize(
+    "url, expected_video_id",
+    data_for_testing.active_vimeo_array_url_formats
+    + data_for_testing.active_youtube_array_url_formats,
+)
+def test_url_endpoint(url, expected_video_id):
+    # Test if the urls are valid
+    url_input_response = requests.get(url)
+    assert url_input_response.status_code == 200
+
+    # Did we recieve an image?
+    parsed_url = urllib.parse.quote(url)
+    response = client.get(f"/url?url={parsed_url}")
+    assert response.status_code == 200
+    assert response.headers["content-type"] == "image/jpeg"
+
+    # Read the image from the response content
+    image = Image.open(io.BytesIO(response.content))
+
+    # Check the size of the image
+    assert image.size == (default_img_width, default_img_height)
