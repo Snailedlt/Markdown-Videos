@@ -1,19 +1,41 @@
 <script lang="ts">
-  let urlValue: string = '';
+  import { createEventDispatcher } from 'svelte';
+
+  const dispatch = createEventDispatcher();
+
+  $: urlValue = '';
+  $: titleValue = '';
+
   let urlPlaceholder: string = 'https://youtu.be/dQw4w9WgXcQ';
-  let titleValue: string = '';
   let titlePlaceholder: string = 'Definitely not a rickroll';
+
+  let result: { url: string; alt: string };
+  $: result = {
+    url: urlValue,
+    alt: titleValue,
+  };
+
+  function Submit() {
+    dispatch('submit', result);
+  }
 </script>
 
-<div class="input-container">
+<div class="form input-container">
   <div>
     <label for="url">URL</label>
-    <input name="url" value={urlValue} placeholder={urlPlaceholder} />
+    <input name="url" bind:value={urlValue} placeholder={urlPlaceholder} />
   </div>
   <div>
     <label for="title">Title</label>
-    <input name="title" value={titleValue} placeholder={titlePlaceholder} />
+    <input
+      name="title"
+      bind:value={titleValue}
+      placeholder={titlePlaceholder}
+    />
   </div>
+  <button on:click={Submit} disabled={urlValue == '' || titleValue == ''}
+    >Submit</button
+  >
 </div>
 
 <style lang="scss">
