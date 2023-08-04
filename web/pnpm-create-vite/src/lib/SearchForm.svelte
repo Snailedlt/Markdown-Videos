@@ -1,10 +1,14 @@
 <script lang="ts">
   import { createEventDispatcher } from 'svelte';
+  import { isValidUrl } from '../utils/urlValidator';
 
   const dispatch = createEventDispatcher();
 
   $: urlValue = '';
   $: titleValue = '';
+  $: isUrlValid = isValidUrl(urlValue);
+
+  $: isUrlValidAndNotEmpty = urlValue != '' && !isUrlValid;
 
   let urlPlaceholder: string = 'https://youtu.be/dQw4w9WgXcQ';
   let titlePlaceholder: string = 'Definitely not a rickroll';
@@ -16,14 +20,21 @@
   };
 
   function Submit() {
-    dispatch('submit', result);
+    if (isUrlValid) {
+      dispatch('submit', result);
+    }
   }
 </script>
 
 <div class="form input-container">
   <div>
     <label for="url">URL</label>
-    <input name="url" bind:value={urlValue} placeholder={urlPlaceholder} />
+    <input
+      name="url"
+      bind:value={urlValue}
+      placeholder={urlPlaceholder}
+      class:invalid={isUrlValidAndNotEmpty}
+    />
   </div>
   <div>
     <label for="title">Title</label>
@@ -36,6 +47,10 @@
   <button on:click={Submit} disabled={urlValue == '' || titleValue == ''}
     >Submit</button
   >
+
+  {#if isUrlValidAndNotEmpty}
+    <p style="color:red;">Invalid URL</p>
+  {/if}
 </div>
 
 <style lang="scss">
