@@ -6,9 +6,9 @@
 
   $: urlValue = '';
   $: titleValue = '';
-  $: isUrlValid = isValidUrl(urlValue);
-
-  $: isUrlValidAndNotEmpty = urlValue != '' && !isUrlValid;
+  $: isUrl = isValidUrl(urlValue);
+  $: isNotUrlAndNotEmpty = urlValue != '' && !isUrl;
+  $: errorMessage = '';
 
   let urlPlaceholder: string = 'https://youtu.be/dQw4w9WgXcQ';
   let titlePlaceholder: string = 'Definitely not a rickroll';
@@ -20,8 +20,29 @@
   };
 
   function Submit() {
-    if (isUrlValid) {
-      dispatch('submit', result);
+    errorMessage = '';
+    if (!isNotUrlAndNotEmpty) {
+      fetch(`http://127.0.0.1:8000/url?url=${encodeURIComponent(urlValue)}`)
+        .then((res) => {
+          if (!res.ok) {
+            res
+              .json()
+              .then(
+                (errorObj) =>
+                  (errorMessage =
+                    typeof errorObj.value === 'string'
+                      ? errorObj.value
+                      : errorObj.detail.message)
+              );
+          } else {
+            dispatch('submit', result);
+          }
+        })
+        .catch((err) => {
+          errorMessage = err.message;
+        });
+    } else {
+      errorMessage = 'Invalid or empty URL. Please enter a valid URL';
     }
   }
 </script>
@@ -33,7 +54,7 @@
       name="url"
       bind:value={urlValue}
       placeholder={urlPlaceholder}
-      class:invalid={isUrlValidAndNotEmpty}
+      class:invalid={isNotUrlAndNotEmpty}
     />
   </div>
   <div>
@@ -44,12 +65,12 @@
       placeholder={titlePlaceholder}
     />
   </div>
-  <button on:click={Submit} disabled={urlValue == '' || titleValue == ''}
+  <button on:click={Submit} disabled={isNotUrlAndNotEmpty || !titleValue}
     >Submit</button
   >
 
-  {#if isUrlValidAndNotEmpty}
-    <p style="color:red;">Invalid URL</p>
+  {#if errorMessage}
+    <p style="color:red;">{errorMessage}</p>
   {/if}
 </div>
 
