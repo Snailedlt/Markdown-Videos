@@ -3,6 +3,8 @@
   import MainContent from './lib/MainContent.svelte';
 </script>
 
+<!-- TODO: Add links to GitHub and Docs in the header or footer-->
+
 <main>
   <LogoContainer />
   <h1>
