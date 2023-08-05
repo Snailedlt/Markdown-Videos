@@ -29,18 +29,18 @@ Markdown Videos lets you embed Youtube videos into GitHub markdown with ease!
 #### template
 
 ```markdown
-[![](https://markdown-videos.vercel.app/youtube/{video_id})](https://youtu.be/{video_id})
+[![Alt text](https://markdown-videos.vercel.app/youtube/{video_id})](https://youtu.be/{video_id})
 ```
 #### example
 
 ```markdown
-[![](https://markdown-videos.vercel.app/youtube/8lGpZkjnkt4)](https://youtu.be/8lGpZkjnkt4)
+[![Pull Requests in 100 seconds](https://markdown-videos.vercel.app/youtube/8lGpZkjnkt4)](https://youtu.be/8lGpZkjnkt4)
 ```
 
 <details>
   <summary>Preview</summary>
 
-  [![](https://markdown-videos.vercel.app/youtube/8lGpZkjnkt4)](https://youtu.be/8lGpZkjnkt4)
+  [![Pull Requests in 100 seconds](https://markdown-videos.vercel.app/youtube/8lGpZkjnkt4)](https://youtu.be/8lGpZkjnkt4)
 </details>
 
 ### How to use in HTML
@@ -48,19 +48,25 @@ Markdown Videos lets you embed Youtube videos into GitHub markdown with ease!
 #### template
 
 ```html
-<a href=https://youtu.be/{video_id}><img src=https://markdown-videos.vercel.app/youtube/{video_id}></a></img>
+<a href=https://youtu.be/{video_id}>
+  <img src=https://markdown-videos.vercel.app/youtube/{video_id} />
+</a>
 ```
 
 #### example
 
 ```html
-<a href=https://youtu.be/8lGpZkjnkt4><img src=https://markdown-videos.vercel.app/youtube/8lGpZkjnkt4></a></img>
+<a href=https://youtu.be/8lGpZkjnkt4>
+  <img src=https://markdown-videos.vercel.app/youtube/8lGpZkjnkt4 />
+</a>
 ```
 
 <details>
   <summary>Preview</summary>
 
-  <a href=https://youtu.be/8lGpZkjnkt4><img src=https://markdown-videos.vercel.app/youtube/8lGpZkjnkt4></a></img>
+<a href=https://youtu.be/8lGpZkjnkt4>
+  <img src=https://markdown-videos.vercel.app/youtube/8lGpZkjnkt4 />
+</a>
 </details>
 
 ---
