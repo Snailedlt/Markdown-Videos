@@ -3,6 +3,7 @@ from . import util, config
 from functools import lru_cache
 from io import BytesIO
 from fastapi import Depends, FastAPI, HTTPException, Query, Response
+from fastapi.middleware.cors import CORSMiddleware
 from typing_extensions import Annotated
 from api_analytics.fastapi import Analytics
 from starlette.responses import RedirectResponse
@@ -24,6 +25,15 @@ app = FastAPI(
         "url": "https://choosealicense.com/licenses/mit/",
     },
 )
+
+origins = ["*"]
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 if get_settings().analytics_api_key is not None:
     app.add_middleware(
         Analytics, api_key=get_settings().analytics_api_key
