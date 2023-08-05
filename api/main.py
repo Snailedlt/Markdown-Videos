@@ -3,6 +3,7 @@ from . import util, config
 from functools import lru_cache
 from io import BytesIO
 from fastapi import Depends, FastAPI, HTTPException, Query, Response
+from fastapi.middleware.cors import CORSMiddleware
 from typing_extensions import Annotated
 from api_analytics.fastapi import Analytics
 from starlette.responses import RedirectResponse
@@ -24,6 +25,15 @@ app = FastAPI(
         "url": "https://choosealicense.com/licenses/mit/",
     },
 )
+
+origins = ["*"]
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 if get_settings().analytics_api_key is not None:
     app.add_middleware(
         Analytics, api_key=get_settings().analytics_api_key
@@ -134,15 +144,18 @@ def url_to_thumbnail(
             video_id = util.get_video_id_by_url(url, util.URL_Regex.VIMEO)
             return vimeo_thumbnail(video_id, width, height, filetype)
         else:
-            return HTTPException(
+            raise HTTPException(
                 status_code=400,
                 detail=(
                     f"{url} is an unsupported or invalid url, make sure you're using a"
                     " valid Youtube or Vimeo URL."
                 ),
             )
+    except HTTPException as e:
+        if e.status_code == 400:
+            raise e
     except Exception:
-        return HTTPException(
+        raise HTTPException(
             status_code=406,
             detail={
                 "attempted url": url,
@@ -150,7 +163,7 @@ def url_to_thumbnail(
                 "message": (
                     f"{url} is not supported, is invalid or was parsed incorrectly,"
                     " make sure you're using a valid Youtube or Vimeo URL. Here's the"
-                    f" video_id that was parsed from the url: {video_id} <br> If you"
+                    f" video_id that was parsed from the url: {video_id}. If you"
                     " think this is a mistake, please open an issue here:"
                     " https://github.com/Snailedlt/Markdown-Videos/issues"
                 ),
