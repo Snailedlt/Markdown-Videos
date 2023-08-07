@@ -9,10 +9,10 @@ jobs:
     strategy:
       matrix:
         python-version: ["3.8", "3.9", "3.10"]
-
+    defaults:
+      run:
+        working-directory: ./api
     steps:
-      - name: Cd into api
-        run: cd api
       - uses: actions/checkout@v3
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v4
@@ -22,7 +22,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           python -m pip install --user pipenv
-          if [ -f api/Pipfile ]; then pipenv run start; fi
+          pipenv install
       - name: Run linting
         run: |
           # stop the build if there are Python syntax errors or undefined names
