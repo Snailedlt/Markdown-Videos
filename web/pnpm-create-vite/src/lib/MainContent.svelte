@@ -33,8 +33,8 @@
         <CodeHighlighter
           language={html}
           code="
-          <a href={href}>
-            <img src={src} {alt ? `alt="${alt}"` : ''}/>
+          <a href={`"${href}"`}>
+            <img src={`"${src}"`} {alt ? `alt="${alt}"` : ''}/>
           </a>
           "
         />
