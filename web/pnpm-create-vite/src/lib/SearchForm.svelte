@@ -1,6 +1,7 @@
 <script lang="ts">
   import { createEventDispatcher } from 'svelte';
   import { isValidUrl } from '../utils/urlValidator';
+  import { errorMessage } from '../stores/errors';
 
   const dispatch = createEventDispatcher();
 
@@ -8,7 +9,6 @@
   $: titleValue = '';
   $: isUrl = isValidUrl(urlValue);
   $: isNotUrlAndNotEmpty = urlValue != '' && !isUrl;
-  $: errorMessage = '';
 
   let urlPlaceholder: string = 'https://youtu.be/dQw4w9WgXcQ';
   let titlePlaceholder: string = 'Definitely not a rickroll';
@@ -19,8 +19,12 @@
     alt: titleValue,
   };
 
+  function setErrorMessage(errorString: string) {
+    errorMessage.set(errorString);
+  }
+
   function Submit() {
-    errorMessage = '';
+    setErrorMessage('');
     if (!isNotUrlAndNotEmpty) {
       fetch(
         `${import.meta.env.VITE_API_BASE_URL}/url?url=${encodeURIComponent(
@@ -31,22 +35,22 @@
           if (!res.ok) {
             res
               .json()
-              .then(
-                (errorObj) =>
-                  (errorMessage =
-                    typeof errorObj.detail == 'string'
-                      ? errorObj.detail
-                      : errorObj.detail.message)
+              .then((errorObj) =>
+                setErrorMessage(
+                  typeof errorObj.detail == 'string'
+                    ? errorObj.detail
+                    : errorObj.detail.message
+                )
               );
           } else {
             dispatch('submit', result);
           }
         })
         .catch((err) => {
-          errorMessage = err.message;
+          setErrorMessage(err.message);
         });
     } else {
-      errorMessage = 'Invalid or empty URL. Please enter a valid URL';
+      setErrorMessage('Invalid or empty URL. Please enter a valid URL');
     }
   }
 </script>
@@ -56,24 +60,24 @@
     <label for="url">URL*</label>
     <input
       name="url"
+      type="url"
+      required
       bind:value={urlValue}
       placeholder={urlPlaceholder}
-      class:invalid={isNotUrlAndNotEmpty}
     />
   </div>
   <div>
     <label for="title">Title*</label>
     <input
       name="title"
+      type="text"
+      required
       bind:value={titleValue}
       placeholder={titlePlaceholder}
     />
   </div>
   <button type="submit">Submit</button>
 </form>
-{#if errorMessage}
-  <p style="color:red;">{errorMessage}</p>
-{/if}
 
 <style lang="scss">
   .input-container {

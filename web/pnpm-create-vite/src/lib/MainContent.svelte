@@ -3,6 +3,7 @@
   import ImagePreview from './ImagePreview.svelte';
   import SearchForm from './SearchForm.svelte';
   import html from 'svelte-highlight/languages/vbscript-html';
+  import { errorMessage } from '../stores/errors';
 
   $: src = '';
   $: alt = '';
@@ -19,7 +20,7 @@
 
 <div class="card">
   <SearchForm on:submit={handleSubmit} />
-  {#if src}
+  {#if src && !$errorMessage}
     <ImagePreview {src} {alt} {href} />
     <!-- TODO: Add tabs to code-preview and extract to separate component -->
     <div class="code-preview">
@@ -39,6 +40,8 @@
         />
       </div>
     </div>
+  {:else if $errorMessage}
+    <p style="color:red;">{$errorMessage}</p>
   {/if}
 </div>
 
