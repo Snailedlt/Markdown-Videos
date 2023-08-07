@@ -1,0 +1,29 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+PIPENV_VENV_IN_PROJECT = 1
+
+[scripts]
+dev = "uvicorn src.main:app --reload"
+start = "uvicorn src.main:app"
+test = "pytest"
+lint = "ruff"
+
+[packages]
+fastapi = "==0.101.0"
+pillow = "==10.0.0"
+requests = "==2.31.0"
+uvicorn = {extras = ["standard"], version = "*"}
+pytest = "==7.4.0"
+httpx = "==0.24.1"
+ruff = "==0.0.282"
+fastapi-analytics = "==1.1.4"
+python-dotenv = "==1.0.0"
+pydantic-settings = "==2.0.2"
+
+[dev-packages]
+
+[requires]
+python_version = "3.10"
+
