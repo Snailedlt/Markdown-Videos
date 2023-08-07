@@ -1,4 +1,4 @@
-fastapi==0.100.1
+fastapi==0.101.0
 Pillow==10.0.0
 requests==2.31.0
 uvicorn[standard]
