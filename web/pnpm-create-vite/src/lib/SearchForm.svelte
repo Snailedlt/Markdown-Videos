@@ -34,8 +34,8 @@
               .then(
                 (errorObj) =>
                   (errorMessage =
-                    typeof errorObj.value === 'string'
-                      ? errorObj.value
+                    typeof errorObj.detail == 'string'
+                      ? errorObj.detail
                       : errorObj.detail.message)
               );
           } else {
@@ -51,9 +51,9 @@
   }
 </script>
 
-<div class="form input-container">
+<form on:submit|preventDefault={Submit} class="form input-container">
   <div>
-    <label for="url">URL</label>
+    <label for="url">URL*</label>
     <input
       name="url"
       bind:value={urlValue}
@@ -62,21 +62,18 @@
     />
   </div>
   <div>
-    <label for="title">Title</label>
+    <label for="title">Title*</label>
     <input
       name="title"
       bind:value={titleValue}
       placeholder={titlePlaceholder}
     />
   </div>
-  <button on:click={Submit} disabled={isNotUrlAndNotEmpty || !titleValue}
-    >Submit</button
-  >
-
-  {#if errorMessage}
-    <p style="color:red;">{errorMessage}</p>
-  {/if}
-</div>
+  <button type="submit">Submit</button>
+</form>
+{#if errorMessage}
+  <p style="color:red;">{errorMessage}</p>
+{/if}
 
 <style lang="scss">
   .input-container {
