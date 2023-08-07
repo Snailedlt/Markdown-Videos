@@ -22,7 +22,11 @@
   function Submit() {
     errorMessage = '';
     if (!isNotUrlAndNotEmpty) {
-      fetch(`http://127.0.0.1:8000/url?url=${encodeURIComponent(urlValue)}`)
+      fetch(
+        `${import.meta.env.VITE_API_BASE_URL}/url?url=${encodeURIComponent(
+          urlValue
+        )}`
+      )
         .then((res) => {
           if (!res.ok) {
             res

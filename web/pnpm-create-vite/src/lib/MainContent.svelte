@@ -10,7 +10,7 @@
 
   function handleSubmit(event) {
     src =
-      'https://markdown-videos.vercel.app/url?url=' +
+      `${import.meta.env.VITE_API_BASE_URL}/url?url=` +
       encodeURIComponent(event.detail.url);
     alt = event.detail.alt;
     href = event.detail.url;
@@ -32,11 +32,10 @@
         HTML
         <CodeHighlighter
           language={html}
-          code="
-          <a href={`"${href}"`}>
-            <img src={`"${src}"`} {alt ? `alt="${alt}"` : ''}/>
-          </a>
-          "
+          code="<a href={`"${href}"`}>
+  <img src={`"${src}"`} {alt ? `alt="${alt}"` : ''}/>
+</a>
+"
         />
       </div>
     </div>
