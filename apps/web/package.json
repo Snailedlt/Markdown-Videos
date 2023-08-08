@@ -1,0 +1,29 @@
+{
+  "name": "web",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "pnpm with-env vite",
+    "build": "pnpm with-env vite build",
+    "preview": "vite preview",
+    "check": "svelte-check --tsconfig ./tsconfig.json",
+    "with-env": "dotenv -e ../../.env"
+  },
+  "devDependencies": {
+    "@sveltejs/vite-plugin-svelte": "^2.4.2",
+    "@tsconfig/svelte": "^5.0.0",
+    "highlight.js": "^11.8.0",
+    "sass": "^1.64.2",
+    "svelte": "^4.0.5",
+    "svelte-check": "^3.4.6",
+    "svelte-highlight": "^7.3.0",
+    "tslib": "^2.6.0",
+    "typescript": "^5.0.2",
+    "vite": "^4.4.5"
+  },
+  "dependencies": {
+    "install": "^0.13.0",
+    "lucide-svelte": "^0.263.0"
+  }
+}

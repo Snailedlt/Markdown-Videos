@@ -16,7 +16,8 @@ class Settings(BaseSettings):
         "url": "https://jorgenkh.no",
         "email": "jorgenkalsnes.hagen@gmail.com",
     }
-    analytics_api_key: str = ""  # This gets filled out by the .env file
+    # The following get filled out by the .env file
+    analytics_api_key: str = ""
     model_config = SettingsConfigDict(env_file=".env")
 
 

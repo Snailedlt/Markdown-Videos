@@ -1,4 +1,4 @@
-from . import util, config
+from src import util, config
 
 from functools import lru_cache
 from io import BytesIO
@@ -26,18 +26,15 @@ app = FastAPI(
     },
 )
 
-origins = ["*"]
+# Add middleware
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
 if get_settings().analytics_api_key is not None:
-    app.add_middleware(
-        Analytics, api_key=get_settings().analytics_api_key
-    )  # Add middleware
+    app.add_middleware(Analytics, api_key=get_settings().analytics_api_key)
 
 
 @app.get("/youtube/{video_id}.gif", tags=["Youtube"])
@@ -55,14 +52,14 @@ def youtube_gif_thumbnail(
             url=f"{base_url}/maxresdefault.jpg",
             alt_url=f"{base_url}/0.jpg",
         ).resize((width, height)),
-        "api/img/youtube_play_button.png",
+        "src/img/youtube_play_button.png",
     )
     following = (
         util.add_play_button_to_thumbnail(
             util.read_img_from_url(
                 f"https://i.ytimg.com/vi/{video_id}/{i+1}.jpg"
             ).resize((width, height)),
-            "api/img/youtube_play_button.png",
+            "src/img/youtube_play_button.png",
         )
         for i in range(3)
     )
@@ -91,7 +88,7 @@ def youtube_thumbnail(
             url=f"{base_url}/maxresdefault.jpg",
             alt_url=f"{base_url}/0.jpg",
         ).resize((width, height)),
-        "api/img/youtube_play_button.png",
+        "src/img/youtube_play_button.png",
     )
     buffer = BytesIO()
     image.save(buffer, format=filetype.upper())
@@ -109,7 +106,7 @@ def vimeo_thumbnail(
         util.read_img_from_url(f"https://vumbnail.com/{video_id}.jpg").resize(
             (width, height)
         ),
-        "api/img/vimeo_play_button.png",
+        "src/img/vimeo_play_button.png",
     )
     buffer = BytesIO()
     image.save(buffer, format=filetype.upper())
@@ -122,6 +119,7 @@ async def info(settings: Annotated[config.Settings, Depends(get_settings)]):
         "app_name": settings.app_name,
         "app_description": settings.app_description,
         "contact": settings.contact,
+        "analytics_api_key": settings.analytics_api_key,
     }
 
 
