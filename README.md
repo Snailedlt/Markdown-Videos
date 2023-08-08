@@ -100,37 +100,39 @@ Made using
 Hosted on
 [![Vercel](https://img.shields.io/badge/vercel-%23000000.svg?style=for-the-badge&logo=vercel&logoColor=white)](https://vercel.com/)
 
-### Local development
+### Building
 
-Install [pipenv](https://pipenv.pypa.io/en/latest/) if you haven't already
-
-```sh
-pip install --user pipenv
-```
-
-Install dependencies
+#### Install Dependencies
 
 ```sh
-pipenv install
+pip install -r api/requirements.txt
 ```
 
 #### Run Locally
 
 ```sh
-pipenv dev # in development
+uvicorn api.main:app --reload
+```
 
-# run the following in production environment
-# pipenv start
+or if that doesn't work:
+
+```sh
+python -m uvicorn api.main:app --reload
 ```
 
 ref: <https://fastapi.tiangolo.com/#run-it>
 
 #### Running tests
-
 For detailed instructions see the Fast API tutorial for [Testing](https://fastapi.tiangolo.com/tutorial/testing/)
 
+Install pytest and httpx
 ```sh
-pipenv test
+pip install httpx
+pip install pytest
+```
+Run the tests
+```sh
+pytest
 ```
 
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/H2H0GY0OU)
