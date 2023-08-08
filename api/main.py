@@ -1,4 +1,4 @@
-from .src import util, config
+from src import util, config
 
 from functools import lru_cache
 from io import BytesIO
