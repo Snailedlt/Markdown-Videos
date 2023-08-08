@@ -71,7 +71,9 @@ pnpm test
 In case you want more documentation on either the website or the api.
 
 The API is built with Python, FastAPI, Pillow and Pipenv
+
 - [API README](https://github.com/Snailedlt/Markdown-Videos/blob/main/apps/api/README.md)
 
 The website is built with Svelte, Vite, Typescript, SCSS and pnpm
+
 - [Website README](https://github.com/Snailedlt/Markdown-Videos/blob/main/apps/web/README.md)
