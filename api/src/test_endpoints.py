@@ -5,8 +5,8 @@ import pytest
 import requests
 import urllib
 
-from .main import app
 from . import config, util, data_for_testing
+from api.main import app
 
 client = TestClient(app)
 

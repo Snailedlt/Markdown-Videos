@@ -3,7 +3,7 @@ import pytest
 import requests
 
 from . import data_for_testing, util
-from .main import app
+from api.main import app
 
 client = TestClient(app)
 

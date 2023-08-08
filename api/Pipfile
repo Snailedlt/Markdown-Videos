@@ -5,8 +5,8 @@ name = "pypi"
 PIPENV_VENV_IN_PROJECT = 1
 
 [scripts]
-dev = "uvicorn src.main:app --reload"
-start = "uvicorn src.main:app"
+dev = "uvicorn main:app --reload"
+start = "uvicorn main:app"
 test = "pytest"
 lint = "ruff"
 
