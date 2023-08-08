@@ -1,0 +1,13 @@
+{
+    "name": "api",
+    "private": true,
+    "version": "0.0.0",
+    "type": "module",
+    "scripts": {
+        "pipenv:install": "pipenv install --dev",
+        "dev": "pipenv run dev",
+        "start": "pipenv run start",
+        "check": "pipenv run lint",
+        "test": "pipenv run test"
+    }
+}

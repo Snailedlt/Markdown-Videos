@@ -1,0 +1,17 @@
+{
+    "name": "markdown-videos",
+    "private": true,
+    "packageManager": "pnpm@8.6.6",
+    "scripts": {
+        "build": "turbo run build",
+        "api:install": "turbo run pipenv:install",
+        "dev": "turbo dev --parallel",
+        "start": "turbo start --parallel",
+        "lint": "turbo run check",
+        "clean:workspaces": "turbo clean",
+        "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md,mdx,css,yml,html}\""
+    },
+    "devDependencies": {
+        "turbo": "^1.9.8"
+    }
+}
