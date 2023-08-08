@@ -5,9 +5,10 @@
     "type": "module",
     "scripts": {
         "pipenv:install": "pipenv install --dev",
-        "dev": "pipenv run dev",
-        "start": "pipenv run start",
+        "dev": "pnpm with-env pipenv run dev",
+        "start": "pnpm with-env pipenv run start",
         "check": "pipenv run lint",
-        "test": "pipenv run test"
+        "test": "pipenv run test",
+        "with-env": "dotenv -e ../../.env"
     }
 }

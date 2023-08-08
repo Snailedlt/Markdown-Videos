@@ -1,37 +1,13 @@
-# Markdown Videos
-[![wakatime](https://wakatime.com/badge/github/Snailedlt/Markdown-Videos.svg)](https://wakatime.com/badge/github/Snailedlt/Markdown-Videos)
-![Vercel](https://therealsujitk-vercel-badge.vercel.app/?app=markdown-videos)
-![License](https://img.shields.io/badge/license-MIT-blue)
-![Maintained](https://img.shields.io/badge/Maintained%3F-yes-green.svg)
+# Get Started
 
-An open source API that adds a play button to a youtube video thumbnail, provided the video ID.
-Markdown Videos lets you embed Youtube videos into GitHub markdown with ease!
-
-## Showcase
-
-||Preview|Info|
-|--|--|--|
-|Before|https://youtu.be/8lGpZkjnkt4|<ul><li>No Preview</li><li>Redirects to video</li></ul>|
-|After|[![](https://markdown-videos.vercel.app/youtube/8lGpZkjnkt4)](https://youtu.be/8lGpZkjnkt4)|<ul><li>Clearly shows it's a youtube video</li><li>Play button and backdrop added</li><li>Black bars removed</li><li>Redirects to video</li></ul>|
-|After (GIF)|[![](https://markdown-videos.vercel.app/youtube/8lGpZkjnkt4.gif)](https://youtu.be/8lGpZkjnkt4.gif)|<ul><li>Clearly shows it's a youtube video</li><li>Play button and backdrop added</li><li>:sparkles: Animated GIF :sparkles: </li><li>Redirects to video</li></ul>|
-
-
-## Supported video services
-
-- [x] Youtube
-- [x] Vimeo
-
----
-## Get Started
-
-### How to use in GitHub Markdown
+## How to use in GitHub Markdown
 
 #### template
 
 ```markdown
 [![Alt text](https://markdown-videos.vercel.app/youtube/{video_id})](https://youtu.be/{video_id})
 ```
-#### example
+### example
 
 ```markdown
 [![Pull Requests in 100 seconds](https://markdown-videos.vercel.app/youtube/8lGpZkjnkt4)](https://youtu.be/8lGpZkjnkt4)
@@ -45,7 +21,7 @@ Markdown Videos lets you embed Youtube videos into GitHub markdown with ease!
 
 ### How to use in HTML
 
-#### template
+### template
 
 ```html
 <a href=https://youtu.be/{video_id}>
@@ -53,7 +29,7 @@ Markdown Videos lets you embed Youtube videos into GitHub markdown with ease!
 </a>
 ```
 
-#### example
+### example
 
 ```html
 <a href=https://youtu.be/8lGpZkjnkt4>

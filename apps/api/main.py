@@ -26,18 +26,15 @@ app = FastAPI(
     },
 )
 
-origins = ["*"]
+# Add middleware
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
 if get_settings().analytics_api_key is not None:
-    app.add_middleware(
-        Analytics, api_key=get_settings().analytics_api_key
-    )  # Add middleware
+    app.add_middleware(Analytics, api_key=get_settings().analytics_api_key)
 
 
 @app.get("/youtube/{video_id}.gif", tags=["Youtube"])
@@ -122,6 +119,7 @@ async def info(settings: Annotated[config.Settings, Depends(get_settings)]):
         "app_name": settings.app_name,
         "app_description": settings.app_description,
         "contact": settings.contact,
+        "analytics_api_key": settings.analytics_api_key,
     }
 
 

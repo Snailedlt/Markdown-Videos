@@ -7,11 +7,13 @@
         "api:install": "turbo run pipenv:install",
         "dev": "turbo dev --parallel",
         "start": "turbo start --parallel",
+        "test": "turbo run test",
         "lint": "turbo run check",
         "clean:workspaces": "turbo clean",
         "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md,mdx,css,yml,html}\""
     },
     "devDependencies": {
-        "turbo": "^1.9.8"
+        "turbo": "^1.9.8",
+        "dotenv-cli": "latest"
     }
 }

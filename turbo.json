@@ -1,5 +1,8 @@
 {
     "$schema": "https://turbo.build/schema.json",
+    "globalDependencies": [
+        "**/.env"
+    ],
     "pipeline": {
         "build": {
             "dependsOn": [
@@ -12,7 +15,6 @@
         "pipenv:install": {
             "cache": false
         },
-        "check": {},
         "dev": {
             "cache": false,
             "persistent": true
@@ -23,6 +25,8 @@
             "dependsOn": [
                 "^build"
             ]
-        }
+        },
+        "check": {},
+        "test": {}
     }
 }

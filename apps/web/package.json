@@ -4,10 +4,11 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
+    "dev": "pnpm with-env vite",
+    "build": "pnpm with-env vite build",
     "preview": "vite preview",
-    "check": "svelte-check --tsconfig ./tsconfig.json"
+    "check": "svelte-check --tsconfig ./tsconfig.json",
+    "with-env": "dotenv -e ../../.env"
   },
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "^2.4.2",
