@@ -5,18 +5,18 @@
 #### template
 
 ```markdown
-[![Alt text](https://markdown-videos.vercel.app/youtube/{video_id})](https://youtu.be/{video_id})
+[![Alt text](http://markdown-videos-api.jorgenkh.no/youtube/{video_id})](https://youtu.be/{video_id})
 ```
 ### example
 
 ```markdown
-[![Pull Requests in 100 seconds](https://markdown-videos.vercel.app/youtube/8lGpZkjnkt4)](https://youtu.be/8lGpZkjnkt4)
+[![Pull Requests in 100 seconds](http://markdown-videos-api.jorgenkh.no/youtube/8lGpZkjnkt4)](https://youtu.be/8lGpZkjnkt4)
 ```
 
 <details>
   <summary>Preview</summary>
 
-  [![Pull Requests in 100 seconds](https://markdown-videos.vercel.app/youtube/8lGpZkjnkt4)](https://youtu.be/8lGpZkjnkt4)
+  [![Pull Requests in 100 seconds](http://markdown-videos-api.jorgenkh.no/youtube/8lGpZkjnkt4)](https://youtu.be/8lGpZkjnkt4)
 </details>
 
 ### How to use in HTML
@@ -25,7 +25,7 @@
 
 ```html
 <a href=https://youtu.be/{video_id}>
-  <img src=https://markdown-videos.vercel.app/youtube/{video_id} />
+  <img src=http://markdown-videos-api.jorgenkh.no/youtube/{video_id} />
 </a>
 ```
 
@@ -33,7 +33,7 @@
 
 ```html
 <a href=https://youtu.be/8lGpZkjnkt4>
-  <img src=https://markdown-videos.vercel.app/youtube/8lGpZkjnkt4 />
+  <img src=http://markdown-videos-api.jorgenkh.no/youtube/8lGpZkjnkt4 />
 </a>
 ```
 
@@ -41,27 +41,27 @@
   <summary>Preview</summary>
 
 <a href=https://youtu.be/8lGpZkjnkt4>
-  <img src=https://markdown-videos.vercel.app/youtube/8lGpZkjnkt4 />
+  <img src=http://markdown-videos-api.jorgenkh.no/youtube/8lGpZkjnkt4 />
 </a>
 </details>
 
 ---
 ## Documentation
 For the full documentation see the Swagger and ReDoc docs
-- [Swagger UI](https://github.com/swagger-api/swagger-ui) documentation: <https://markdown-videos.vercel.app/docs>
-- [ReDoc](https://github.com/Rebilly/ReDoc) documentation: <https://markdown-videos.vercel.app/redoc>
+- [Swagger UI](https://github.com/swagger-api/swagger-ui) documentation: <http://markdown-videos-api.jorgenkh.no/docs>
+- [ReDoc](https://github.com/Rebilly/ReDoc) documentation: <http://markdown-videos-api.jorgenkh.no/redoc>
 ### Optional parameters
 |Name     |Data Type |Default Value                |Description                                                              |Example                                                                                                            |Availability               |
 |---------|----------|-----------------------------|-------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------|---------------------------|
-|width    |int       |320                          |The width of the thumbnail                                               |https://markdown-videos.vercel.app/youtube/8lGpZkjnkt4?width=320                                                   |All Endpoints              |
-|height   |int       |180                          |The height of the thumbnail                                              |https://markdown-videos.vercel.app/youtube/8lGpZkjnkt4?height=180                                                  |All Endpoints              |
-|duration |int       |500                          |The duration you want to display each image in the gif (in milliseconds) |https://markdown-videos.vercel.app/youtube/8lGpZkjnkt4.gif?duration=500                                            |Endpoints ending with .gif |
-|filetype |str       |jpeg                         |Valid filetypes are: `jpeg`, `jpg`, `png`, `webp`, `bmp`, `gif`          |https://markdown-videos.vercel.app/youtube/8lGpZkjnkt4.gif?filetype=jpeg                                           |All still-image endpoints  |
-|url      |str       |https://youtu.be/dQw4w9WgXcQ |The url of the video you want the thumbnail of                           |https://markdown-videos.vercel.app/url?url=https%3A%2F%2Fyoutu.be%2FdQw4w9WgXcQ&width=320&height=180&filetype=jpeg |/url                       |
+|width    |int       |320                          |The width of the thumbnail                                               |http://markdown-videos-api.jorgenkh.no/youtube/8lGpZkjnkt4?width=320                                                   |All Endpoints              |
+|height   |int       |180                          |The height of the thumbnail                                              |http://markdown-videos-api.jorgenkh.no/youtube/8lGpZkjnkt4?height=180                                                  |All Endpoints              |
+|duration |int       |500                          |The duration you want to display each image in the gif (in milliseconds) |http://markdown-videos-api.jorgenkh.no/youtube/8lGpZkjnkt4.gif?duration=500                                            |Endpoints ending with .gif |
+|filetype |str       |jpeg                         |Valid filetypes are: `jpeg`, `jpg`, `png`, `webp`, `bmp`, `gif`          |http://markdown-videos-api.jorgenkh.no/youtube/8lGpZkjnkt4.gif?filetype=jpeg                                           |All still-image endpoints  |
+|url      |str       |https://youtu.be/dQw4w9WgXcQ |The url of the video you want the thumbnail of                           |http://markdown-videos-api.jorgenkh.no/url?url=https%3A%2F%2Fyoutu.be%2FdQw4w9WgXcQ&width=320&height=180&filetype=jpeg |/url                       |
 
 Examples with multiple parameters:
-- normal -> https://markdown-videos.vercel.app/youtube/8lGpZkjnkt4?width=320&height=180&filetype=jpeg
-- GIF -> https://markdown-videos.vercel.app/youtube/8lGpZkjnkt4.gif?width=320&height=180&duration=500
+- normal -> http://markdown-videos-api.jorgenkh.no/youtube/8lGpZkjnkt4?width=320&height=180&filetype=jpeg
+- GIF -> http://markdown-videos-api.jorgenkh.no/youtube/8lGpZkjnkt4.gif?width=320&height=180&duration=500
 
 ## Contributing
 
@@ -77,6 +77,7 @@ Hosted on
 [![Vercel](https://img.shields.io/badge/vercel-%23000000.svg?style=for-the-badge&logo=vercel&logoColor=white)](https://vercel.com/)
 
 ### Local development
+It is recommended that you follow the root [README](https://github.com/Snailedlt/Markdown-Videos/blob/main/apps/api/README.md#L82)
 
 Install [pipenv](https://pipenv.pypa.io/en/latest/) if you haven't already
 

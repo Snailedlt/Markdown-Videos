@@ -1,10 +1,14 @@
 # Markdown Videos
+
 [![wakatime](https://wakatime.com/badge/github/Snailedlt/Markdown-Videos.svg)](https://wakatime.com/badge/github/Snailedlt/Markdown-Videos)
-![Vercel](https://therealsujitk-vercel-badge.vercel.app/?app=markdown-videos)
 ![License](https://img.shields.io/badge/license-MIT-blue)
 ![Maintained](https://img.shields.io/badge/Maintained%3F-yes-green.svg)
 
-An open source API that adds a play button to a youtube video thumbnail, provided the video ID.
+Website: ![Vercel Website](https://therealsujitk-vercel-badge.vercel.app/?app=markdown-videos-web)
+
+API: ![Vercel API](https://therealsujitk-vercel-badge.vercel.app/?app=markdown-videos)
+
+An open source [website](http://markdown-videos.jorgenkh.no/) and [API](http://markdown-videos-api.jorgenkh.no/) that adds a play button to a youtube video thumbnail, provided the video ID.
 Markdown Videos lets you embed Youtube videos into GitHub markdown with ease!
 
 ## Showcase
@@ -12,8 +16,8 @@ Markdown Videos lets you embed Youtube videos into GitHub markdown with ease!
 ||Preview|Info|
 |--|--|--|
 |Before|https://youtu.be/8lGpZkjnkt4|<ul><li>No Preview</li><li>Redirects to video</li></ul>|
-|After|[![](https://markdown-videos.vercel.app/youtube/8lGpZkjnkt4)](https://youtu.be/8lGpZkjnkt4)|<ul><li>Clearly shows it's a youtube video</li><li>Play button and backdrop added</li><li>Black bars removed</li><li>Redirects to video</li></ul>|
-|After (GIF)|[![](https://markdown-videos.vercel.app/youtube/8lGpZkjnkt4.gif)](https://youtu.be/8lGpZkjnkt4.gif)|<ul><li>Clearly shows it's a youtube video</li><li>Play button and backdrop added</li><li>:sparkles: Animated GIF :sparkles: </li><li>Redirects to video</li></ul>|
+|After|[![](http://markdown-videos-api.jorgenkh.no/youtube/8lGpZkjnkt4)](https://youtu.be/8lGpZkjnkt4)|<ul><li>Clearly shows it's a youtube video</li><li>Play button and backdrop added</li><li>Black bars removed</li><li>Redirects to video</li></ul>|
+|After (GIF)|[![](http://markdown-videos-api.jorgenkh.no/youtube/8lGpZkjnkt4.gif)](https://youtu.be/8lGpZkjnkt4.gif)|<ul><li>Clearly shows it's a youtube video</li><li>Play button and backdrop added</li><li>:sparkles: Animated GIF :sparkles: </li><li>Redirects to video</li></ul>|
 
 ## Supported video services
 
@@ -24,17 +28,17 @@ Markdown Videos lets you embed Youtube videos into GitHub markdown with ease!
 
 ## How to use?
 
-The simplest way to use markdown-videos is to use [the website](https://markdown-videos.vercel.app/).
-
-If you want to use the API, see the [API README](https://github.com/Snailedlt/Markdown-Videos/blob/main/apps/api/README.md)
+The simplest way to use markdown-videos is to use [the website](http://markdown-videos.jorgenkh.no/). If you want to use the API, see the [API README](https://github.com/Snailedlt/Markdown-Videos/blob/main/apps/api/README.md) for more info
 
 ## Contributing
 
 Markdown Videos is still under development, please open an [issue](https://github.com/Snailedlt/Markdown-Videos/issues) if you find any bugs, or if you want to suggest new features.
 
-I also accept and highly appreciate Pull Requests. If you have anything to contribute, please read on.
+Pull requests are also accepted and highly appreciated. If you have anything to contribute, please read on.
 
-### Local development
+## Local development
+
+Wanna work only with the python or javascript stuff? check out [Additional info](#additional-info)
 
 ### Prerequisites
 
@@ -42,7 +46,7 @@ I also accept and highly appreciate Pull Requests. If you have anything to contr
 - [pipenv](https://pipenv.pypa.io/en/latest/)
 - [pnpm](https://pnpm.io/installation)
 
-Wanna work only with the python or javascript stuff? check out [Additional info](#additional-info)
+I also highly recommend using [VS Code](https://code.visualstudio.com/) for local development, and installing the workspace's [recommended extensions](https://code.visualstudio.com/docs/editor/extension-marketplace#_recommended-extensions).
 
 ### install, run, build, etc...
 
@@ -51,6 +55,12 @@ install dependencies
 ```sh
 pnpm install # installs web dependencies
 pnpm api:install # installs api dependencies
+```
+
+create a new .env file from the .env.example
+
+```sh
+cp .env.example .env
 ```
 
 run the api and website
