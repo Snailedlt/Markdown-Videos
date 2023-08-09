@@ -23,8 +23,8 @@ importers:
         specifier: ^0.13.0
         version: 0.13.0
       lucide-svelte:
-        specifier: ^0.263.0
-        version: 0.263.0(svelte@4.0.5)
+        specifier: ^0.265.0
+        version: 0.265.0(svelte@4.0.5)
     devDependencies:
       '@sveltejs/vite-plugin-svelte':
         specifier: ^2.4.2
@@ -673,8 +673,8 @@ packages:
   /locate-character@3.0.0:
     resolution: {integrity: sha512-SW13ws7BjaeJ6p7Q6CO2nchbYEc3X3J6WrmTTDto7yMPqVSZTUyY5Tjbid+Ab8gLnATtygYtiDIJGQRRn2ZOiA==}
 
-  /lucide-svelte@0.263.0(svelte@4.0.5):
-    resolution: {integrity: sha512-1cB+DPsX7PbHJ+aDbc2nKKRdv3DYHK81mRVUw7kNb7bVw2Dh9QsNVON918WjnSlmXEt9lUnJ7TkNymreZwnLgg==}
+  /lucide-svelte@0.265.0(svelte@4.0.5):
+    resolution: {integrity: sha512-rmIcnkvVxCA4xcxsUJ1AVSn3nuowdjgvK0wmdfBqNAaRmvCGqqPekpZMKBOlYLPzWLzwzGwG5A5J9nj9GH3TrQ==}
     peerDependencies:
       svelte: '>=3 <5'
     dependencies:

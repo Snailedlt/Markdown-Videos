@@ -24,6 +24,6 @@
   },
   "dependencies": {
     "install": "^0.13.0",
-    "lucide-svelte": "^0.263.0"
+    "lucide-svelte": "^0.265.0"
   }
 }
