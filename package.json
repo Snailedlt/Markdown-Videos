@@ -4,7 +4,7 @@
     "packageManager": "pnpm@8.6.6",
     "scripts": {
         "build": "turbo run build",
-        "api:install": "turbo run pipenv:install",
+        "api:install": "turbo run api:install",
         "dev": "turbo dev --parallel",
         "start": "turbo start --parallel",
         "test": "turbo run test",

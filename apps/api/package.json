@@ -1,14 +1,14 @@
 {
-    "name": "api",
-    "private": true,
-    "version": "0.0.0",
-    "type": "module",
-    "scripts": {
-        "pipenv:install": "pipenv install --dev",
-        "dev": "pnpm with-env pipenv run dev",
-        "start": "pnpm with-env pipenv run start",
-        "check": "pipenv run lint",
-        "test": "pipenv run test",
-        "with-env": "dotenv -e ../../.env"
-    }
+        "name": "api",
+        "private": true,
+        "version": "0.0.0",
+        "type": "module",
+        "scripts": {
+                "api:install": "pipenv install --dev",
+                "dev": "pnpm with-env pipenv run dev",
+                "start": "pnpm with-env pipenv run start",
+                "check": "pipenv run lint",
+                "test": "pipenv run test",
+                "with-env": "dotenv -e ../../.env"
+        }
 }
