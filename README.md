@@ -33,7 +33,9 @@ Markdown Videos is still under development, please open an [issue](https://githu
 
 Pull requests are also accepted and highly appreciated. If you have anything to contribute, please read on.
 
-### Local development
+## Local development
+
+Wanna work only with the python or javascript stuff? check out [Additional info](#additional-info)
 
 ### Prerequisites
 
@@ -41,7 +43,7 @@ Pull requests are also accepted and highly appreciated. If you have anything to 
 - [pipenv](https://pipenv.pypa.io/en/latest/)
 - [pnpm](https://pnpm.io/installation)
 
-Wanna work only with the python or javascript stuff? check out [Additional info](#additional-info)
+I also highly recommend using [VS Code](https://code.visualstudio.com/) for local development, and installing the workspace's [recommended extensions](https://code.visualstudio.com/docs/editor/extension-marketplace#_recommended-extensions).
 
 ### install, run, build, etc...
 
