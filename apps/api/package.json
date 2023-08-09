@@ -9,6 +9,7 @@
                 "start": "pnpm with-env pipenv run start",
                 "check": "pipenv run lint",
                 "test": "pipenv run test",
+                "test:verbose": "pipenv run test -v",
                 "with-env": "dotenv -e ../../.env"
         }
 }

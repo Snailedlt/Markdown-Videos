@@ -27,6 +27,9 @@
             ]
         },
         "check": {},
-        "test": {}
+        "test": {},
+        "test:verbose": {
+            "cache": false
+        }
     }
 }
