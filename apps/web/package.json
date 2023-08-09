@@ -11,7 +11,7 @@
     "with-env": "dotenv -e ../../.env"
   },
   "devDependencies": {
-    "@sveltejs/vite-plugin-svelte": "^2.4.2",
+    "@sveltejs/vite-plugin-svelte": "^2.4.4",
     "@tsconfig/svelte": "^5.0.0",
     "highlight.js": "^11.8.0",
     "sass": "^1.64.2",
