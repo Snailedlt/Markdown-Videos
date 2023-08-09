@@ -41,7 +41,10 @@ jobs:
           run: pnpm install
 
         - name: Install api dependencies
-          run: pnpm api:install
+          run: |
+            python -m pip install --upgrade pip
+            python -m pip install --user pipenv
+            pnpm api:install
 
         - name: Build
           run: pnpm build
