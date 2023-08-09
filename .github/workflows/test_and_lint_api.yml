@@ -11,7 +11,7 @@ jobs:
         python-version: ["3.8", "3.9", "3.10"]
     defaults:
       run:
-        working-directory: ./api
+        working-directory: ./apps/api
     steps:
       - uses: actions/checkout@v3
       - name: Set up Python ${{ matrix.python-version }}
