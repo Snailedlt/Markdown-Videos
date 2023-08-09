@@ -7,7 +7,7 @@
                 "api:install": "pipenv install --dev",
                 "dev": "pnpm with-env pipenv run dev",
                 "start": "pnpm with-env pipenv run start",
-                "lint:github": "pipenv run lint --format=github --select=E9,F63,F7,F82 --target-version=py37 . && pipenv run lint --format=github --target-version=py37 .",
+                "lint:github": "pipenv run lint-github",
                 "lint": "pipenv run lint",
                 "test": "pipenv run test",
                 "test:verbose": "pipenv run test -v",
