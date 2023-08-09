@@ -11,7 +11,7 @@
         "test": "turbo run test",
         "test:verbose": "turbo run test:verbose",
         "lint": "turbo run lint",
-        "lint:github": "turbo run lint",
+        "lint:github": "turbo run lint:github",
         "clean:workspaces": "turbo clean"
     },
     "devDependencies": {
