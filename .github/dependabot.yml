@@ -1,7 +1,15 @@
 version: 2
 updates:
   - package-ecosystem: "pip"
-    directory: "/api"
+    directory: "/apps/api"
+    schedule:
+      interval: "daily"
+  - package-ecosystem: "npm"
+    directory: "/apps/web"
+    schedule:
+      interval: "daily"
+  - package-ecosystem: "npm"
+    directory: "/"
     schedule:
       interval: "daily"
   - package-ecosystem: "github-actions"
