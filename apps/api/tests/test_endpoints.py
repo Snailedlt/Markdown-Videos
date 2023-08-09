@@ -1,5 +1,3 @@
-from typing_extensions import Annotated
-from fastapi import Depends
 from fastapi.testclient import TestClient
 from PIL import Image, ImageSequence
 import io
@@ -8,7 +6,6 @@ import requests
 import urllib
 
 from src import util
-from src import config
 from . import data_for_testing
 from main import app, get_settings
 
