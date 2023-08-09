@@ -10,9 +10,9 @@
         "start": "turbo start --parallel",
         "test": "turbo run test",
         "test:verbose": "turbo run test:verbose",
-        "lint": "turbo run check",
-        "clean:workspaces": "turbo clean",
-        "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md,mdx,css,yml,html}\""
+        "lint": "turbo run lint",
+        "lint:github": "turbo run lint:github",
+        "clean:workspaces": "turbo clean"
     },
     "devDependencies": {
         "turbo": "^1.9.8",
