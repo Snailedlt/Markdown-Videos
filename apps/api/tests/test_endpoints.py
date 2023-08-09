@@ -1,3 +1,5 @@
+from typing_extensions import Annotated
+from fastapi import Depends
 from fastapi.testclient import TestClient
 from PIL import Image, ImageSequence
 import io
@@ -8,7 +10,7 @@ import urllib
 from src import util
 from src import config
 from . import data_for_testing
-from main import app
+from main import app, get_settings
 
 client = TestClient(app)
 
@@ -34,9 +36,10 @@ def test_info():
     assert response.status_code == 200
     assert response.headers["content-type"] == "application/json"
     assert response.json() == {
-        "app_name": config.Settings().app_name,
-        "app_description": config.Settings().app_description,
-        "contact": config.Settings().contact,
+        "app_name": get_settings().app_name,
+        "app_description": get_settings().app_description,
+        "contact": get_settings().contact,
+        "analytics_api_key": get_settings().analytics_api_key,
     }
 
 
