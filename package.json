@@ -12,8 +12,7 @@
         "test:verbose": "turbo run test:verbose",
         "lint": "turbo run lint",
         "lint:github": "turbo run lint",
-        "clean:workspaces": "turbo clean",
-        "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md,mdx,css,yml,html}\""
+        "clean:workspaces": "turbo clean"
     },
     "devDependencies": {
         "turbo": "^1.9.8",
