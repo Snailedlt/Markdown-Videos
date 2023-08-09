@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-      name: Build, Test and Lint
+      name: Build and Test
       timeout-minutes: 15
       runs-on: ubuntu-latest
       strategy:
