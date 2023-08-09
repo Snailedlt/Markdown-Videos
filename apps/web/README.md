@@ -10,9 +10,9 @@ Powered by Svelte, Vite, TypeScript, SCSS and the [Markdown-Videos api](http://m
 
 ## Local development
 
-Unless you want to only work on the svelte part Markdown-Videos, I recommend using the root [README](https://github.com/Snailedlt/Markdown-Videos/blob/main/README.md).
+I recommend using the root [README](https://github.com/Snailedlt/Markdown-Videos/blob/main/README.md).
 
-If you wish to only develop using svelte, keep in mind that it might not work, since this documentation is rarely updated. If you're still willing to try, do the following.
+If you wish to only develop using svelte, keep in mind that it might not work, since this documentation is rarely updated. You might have to install additional packages and change the `package.json` scripts. If you're still willing to try, do the following.
 
 Add a `.env` file in the `/apps/web` dir with the following code:
 
@@ -25,4 +25,10 @@ install dependencies and start the development server
 ```sh
 pnpm install
 pnpm dev
+```
+
+lint
+
+```sh
+pnpm lint
 ```

@@ -26,7 +26,8 @@
                 "^build"
             ]
         },
-        "check": {},
+        "lint": {},
+        "lint:github": {},
         "test": {},
         "test:verbose": {
             "cache": false
