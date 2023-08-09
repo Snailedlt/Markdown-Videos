@@ -7,7 +7,7 @@
                 "api:install": "pipenv install --dev",
                 "dev": "pnpm with-env pipenv run dev",
                 "start": "pnpm with-env pipenv run start",
-                "lint:github": "pipenv run lint-github",
+                "lint:github": "pipenv run lint-github-stop-if-syntax-errors-or-undefined && pipenv run lint-github",
                 "lint": "pipenv run lint",
                 "test": "pipenv run test",
                 "test:verbose": "pipenv run test -v",
