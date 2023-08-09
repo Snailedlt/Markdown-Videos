@@ -2,8 +2,9 @@ from fastapi.testclient import TestClient
 import pytest
 import requests
 
-from . import data_for_testing, util
-from .main import app
+from . import data_for_testing
+from src import util
+from main import app
 
 client = TestClient(app)
 
