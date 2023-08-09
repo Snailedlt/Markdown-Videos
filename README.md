@@ -52,6 +52,12 @@ pnpm install # installs web dependencies
 pnpm api:install # installs api dependencies
 ```
 
+create a new .env file from the .env.example
+
+```sh
+cp .env.example .env
+```
+
 run the api and website
 
 ```sh
