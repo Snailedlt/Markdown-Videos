@@ -1,4 +1,3 @@
-import typing
 from PIL import Image
 import requests
 from requests.adapters import HTTPAdapter, Retry
@@ -20,7 +19,7 @@ class URL_Regex(str, Enum):
     VIMEO = r"(https?://)?(www.)?(player.)?vimeo.com/([a-z]*/)*(.*/)?(?P<video_id>[0-9]{6,11})[?]?.*"
 
 
-def get_video_id_by_url(url, regex) -> typing.Optional[str]:
+def get_video_id_by_url(url, regex) -> None | str:
     match = re.match(regex, url, re.IGNORECASE)
     if match:
         for group_name, group_value in match.groupdict().items():
@@ -70,7 +69,7 @@ def add_play_button_to_thumbnail(
     return thumbnail
 
 
-def request_with_retry(url, retries: typing.Union[Retry, int] = 5):
+def request_with_retry(url, retries: Retry | int = 5):
     s = requests.Session()
     s.mount("https://", HTTPAdapter(max_retries=retries))
     return s.get(url)
