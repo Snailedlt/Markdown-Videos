@@ -2,7 +2,6 @@ from fastapi.testclient import TestClient
 from PIL import Image, ImageSequence
 import io
 import pytest
-import requests
 import urllib
 
 from src import util
@@ -151,8 +150,7 @@ def test_vimeo_thumbnail_all_params():
 )
 def test_url_endpoint(url, expected_video_id):
     # Test if the urls are valid
-    url_input_response = requests.get(url)
-    assert url_input_response.status_code == 200
+    assert util.request_with_retry(url).status_code == 200
 
     # Did we recieve an image?
     parsed_url = urllib.parse.quote(url)
