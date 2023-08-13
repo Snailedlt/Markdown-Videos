@@ -31,7 +31,7 @@ def get_video_id_by_url(url, regex) -> None | str:
     raise Exception("Something went wrong while trying to get the video id.")
 
 
-def read_img_from_url(url: str, alt_url: typing.Optional[str] = None) -> Image.Image:
+def read_img_from_url(url: str, alt_url: None | str = None) -> Image.Image:
     res = request_with_retry(url)
     try:
         res.raise_for_status()
