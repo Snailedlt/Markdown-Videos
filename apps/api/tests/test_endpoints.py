@@ -28,6 +28,16 @@ def test_main_response():
     assert response.status_code == 200
 
 
+def test_docs():
+    response = client.get("/docs")
+    assert response.status_code == 200
+
+
+def test_redoc():
+    response = client.get("/redoc")
+    assert response.status_code == 200
+
+
 def test_info():
     response = client.get("/info")
     assert response.status_code == 200
