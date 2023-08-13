@@ -2,7 +2,6 @@ from fastapi.testclient import TestClient
 from PIL import Image, ImageSequence
 import io
 import pytest
-import requests
 import urllib
 
 from src import util
