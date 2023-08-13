@@ -1,4 +1,5 @@
-<script>
+<script lang="ts">
+  import CopyToClipboard from './CopyToClipboard.svelte';
   export let items = [];
   export let activeTabValue = 1;
 
@@ -17,8 +18,8 @@
 {#each items as item}
   {#if activeTabValue == item.value}
     <div class="box">
-      <!-- TODO: Add "copy to clipboard" button to each codehighlighter -->
       <svelte:component this={item.component} {...item.props} />
+      <CopyToClipboard textToCopy={item.props.code} />
     </div>
   {/if}
 {/each}
