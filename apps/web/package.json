@@ -13,19 +13,19 @@
     "with-env": "dotenv -e ../../.env"
   },
   "devDependencies": {
-    "@sveltejs/vite-plugin-svelte": "^2.4.2",
+    "@sveltejs/vite-plugin-svelte": "^2.4.5",
     "@tsconfig/svelte": "^5.0.0",
     "highlight.js": "^11.8.0",
-    "sass": "^1.64.2",
-    "svelte": "^4.0.5",
-    "svelte-check": "^3.4.6",
+    "sass": "^1.65.1",
+    "svelte": "^4.2.0",
+    "svelte-check": "^3.5.0",
     "svelte-highlight": "^7.3.0",
-    "tslib": "^2.6.0",
-    "typescript": "^5.0.2",
-    "vite": "^4.4.5"
+    "tslib": "^2.6.1",
+    "typescript": "^5.1.6",
+    "vite": "^4.4.9"
   },
   "dependencies": {
     "install": "^0.13.0",
-    "lucide-svelte": "^0.263.0"
+    "lucide-svelte": "^0.266.0"
   }
 }
