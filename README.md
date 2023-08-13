@@ -45,6 +45,7 @@ Wanna work only with the python or javascript stuff? check out [Additional info]
 - [python](https://www.python.org/downloads/) 3.10 or higher
 - [pipenv](https://pipenv.pypa.io/en/latest/)
 - [pnpm](https://pnpm.io/installation)
+- [node](https://nodejs.org/en) 18 or higher
 
 I also highly recommend using [VS Code](https://code.visualstudio.com/) for local development, and installing the workspace's [recommended extensions](https://code.visualstudio.com/docs/editor/extension-marketplace#_recommended-extensions).
 
