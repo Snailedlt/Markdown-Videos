@@ -19,12 +19,18 @@ importers:
 
   apps/web:
     dependencies:
+      dedent-js:
+        specifier: ^1.0.1
+        version: 1.0.1
       install:
         specifier: ^0.13.0
         version: 0.13.0
       lucide-svelte:
         specifier: ^0.266.0
         version: 0.266.0(svelte@4.2.0)
+      svelte-lucide:
+        specifier: ^0.7.6
+        version: 0.7.6(svelte@4.2.0)
     devDependencies:
       '@sveltejs/vite-plugin-svelte':
         specifier: ^2.4.5
@@ -467,6 +473,10 @@ packages:
     dependencies:
       ms: 2.1.2
     dev: true
+
+  /dedent-js@1.0.1:
+    resolution: {integrity: sha512-OUepMozQULMLUmhxS95Vudo0jb0UchLimi3+pQ2plj61Fcy8axbP9hbiD4Sz6DPqn6XG3kfmziVfQ1rSys5AJQ==}
+    dev: false
 
   /deepmerge@4.3.1:
     resolution: {integrity: sha512-3sUqbMEc77XqpdNO7FRyRog+eW3ph+GYCbj+rK+uYyRMuwsVy0rMiVtPn+QJlKFvWP/1PYpapqYn0Me2knFn+A==}
@@ -942,6 +952,14 @@ packages:
     dependencies:
       svelte: 4.2.0
     dev: true
+
+  /svelte-lucide@0.7.6(svelte@4.2.0):
+    resolution: {integrity: sha512-EfbtR8xg3R0Yd3/pUD8hveFLrlk+Y9hwu8gekvHD7icjoeSyMIZvXj39sQKBIEmhX2sKpwxzm+3+5bE1T5xaTg==}
+    peerDependencies:
+      svelte: ^3.54.0 || ^4.0.0
+    dependencies:
+      svelte: 4.2.0
+    dev: false
 
   /svelte-preprocess@5.0.4(sass@1.65.1)(svelte@4.2.0)(typescript@5.1.6):
     resolution: {integrity: sha512-ABia2QegosxOGsVlsSBJvoWeXy1wUKSfF7SWJdTjLAbx/Y3SrVevvvbFNQqrSJw89+lNSsM58SipmZJ5SRi5iw==}

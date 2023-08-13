@@ -3,8 +3,11 @@
   import ImagePreview from './ImagePreview.svelte';
   import SearchForm from './SearchForm.svelte';
   import html from 'svelte-highlight/languages/vbscript-html';
+  import markdown from 'svelte-highlight/languages/markdown';
   import { errorMessage } from '../stores/errors';
   import LogoContainer from './LogoContainer.svelte';
+  import TabCard from './TabCard.svelte';
+  import dedent from 'dedent-js';
 
   $: src = '';
   $: alt = '';
@@ -17,6 +20,31 @@
     alt = event.detail.alt;
     href = event.detail.url;
   }
+
+  $: items = [
+    {
+      label: 'Markdown',
+      value: 1,
+      component: CodeHighlighter,
+      props: {
+        language: markdown,
+        code: `[![${alt}](${src})](${href})`,
+      },
+    },
+    {
+      label: 'HTML',
+      value: 2,
+      component: CodeHighlighter,
+      props: {
+        language: html,
+        code: dedent(`
+          <a href="${href}">
+            <img src="${src}" ${alt ? `alt="${alt}" title="${alt}"` : ''}/>
+          </a>
+        `),
+      },
+    },
+  ];
 </script>
 
 <main>
@@ -28,24 +56,7 @@
       <!-- https://svelte.dev/repl/12df4d4886fe43b7a65f541381b2aa94?version=3.31.0 -->
       <!-- https://svelte.dev/repl/adb8dc564044415f8ffbbd240a39d68d?version=3.44.2 -->
       <ImagePreview {src} {alt} {href} />
-      <!-- TODO: Add tabs to code-preview and extract to separate component -->
-      <div class="code-preview">
-        <!-- TODO: Add "copy to clipboard" button to each codehighlighter -->
-        <div>
-          Markdown
-          <CodeHighlighter code="[![{alt}]({src})]({href})" />
-        </div>
-        <div>
-          HTML
-          <CodeHighlighter
-            language={html}
-            code="<a href={`"${href}"`}>
-  <img src={`"${src}"`} {alt ? `alt="${alt}" title="${alt}"` : ''}/>
-</a>"
-          />
-          <!-- TODO: fix the indenting for code here 👆-->
-        </div>
-      </div>
+      <TabCard {items} />
     {:else if $errorMessage}
       <p style="color:red;">{$errorMessage}</p>
     {/if}
@@ -53,12 +64,6 @@
 </main>
 
 <style lang="scss">
-  :global(.code-preview) {
-    text-align: left;
-    :global(& *) {
-      text-align: left;
-    }
-  }
   .card {
     padding-inline: 0rem;
   }
