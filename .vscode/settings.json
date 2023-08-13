@@ -8,4 +8,8 @@
       "editor.defaultFormatter": "ms-python.black-formatter",
       "editor.formatOnSave": true,
     },
+    "[svelte]": {
+      "editor.defaultFormatter": "svelte.svelte-vscode",
+      "editor.formatOnSave": true,
+    },
 }
