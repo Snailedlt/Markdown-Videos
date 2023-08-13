@@ -18,7 +18,7 @@
         "clean:workspaces": "turbo clean"
     },
     "devDependencies": {
-        "turbo": "^1.9.8",
+        "turbo": "^1.10.12",
         "dotenv-cli": "latest"
     }
 }
