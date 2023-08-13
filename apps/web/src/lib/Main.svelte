@@ -23,8 +23,17 @@
 
   $: items = [
     {
-      label: 'HTML',
+      label: 'Markdown',
       value: 1,
+      component: CodeHighlighter,
+      props: {
+        language: markdown,
+        code: `[![${alt}](${src})](${href})`,
+      },
+    },
+    {
+      label: 'HTML',
+      value: 2,
       component: CodeHighlighter,
       props: {
         language: html,
@@ -33,15 +42,6 @@
             <img src="${src}" ${alt ? `alt="${alt}" title="${alt}"` : ''}/>
           </a>
         `),
-      },
-    },
-    {
-      label: 'Markdown',
-      value: 2,
-      component: CodeHighlighter,
-      props: {
-        language: markdown,
-        code: `[![${alt}](${src})](${href})`,
       },
     },
   ];
