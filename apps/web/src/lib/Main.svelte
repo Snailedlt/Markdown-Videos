@@ -7,6 +7,7 @@
   import { errorMessage } from '../stores/errors';
   import LogoContainer from './LogoContainer.svelte';
   import TabCard from './TabCard.svelte';
+  import dedent from 'dedent-js';
 
   $: src = '';
   $: alt = '';
@@ -27,10 +28,11 @@
       component: CodeHighlighter,
       props: {
         language: html,
-        code: `<a href="${href}">
-  <img src="${src}" ${alt ? `alt="${alt}" title="${alt}"` : ''}/>
-</a>`,
-        // TODO: fix the indenting for code here 👆
+        code: dedent(`
+          <a href="${href}">
+            <img src="${src}" ${alt ? `alt="${alt}" title="${alt}"` : ''}/>
+          </a>
+        `),
       },
     },
     {

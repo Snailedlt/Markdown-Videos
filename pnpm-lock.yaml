@@ -19,6 +19,9 @@ importers:
 
   apps/web:
     dependencies:
+      dedent-js:
+        specifier: ^1.0.1
+        version: 1.0.1
       install:
         specifier: ^0.13.0
         version: 0.13.0
@@ -470,6 +473,10 @@ packages:
     dependencies:
       ms: 2.1.2
     dev: true
+
+  /dedent-js@1.0.1:
+    resolution: {integrity: sha512-OUepMozQULMLUmhxS95Vudo0jb0UchLimi3+pQ2plj61Fcy8axbP9hbiD4Sz6DPqn6XG3kfmziVfQ1rSys5AJQ==}
+    dev: false
 
   /deepmerge@4.3.1:
     resolution: {integrity: sha512-3sUqbMEc77XqpdNO7FRyRog+eW3ph+GYCbj+rK+uYyRMuwsVy0rMiVtPn+QJlKFvWP/1PYpapqYn0Me2knFn+A==}
