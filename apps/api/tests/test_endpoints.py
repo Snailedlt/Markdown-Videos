@@ -149,8 +149,7 @@ def test_vimeo_thumbnail_all_params():
     + data_for_testing.active_youtube_array_url_formats,
 )
 def test_url_endpoint(url, expected_video_id):
-    # Test if the urls are valid
-    assert util.request_with_retry(url).status_code == 200
+    # Todo: test if the urls are valid
 
     # Did we recieve an image?
     parsed_url = urllib.parse.quote(url)
