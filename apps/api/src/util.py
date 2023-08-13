@@ -1,6 +1,8 @@
+import logging
 import typing
 from PIL import Image
 import requests
+from requests.adapters import HTTPAdapter, Retry
 from io import BytesIO
 from enum import Enum
 import re
@@ -32,12 +34,12 @@ def get_video_id_by_url(url, regex) -> typing.Optional[str]:
 
 
 def read_img_from_url(url: str, alt_url: typing.Optional[str] = None) -> Image.Image:
-    res = requests.get(url)
+    res = request_with_retry(url)
     try:
         res.raise_for_status()
     except requests.exceptions.HTTPError:
         if alt_url is not None and res.status_code == 404:
-            res = requests.get(alt_url)
+            res = request_with_retry(alt_url)
             res.raise_for_status()
     return Image.open(BytesIO(res.content))
 
@@ -67,3 +69,9 @@ def add_play_button_to_thumbnail(
     # Add play button image
     thumbnail.paste(play, (play_pos), play)
     return thumbnail
+
+
+def request_with_retry(url, retries: typing.Union[Retry, int] = 5):
+    s = requests.Session()
+    s.mount("https://", HTTPAdapter(max_retries=retries))
+    return s.get(url)
