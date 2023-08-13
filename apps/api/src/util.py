@@ -1,4 +1,3 @@
-import logging
 import typing
 from PIL import Image
 import requests
