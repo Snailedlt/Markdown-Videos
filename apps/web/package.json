@@ -27,7 +27,7 @@
   "dependencies": {
     "dedent-js": "^1.0.1",
     "install": "^0.13.0",
-    "lucide-svelte": "^0.268.0",
+    "lucide-svelte": "^0.276.0",
     "svelte-lucide": "^0.7.6"
   }
 }
