@@ -1,24 +1,42 @@
 {
-    "name": "markdown-videos",
-    "private": true,
-    "version": "0.0.0",
-    "packageManager": "pnpm@8.6.6",
-    "engines": {
-        "node": ">=18.0.0"
-    },
-    "scripts": {
-        "build": "turbo run build",
-        "api:install": "turbo run api:install",
-        "dev": "turbo dev --parallel",
-        "start": "turbo start --parallel",
-        "test": "turbo run test",
-        "test:verbose": "turbo run test:verbose",
-        "lint": "turbo run lint",
-        "lint:github": "turbo run lint:github",
-        "clean:workspaces": "turbo clean"
-    },
-    "devDependencies": {
-        "dotenv-cli": "^7.3.0",
-        "turbo": "^1.10.12"
-    }
+  "name": "markdown-videos",
+  "private": true,
+  "version": "0.1.0",
+  "packageManager": "pnpm@8.6.6",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "scripts": {
+    "build": "turbo run build",
+    "api:install": "turbo run api:install",
+    "dev": "turbo dev --parallel",
+    "start": "turbo start --parallel",
+    "test": "turbo run test",
+    "test:verbose": "turbo run test:verbose",
+    "lint": "turbo run lint",
+    "lint:github": "turbo run lint:github",
+    "clean:workspaces": "turbo clean"
+  },
+  "devDependencies": {
+    "dotenv-cli": "^7.3.0",
+    "turbo": "^1.10.12"
+  },
+  "description": "Markdown Videos lets you embed YouTube videos into GitHub markdown with ease.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Snailedlt/Markdown-Videos.git"
+  },
+  "keywords": [
+    "markdown",
+    "videos",
+    "youtube",
+    "vimeo",
+    "preview"
+  ],
+  "author": "SnailedIt",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Snailedlt/Markdown-Videos/issues"
+  },
+  "homepage": "https://github.com/Snailedlt/Markdown-Videos#readme"
 }
