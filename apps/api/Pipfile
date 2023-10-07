@@ -16,7 +16,7 @@ lint-github = "ruff --format=github --target-version=py37 ."
 
 [packages]
 fastapi = "==0.101.1"
-pillow = "==10.0.0"
+pillow = "==10.0.1"
 requests = "==2.31.0"
 uvicorn = {extras = ["standard"], version = "*"}
 pytest = "==7.4.0"
