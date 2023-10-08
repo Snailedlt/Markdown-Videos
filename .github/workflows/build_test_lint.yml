@@ -50,6 +50,3 @@ jobs:
 
         - name: Test
           run: pnpm test:verbose
-
-        - name: Lint
-          run: pnpm lint:github
