@@ -19,7 +19,7 @@ fastapi = "==0.103.2"
 pillow = "==10.0.1"
 requests = "==2.31.0"
 uvicorn = {extras = ["standard"], version = "*"}
-pytest = "==7.4.0"
+pytest = "==7.4.2"
 httpx = "==0.24.1"
 ruff = "==0.0.292"
 fastapi-analytics = "==1.1.4"
