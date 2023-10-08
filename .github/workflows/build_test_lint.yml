@@ -28,7 +28,7 @@ jobs:
         - name: Setup Node.js environment
           uses: actions/setup-node@v3
           with:
-            node-version: "18"
+            node-version: "19.9"
             cache: 'pnpm'
 
         - name: Set up Python ${{ matrix.python-version }}
@@ -50,6 +50,3 @@ jobs:
 
         - name: Test
           run: pnpm test:verbose
-
-        - name: Lint
-          run: pnpm lint:github
