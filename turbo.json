@@ -21,7 +21,14 @@
         },
         "start": {
             "cache": true,
-            "persistent": false,
+            "persistent": true,
+            "dependsOn": [
+                "^build"
+            ]
+        },
+        "preview": {
+            "cache": true,
+            "persistent": true,
             "dependsOn": [
                 "^build"
             ]

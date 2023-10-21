@@ -7,6 +7,7 @@
                 "api:install": "pipenv install --dev",
                 "dev": "pnpm with-env pipenv run dev",
                 "start": "pnpm with-env pipenv run start",
+                "preview": "pnpm start",
                 "lint": "pipenv run lint",
                 "test": "pipenv run test",
                 "test:verbose": "pipenv run test -v",

@@ -11,6 +11,7 @@
         "api:install": "turbo run api:install",
         "dev": "turbo dev --parallel",
         "start": "turbo start --parallel",
+        "preview": "turbo preview --parallel",
         "test": "turbo run test",
         "test:verbose": "turbo run test:verbose",
         "lint": "turbo run lint",
