@@ -8,7 +8,6 @@
     "build": "pnpm with-env vite build",
     "preview": "vite preview",
     "lint": "pnpm check",
-    "lint:github": "pnpm lint",
     "check": "svelte-check --tsconfig ./tsconfig.json",
     "with-env": "dotenv -e ../../.env"
   },

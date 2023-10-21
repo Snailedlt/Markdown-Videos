@@ -51,5 +51,8 @@ jobs:
         - name: Test
           run: pnpm test:verbose
 
-        - name: Lint
+        - name: Lint web
           run: pnpm lint:github
+
+        - name: Lint api
+          uses: chartboost/ruff-action@v1
