@@ -35,7 +35,10 @@
 
   .copy-to-clipboard {
     background-color: field;
-    border: 1px white solid;
+    border: 1px #fafafa solid;
+    @media (prefers-color-scheme: light) {
+      border: 1px #242424 solid;
+    }
     height: 4rem;
     width: 4rem;
     &.active:not(focus-visible) {
