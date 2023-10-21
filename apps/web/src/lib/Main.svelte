@@ -6,20 +6,22 @@
   import markdown from 'svelte-highlight/languages/markdown';
   import { errorMessage } from '../stores/errors';
   import LogoContainer from './LogoContainer.svelte';
-  import TabCard from './TabCard.svelte';
+  import TabCard, { type TabItem } from './TabCard.svelte';
   import dedent from 'dedent-js';
 
   $: src = '';
   $: alt = '';
   $: href = '';
 
-  function handleSubmit(event) {
+  function handleSubmit(event: CustomEvent<{ url: string; alt: string }>) {
     src =
       `${import.meta.env.VITE_API_BASE_URL}/url?url=` +
       encodeURIComponent(event.detail.url);
     alt = event.detail.alt;
     href = event.detail.url;
   }
+
+  let items: TabItem[] = [];
 
   $: items = [
     {

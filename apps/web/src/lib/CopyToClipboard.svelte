@@ -1,7 +1,7 @@
 <script lang="ts">
   import { LucideCopy, LucideCheck } from 'lucide-svelte';
 
-  export let textToCopy;
+  export let textToCopy: string;
 
   let active = false;
 

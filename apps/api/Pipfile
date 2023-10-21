@@ -9,10 +9,6 @@ dev = "uvicorn main:app --reload"
 start = "uvicorn main:app"
 test = "pytest"
 lint = "ruff ."
-# stop the build if there are Python syntax errors or undefined names, etc...
-lint-github-stop-if-syntax-errors-or-undefined = "ruff --format=github --select=E9,F63,F7,F82 --target-version=py37 ."
-# default set of ruff rules with GitHub Annotations
-lint-github = "ruff --format=github --target-version=py37 ."
 
 [packages]
 fastapi = "==0.104.0"
@@ -21,7 +17,7 @@ requests = "==2.31.0"
 uvicorn = {extras = ["standard"], version = "*"}
 pytest = "==7.4.2"
 httpx = "==0.24.1"
-ruff = "==0.0.292"
+ruff = "==0.1.1"
 fastapi-analytics = "==1.1.4"
 python-dotenv = "==1.0.0"
 pydantic-settings = "==2.0.3"

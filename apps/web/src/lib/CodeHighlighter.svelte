@@ -3,7 +3,7 @@
   import type { LanguageType } from 'svelte-highlight/languages';
   import atomOneDark from 'svelte-highlight/styles/atom-one-dark';
 
-  export let code;
+  export let code: string;
   export let language: LanguageType<string>;
   export let style = atomOneDark;
 </script>

@@ -50,3 +50,11 @@ jobs:
 
         - name: Test
           run: pnpm test:verbose
+
+        - name: Lint web
+          run: pnpm --filter web lint
+
+        - name: Lint api
+          uses: chartboost/ruff-action@v1
+          with:
+            src: "./apps/api"

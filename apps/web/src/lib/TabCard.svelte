@@ -1,9 +1,26 @@
+<script lang="ts" context="module">
+  import type { LanguageType } from 'svelte-highlight/languages';
+  import type { ComponentType } from 'svelte';
+
+  export type TabItem = {
+    label: string;
+    value: number;
+    component: ComponentType;
+    props: TabItemProps;
+  };
+
+  export type TabItemProps = {
+    language: LanguageType<string>;
+    code: string;
+  };
+</script>
+
 <script lang="ts">
   import CopyToClipboard from './CopyToClipboard.svelte';
-  export let items = [];
+  export let items: TabItem[];
   export let activeTabValue = 1;
 
-  const handleClick = (tabValue) => () => (activeTabValue = tabValue);
+  const handleClick = (tabValue: number) => () => (activeTabValue = tabValue);
 </script>
 
 <div class="tab-buttons">
