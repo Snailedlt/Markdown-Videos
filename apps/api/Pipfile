@@ -12,7 +12,7 @@ lint = "ruff ."
 # stop the build if there are Python syntax errors or undefined names, etc...
 lint-github-stop-if-syntax-errors-or-undefined = "ruff --format=github --select=E9,F63,F7,F82 --target-version=py37 ."
 # default set of ruff rules with GitHub Annotations
-lint-github = "ruff --format=github --target-version=py37 ."
+lint-github = "ruff -- --format=github --target-version=py37 ."
 
 [packages]
 fastapi = "==0.104.0"
