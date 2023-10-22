@@ -16,7 +16,7 @@ pillow = "==10.1.0"
 requests = "==2.31.0"
 uvicorn = {extras = ["standard"], version = "*"}
 pytest = "==7.4.2"
-httpx = "==0.24.1"
+httpx = "==0.25.0"
 ruff = "==0.1.1"
 fastapi-analytics = "==1.1.4"
 python-dotenv = "==1.0.0"
