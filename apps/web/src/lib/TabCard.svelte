@@ -1,17 +1,12 @@
 <script lang="ts" context="module">
-  import type { LanguageType } from 'svelte-highlight/languages';
   import type { ComponentType } from 'svelte';
+  import type { TabItemProps } from './CodeHighlighter.svelte';
 
   export type TabItem = {
     label: string;
     value: number;
     component: ComponentType;
     props: TabItemProps;
-  };
-
-  export type TabItemProps = {
-    language: LanguageType<string>;
-    code: string;
   };
 </script>
 
@@ -45,7 +40,13 @@
   .box {
     display: flex;
     border-radius: 0 0 0.5rem 0.5rem;
-    background-color: #282c34;
+
+    @media (prefers-color-scheme: dark) {
+      background-color: #282c34;
+    }
+    @media (prefers-color-scheme: light) {
+      background-color: #fafafa;
+    }
     text-align: left;
   }
   .tab-buttons {
@@ -53,7 +54,21 @@
   }
 
   .tab-buttons button {
-    background-color: darken(#282c34, 5%);
+    @media (prefers-color-scheme: dark) {
+      background-color: darken(#282c34, 5%);
+
+      &.active {
+        background-color: #282c34;
+      }
+    }
+    @media (prefers-color-scheme: light) {
+      background-color: darken(#fafafa, 5%);
+
+      &.active {
+        background-color: #fafafa;
+      }
+    }
+
     &:not(:focus-visible) {
       outline: transparent;
     }
@@ -62,9 +77,6 @@
     }
     &:not(:first-child) {
       border-radius: 0 0.5rem 0 0;
-    }
-    &.active {
-      background-color: #282c34;
     }
   }
 </style>
