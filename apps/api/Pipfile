@@ -18,7 +18,7 @@ uvicorn = {extras = ["standard"], version = "*"}
 pytest = "==7.4.3"
 httpx = "==0.24.1"
 ruff = "==0.1.2"
-fastapi-analytics = "==1.1.4"
+fastapi-analytics = "==1.1.5"
 python-dotenv = "==1.0.0"
 pydantic-settings = "==2.0.3"
 
