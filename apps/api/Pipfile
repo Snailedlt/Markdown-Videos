@@ -20,7 +20,7 @@ httpx = "==0.24.1"
 ruff = "==0.1.5"
 fastapi-analytics = "==1.1.5"
 python-dotenv = "==1.0.0"
-pydantic-settings = "==2.0.3"
+pydantic-settings = "==2.1.0"
 
 [dev-packages]
 
