@@ -57,8 +57,8 @@ importers:
         specifier: ^2.6.2
         version: 2.6.2
       typescript:
-        specifier: ^5.2.2
-        version: 5.2.2
+        specifier: ^5.3.2
+        version: 5.3.2
       vite:
         specifier: ^5.0.0
         version: 5.0.0(sass@1.69.5)
@@ -1032,8 +1032,8 @@ packages:
       picocolors: 1.0.0
       sade: 1.8.1
       svelte: 4.2.7
-      svelte-preprocess: 5.1.0(sass@1.69.5)(svelte@4.2.7)(typescript@5.2.2)
-      typescript: 5.2.2
+      svelte-preprocess: 5.1.0(sass@1.69.5)(svelte@4.2.7)(typescript@5.3.2)
+      typescript: 5.3.2
     transitivePeerDependencies:
       - '@babel/core'
       - coffeescript
@@ -1069,7 +1069,7 @@ packages:
       svelte: 4.2.7
     dev: false
 
-  /svelte-preprocess@5.1.0(sass@1.69.5)(svelte@4.2.7)(typescript@5.2.2):
+  /svelte-preprocess@5.1.0(sass@1.69.5)(svelte@4.2.7)(typescript@5.3.2):
     resolution: {integrity: sha512-EkErPiDzHAc0k2MF5m6vBNmRUh338h2myhinUw/xaqsLs7/ZvsgREiLGj03VrSzbY/TB5ZXgBOsKraFee5yceA==}
     engines: {node: '>= 14.10.0'}
     requiresBuild: true
@@ -1114,7 +1114,7 @@ packages:
       sorcery: 0.11.0
       strip-indent: 3.0.0
       svelte: 4.2.7
-      typescript: 5.2.2
+      typescript: 5.3.2
     dev: true
 
   /svelte@4.2.7:
@@ -1206,8 +1206,8 @@ packages:
       turbo-windows-arm64: 1.10.16
     dev: true
 
-  /typescript@5.2.2:
-    resolution: {integrity: sha512-mI4WrpHsbCIcwT9cF4FZvr80QUeKvsUsUvKDoR+X/7XHQH98xYD8YHZg7ANtz2GtZt/CBq2QJ0thkGJMHfqc1w==}
+  /typescript@5.3.2:
+    resolution: {integrity: sha512-6l+RyNy7oAHDfxC4FzSJcz9vnjTKxrLpDG5M2Vu4SHRVNg6xzqZp6LYSR9zjqQTu8DU/f5xwxUdADOkbrIX2gQ==}
     engines: {node: '>=14.17'}
     hasBin: true
     dev: true
