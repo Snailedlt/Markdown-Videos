@@ -33,8 +33,8 @@ importers:
         version: 0.8.2(svelte@4.2.7)
     devDependencies:
       '@sveltejs/vite-plugin-svelte':
-        specifier: ^3.0.0
-        version: 3.0.0(svelte@4.2.7)(vite@5.0.2)
+        specifier: ^3.0.1
+        version: 3.0.1(svelte@4.2.7)(vite@5.0.2)
       '@tsconfig/svelte':
         specifier: ^5.0.2
         version: 5.0.2
@@ -412,7 +412,7 @@ packages:
     dev: true
     optional: true
 
-  /@sveltejs/vite-plugin-svelte-inspector@2.0.0(@sveltejs/vite-plugin-svelte@3.0.0)(svelte@4.2.7)(vite@5.0.2):
+  /@sveltejs/vite-plugin-svelte-inspector@2.0.0(@sveltejs/vite-plugin-svelte@3.0.1)(svelte@4.2.7)(vite@5.0.2):
     resolution: {integrity: sha512-gjr9ZFg1BSlIpfZ4PRewigrvYmHWbDrq2uvvPB1AmTWKuM+dI1JXQSUu2pIrYLb/QncyiIGkFDFKTwJ0XqQZZg==}
     engines: {node: ^18.0.0 || >=20}
     peerDependencies:
@@ -420,7 +420,7 @@ packages:
       svelte: ^4.0.0 || ^5.0.0-next.0
       vite: ^5.0.0
     dependencies:
-      '@sveltejs/vite-plugin-svelte': 3.0.0(svelte@4.2.7)(vite@5.0.2)
+      '@sveltejs/vite-plugin-svelte': 3.0.1(svelte@4.2.7)(vite@5.0.2)
       debug: 4.3.4
       svelte: 4.2.7
       vite: 5.0.2(sass@1.69.5)
@@ -428,14 +428,14 @@ packages:
       - supports-color
     dev: true
 
-  /@sveltejs/vite-plugin-svelte@3.0.0(svelte@4.2.7)(vite@5.0.2):
-    resolution: {integrity: sha512-Th0nupxk8hl5Rcg9jm+1xWylwco4bSUAvutWxM4W4bjOAollpXLmrYqSSnYo9pPbZOO6ZGRm6sSqYa/v1d/Saw==}
+  /@sveltejs/vite-plugin-svelte@3.0.1(svelte@4.2.7)(vite@5.0.2):
+    resolution: {integrity: sha512-CGURX6Ps+TkOovK6xV+Y2rn8JKa8ZPUHPZ/NKgCxAmgBrXReavzFl8aOSCj3kQ1xqT7yGJj53hjcV/gqwDAaWA==}
     engines: {node: ^18.0.0 || >=20}
     peerDependencies:
       svelte: ^4.0.0 || ^5.0.0-next.0
       vite: ^5.0.0
     dependencies:
-      '@sveltejs/vite-plugin-svelte-inspector': 2.0.0(@sveltejs/vite-plugin-svelte@3.0.0)(svelte@4.2.7)(vite@5.0.2)
+      '@sveltejs/vite-plugin-svelte-inspector': 2.0.0(@sveltejs/vite-plugin-svelte@3.0.1)(svelte@4.2.7)(vite@5.0.2)
       debug: 4.3.4
       deepmerge: 4.3.1
       kleur: 4.1.5
