@@ -21,7 +21,7 @@
     "svelte-highlight": "^7.4.2",
     "tslib": "^2.6.2",
     "typescript": "^5.3.2",
-    "vite": "^5.0.4"
+    "vite": "^5.0.5"
   },
   "dependencies": {
     "dedent-js": "^1.0.1",
