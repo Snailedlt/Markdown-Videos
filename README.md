@@ -2,11 +2,7 @@
 
 [![wakatime](https://wakatime.com/badge/github/Snailedlt/Markdown-Videos.svg)](https://wakatime.com/badge/github/Snailedlt/Markdown-Videos)
 ![License](https://img.shields.io/badge/license-MIT-blue)
-![Maintained](https://img.shields.io/badge/Maintained%3F-yes-green.svg)
-
-Website: ![Vercel Website](https://therealsujitk-vercel-badge.vercel.app/?app=markdown-videos-web)
-
-API: ![Vercel API](https://therealsujitk-vercel-badge.vercel.app/?app=markdown-videos)
+![Maintained](https://img.shields.io/badge/Maintained%3F-yes-green.svg) ![Vercel Website](https://therealsujitk-vercel-badge.vercel.app/?app=markdown-videos-web&name=web) ![Vercel API](https://therealsujitk-vercel-badge.vercel.app/?app=markdown-videos&name=api)
 
 An open source [website](http://markdown-videos.jorgenkh.no/) and [API](http://markdown-videos-api.jorgenkh.no/) that adds a play button to a youtube video thumbnail, provided the video ID.
 Markdown Videos lets you embed Youtube videos into GitHub markdown with ease!
