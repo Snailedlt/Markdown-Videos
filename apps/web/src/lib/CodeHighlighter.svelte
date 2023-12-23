@@ -11,8 +11,8 @@
   import { onMount } from 'svelte';
 
   import Highlight from 'svelte-highlight';
-  import type { LanguageType } from 'svelte-highlight/languages';
-  import { atomOneDark, atomOneLight } from 'svelte-highlight/styles';
+  import type { LanguageType } from 'svelte-highlight/languages/index';
+  import { atomOneDark, atomOneLight } from 'svelte-highlight/styles/index';
 
   export let code: TabItemProps['code'];
   export let language: TabItemProps['language'];
