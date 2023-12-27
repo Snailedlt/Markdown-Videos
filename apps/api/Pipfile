@@ -11,12 +11,12 @@ test = "pytest"
 lint = "ruff ."
 
 [packages]
-fastapi = "==0.105.0"
+fastapi = "==0.108.0"
 pillow = "==10.1.0"
 requests = "==2.31.0"
 uvicorn = {extras = ["standard"], version = "*"}
 pytest = "==7.4.3"
-httpx = "==0.24.1"
+httpx = "==0.26.0"
 ruff = "==0.1.9"
 fastapi-analytics = "==1.2.1"
 python-dotenv = "==1.0.0"
