@@ -12,7 +12,7 @@ lint = "ruff ."
 
 [packages]
 fastapi = "==0.108.0"
-pillow = "==10.1.0"
+pillow = "==10.2.0"
 requests = "==2.31.0"
 uvicorn = {extras = ["standard"], version = "*"}
 pytest = "==7.4.4"
