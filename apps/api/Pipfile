@@ -11,7 +11,7 @@ test = "pytest"
 lint = "ruff ."
 
 [packages]
-fastapi = "==0.108.0"
+fastapi = "==0.109.0"
 pillow = "==10.2.0"
 requests = "==2.31.0"
 uvicorn = {extras = ["standard"], version = "*"}
