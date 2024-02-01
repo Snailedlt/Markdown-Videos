@@ -30,8 +30,8 @@ The simplest way to use markdown-videos is to use [the website](http://markdown-
 
 | | |
 |-|-|
-| Excellent performance, trusted by over 100k users [(apparantly)](https://www.apianalytics.dev/dashboard/fb1f330ea13b4f4c91a8de83895e56e3)! | [![image](https://github.com/Snailedlt/Markdown-Videos/assets/43886029/faaa1c96-5d7d-4f9c-8588-94c9b3d9e409)](https://www.apianalytics.dev/dashboard/fb1f330ea13b4f4c91a8de83895e56e3) |
-| People when they see Markdown-Videos | ![](https://i.imgur.com/iYqimOz.jpg) |
+| Excellent performance, trusted by over 100k users [(apparantly)](https://www.apianalytics.dev/dashboard/fb1f330ea13b4f4c91a8de83895e56e3)! | [![image](https://github.com/Snailedlt/Markdown-Videos/assets/43886029/9056298c-46b3-4926-b811-ef73db48faa4)](https://www.apianalytics.dev/dashboard/fb1f330ea13b4f4c91a8de83895e56e3) |
+| People when they see Markdown-Videos | [![](https://i.imgur.com/iYqimOz.jpg)](https://imgur.com/gallery/1oi2Lth) |
 
 
 
