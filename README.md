@@ -26,6 +26,15 @@ Markdown Videos lets you embed Youtube videos into GitHub markdown with ease!
 
 The simplest way to use markdown-videos is to use [the website](http://markdown-videos.jorgenkh.no/). If you want to use the API, see the [API README](https://github.com/Snailedlt/Markdown-Videos/blob/main/apps/api/README.md) for more info
 
+## Why choose Markdown-Videos?
+
+| | |
+|-|-|
+| Excellent performance, trusted by over 100k users [(apparantly)](https://www.apianalytics.dev/dashboard/fb1f330ea13b4f4c91a8de83895e56e3)! | [![image](https://github.com/Snailedlt/Markdown-Videos/assets/43886029/faaa1c96-5d7d-4f9c-8588-94c9b3d9e409)](https://www.apianalytics.dev/dashboard/fb1f330ea13b4f4c91a8de83895e56e3) |
+| People when they see Markdown-Videos | ![](https://i.imgur.com/iYqimOz.jpg) |
+
+
+
 ## Contributing
 
 Markdown Videos is still under development, please open an [issue](https://github.com/Snailedlt/Markdown-Videos/issues) if you find any bugs, or if you want to suggest new features.
