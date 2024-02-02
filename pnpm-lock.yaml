@@ -51,8 +51,8 @@ importers:
         specifier: ^3.6.3
         version: 3.6.3(sass@1.70.0)(svelte@4.2.9)
       svelte-highlight:
-        specifier: ^7.4.8
-        version: 7.4.8
+        specifier: ^7.5.0
+        version: 7.5.0
       tslib:
         specifier: ^2.6.2
         version: 2.6.2
@@ -1046,8 +1046,8 @@ packages:
       - sugarss
     dev: true
 
-  /svelte-highlight@7.4.8:
-    resolution: {integrity: sha512-KjXI+RwpBiDvwgZX9M0T6JpmAPhLjC4Gcks5qIDrFd7iO/pEBFR3B6qeMUTFIhxipHEPp/rC4/0enAvCQtHp+A==}
+  /svelte-highlight@7.5.0:
+    resolution: {integrity: sha512-QbuGwX2wygDQSC1G4jFxXYrz3S2lfm223e24SHRoH2ArbA8uHpEgTaUlCOKoV2QQHvj8ijcTY4DipfVqXq2o5w==}
     dependencies:
       highlight.js: 11.9.0
     dev: true
