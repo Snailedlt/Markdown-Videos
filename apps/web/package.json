@@ -16,7 +16,7 @@
     "@tsconfig/svelte": "^5.0.2",
     "highlight.js": "^11.9.0",
     "sass": "^1.70.0",
-    "svelte": "^4.2.10",
+    "svelte": "^4.2.11",
     "svelte-check": "^3.6.4",
     "svelte-highlight": "^7.6.0",
     "tslib": "^2.6.2",
