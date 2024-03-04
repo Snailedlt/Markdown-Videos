@@ -27,6 +27,6 @@
     "dedent-js": "^1.0.1",
     "install": "^0.13.0",
     "lucide-svelte": "^0.344.0",
-    "svelte-lucide": "^1.0.3"
+    "svelte-lucide": "^1.0.5"
   }
 }
