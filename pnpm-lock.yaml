@@ -48,8 +48,8 @@ importers:
         specifier: ^4.2.15
         version: 4.2.15
       svelte-check:
-        specifier: ^3.6.9
-        version: 3.6.9(sass@1.75.0)(svelte@4.2.15)
+        specifier: ^3.7.0
+        version: 3.7.0(sass@1.75.0)(svelte@4.2.15)
       svelte-highlight:
         specifier: ^7.6.0
         version: 7.6.0
@@ -1033,8 +1033,8 @@ packages:
       min-indent: 1.0.1
     dev: true
 
-  /svelte-check@3.6.9(sass@1.75.0)(svelte@4.2.15):
-    resolution: {integrity: sha512-hDQrk3L0osX07djQyMiXocKysTLfusqi8AriNcCiQxhQR49/LonYolcUGMtZ0fbUR8HTR198Prrgf52WWU9wEg==}
+  /svelte-check@3.7.0(sass@1.75.0)(svelte@4.2.15):
+    resolution: {integrity: sha512-Va6sGL4Vy4znn0K+vaatk98zoBvG2aDee4y3r5X4S80z8DXfbACHvdLlyXa4C4c5tQzK9H0Uq2pbd20wH3ucjQ==}
     hasBin: true
     peerDependencies:
       svelte: ^3.55.0 || ^4.0.0-next.0 || ^4.0.0 || ^5.0.0-next.0
