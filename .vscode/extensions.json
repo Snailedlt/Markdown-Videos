@@ -3,6 +3,7 @@
     "ms-python.python",
     "charliermarsh.ruff",
     "ms-python.black-formatter",
-    "svelte.svelte-vscode"
+    "svelte.svelte-vscode",
+    "esbenp.prettier-vscode",
   ]
 }
