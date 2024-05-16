@@ -51,8 +51,8 @@ importers:
         specifier: ^3.7.1
         version: 3.7.1(postcss@8.4.38)(sass@1.77.1)(svelte@4.2.17)
       svelte-highlight:
-        specifier: ^7.6.0
-        version: 7.6.0
+        specifier: ^7.6.1
+        version: 7.6.1
       tslib:
         specifier: ^2.6.2
         version: 2.6.2
@@ -650,8 +650,8 @@ packages:
     peerDependencies:
       svelte: ^3.55.0 || ^4.0.0-next.0 || ^4.0.0 || ^5.0.0-next.0
 
-  svelte-highlight@7.6.0:
-    resolution: {integrity: sha512-J9X1d07iMIKZMAqNAhlkjLX/FS+7R2lPrqVul7i+EleVZIOYvBhtx7ES62bc661a70nKNOS05yr9JAvyQPPOIA==}
+  svelte-highlight@7.6.1:
+    resolution: {integrity: sha512-YIpA6LBVpghQndBsbZQLl3ufEje179vQTtC7FH/utbEmUwYecIXsBq4mcwNkCeUuCrpcaF0DkrppWmMp/ZoPfA==}
 
   svelte-hmr@0.16.0:
     resolution: {integrity: sha512-Gyc7cOS3VJzLlfj7wKS0ZnzDVdv3Pn2IuVeJPk9m2skfhcu5bq3wtIZyQGggr7/Iim5rH5cncyQft/kRLupcnA==}
@@ -1324,7 +1324,7 @@ snapshots:
       - stylus
       - sugarss
 
-  svelte-highlight@7.6.0:
+  svelte-highlight@7.6.1:
     dependencies:
       highlight.js: 11.9.0
 
