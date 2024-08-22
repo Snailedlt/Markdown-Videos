@@ -28,6 +28,7 @@ def test_get_youtube_video_id_by_valid_url(url, expected_video_id):
 def test_get_vimeo_video_id_by_valid_url(url, expected_video_id):
     assert util.get_video_id_by_url(url, util.URL_Regex.VIMEO) == expected_video_id
 
+    # -- NOT WORKING AS OF 2024.08.22 with status_code 429 (Too Many Requests) -- #
     # Test if the urls are valid with the expected video id
-    url_input_response = requests.get(f"https://vimeo.com/{expected_video_id}")
-    assert url_input_response.status_code == 200
+    # url_input_response = requests.get(f"https://vimeo.com/{expected_video_id}")
+    # assert url_input_response.status_code == 200
