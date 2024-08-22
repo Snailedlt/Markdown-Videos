@@ -51,8 +51,8 @@ importers:
         specifier: ^3.8.5
         version: 3.8.5(postcss@8.4.41)(sass@1.77.6)(svelte@4.2.18)
       svelte-highlight:
-        specifier: ^7.6.1
-        version: 7.6.1
+        specifier: ^7.7.0
+        version: 7.7.0
       tslib:
         specifier: ^2.6.3
         version: 2.6.3
@@ -453,10 +453,6 @@ packages:
     resolution: {integrity: sha512-SYVnVFswQER+zu1laSya563s+F8VDGt7o35d4utbamowvUNLLMovFqwCLSocpZTz3MgaSRA1IbqRWZv97dtErQ==}
     engines: {node: '>=12.0.0'}
 
-  highlight.js@11.9.0:
-    resolution: {integrity: sha512-fJ7cW7fQGCYAkgv4CPfwFHrfd/cLS4Hau96JuJ+ZTOWhjnhoeN1ub1tFmALm/+lW5z4WCAuAV9bm05AP0mS6Gw==}
-    engines: {node: '>=12.0.0'}
-
   immutable@4.3.2:
     resolution: {integrity: sha512-oGXzbEDem9OOpDWZu88jGiYCvIsLHMvGw+8OXlpsvTFvIQplQbjg1B1cvKg8f7Hoch6+NGjpPsH1Fr+Mc2D1aA==}
 
@@ -618,8 +614,8 @@ packages:
     peerDependencies:
       svelte: ^3.55.0 || ^4.0.0-next.0 || ^4.0.0 || ^5.0.0-next.0
 
-  svelte-highlight@7.6.1:
-    resolution: {integrity: sha512-YIpA6LBVpghQndBsbZQLl3ufEje179vQTtC7FH/utbEmUwYecIXsBq4mcwNkCeUuCrpcaF0DkrppWmMp/ZoPfA==}
+  svelte-highlight@7.7.0:
+    resolution: {integrity: sha512-umBiTz3fLbbNCA+wGlRhJOb54iC6ap8S/dxjauQ+g6a8oFGTOGQeOP2rJVoh/K1ssF7IjP4P0T3Yuiu+vtaG5Q==}
 
   svelte-hmr@0.16.0:
     resolution: {integrity: sha512-Gyc7cOS3VJzLlfj7wKS0ZnzDVdv3Pn2IuVeJPk9m2skfhcu5bq3wtIZyQGggr7/Iim5rH5cncyQft/kRLupcnA==}
@@ -1080,8 +1076,6 @@ snapshots:
 
   highlight.js@11.10.0: {}
 
-  highlight.js@11.9.0: {}
-
   immutable@4.3.2: {}
 
   inflight@1.0.6:
@@ -1255,9 +1249,9 @@ snapshots:
       - stylus
       - sugarss
 
-  svelte-highlight@7.6.1:
+  svelte-highlight@7.7.0:
     dependencies:
-      highlight.js: 11.9.0
+      highlight.js: 11.10.0
 
   svelte-hmr@0.16.0(svelte@4.2.18):
     dependencies:
