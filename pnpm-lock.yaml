@@ -29,8 +29,8 @@ importers:
         specifier: ^0.436.0
         version: 0.436.0(svelte@4.2.19)
       svelte-lucide:
-        specifier: ^1.0.5
-        version: 1.0.5(svelte@4.2.19)
+        specifier: ^1.0.6
+        version: 1.0.6(svelte@4.2.19)
     devDependencies:
       '@sveltejs/vite-plugin-svelte':
         specifier: ^3.1.2
@@ -623,8 +623,8 @@ packages:
     peerDependencies:
       svelte: ^3.19.0 || ^4.0.0
 
-  svelte-lucide@1.0.5:
-    resolution: {integrity: sha512-gEkzTR2ZslWPz7A77L6z7KCXit12dT5VV/8ELGizxP00uyFcKV2nQaew/zhFRjlUyol/yrtaKS+F/BeASM4Ijw==}
+  svelte-lucide@1.0.6:
+    resolution: {integrity: sha512-p3KmG59dr7Xwm4gKnWG/flbukF5X6FP9W7FnK0fhigaKyBKAWmHlMJ4peFwxDOuQ/k3Ssl8ngLiDqAUxLX8dyA==}
     peerDependencies:
       svelte: ^3.54.0 || ^4.0.0 || ^5.0.0
 
@@ -1257,7 +1257,7 @@ snapshots:
     dependencies:
       svelte: 4.2.19
 
-  svelte-lucide@1.0.5(svelte@4.2.19):
+  svelte-lucide@1.0.6(svelte@4.2.19):
     dependencies:
       svelte: 4.2.19
 
