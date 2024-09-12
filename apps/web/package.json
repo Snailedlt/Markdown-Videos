@@ -17,7 +17,7 @@
     "highlight.js": "^11.10.0",
     "sass": "^1.78.0",
     "svelte": "^4.2.19",
-    "svelte-check": "^4.0.1",
+    "svelte-check": "^4.0.2",
     "svelte-highlight": "^7.7.0",
     "tslib": "^2.7.0",
     "typescript": "^5.6.2",
