@@ -46,7 +46,7 @@ importers:
         version: 4.2.19
       svelte-check:
         specifier: ^4.0.2
-        version: 4.0.2(picomatch@2.3.1)(svelte@4.2.19)(typescript@5.6.2)
+        version: 4.0.2(svelte@4.2.19)(typescript@5.6.2)
       svelte-highlight:
         specifier: ^7.7.0
         version: 7.7.0
@@ -392,8 +392,8 @@ packages:
     resolution: {integrity: sha512-GopVGCpVS1UKH75VKHGuQFqS1Gusej0z4FyQkPdwjil2gNIv+LNsqBlboOzpJFZKVT95GkCyWJbBSdFEFUWI2A==}
     engines: {node: '>=12'}
 
-  dotenv@16.3.1:
-    resolution: {integrity: sha512-IPzF4w4/Rd94bA9imS68tZBaYyBWSCE47V1RGuMrB94iyTOIEwRmVL2x/4An+6mETpLrKJ5hQkB8W4kFAadeIQ==}
+  dotenv@16.4.5:
+    resolution: {integrity: sha512-ZmdL2rui+eB2YwhsWzjInR8LldtZHGDoQ1ugH85ppHKwpUHL7j7rN0Ti9NCnGiQbhaZ11FpR+7ao1dNsmduNUg==}
     engines: {node: '>=12'}
 
   esbuild@0.21.5:
@@ -892,13 +892,13 @@ snapshots:
   dotenv-cli@7.4.2:
     dependencies:
       cross-spawn: 7.0.3
-      dotenv: 16.3.1
+      dotenv: 16.4.5
       dotenv-expand: 10.0.0
       minimist: 1.2.8
 
   dotenv-expand@10.0.0: {}
 
-  dotenv@16.3.1: {}
+  dotenv@16.4.5: {}
 
   esbuild@0.21.5:
     optionalDependencies:
@@ -930,9 +930,7 @@ snapshots:
     dependencies:
       '@types/estree': 1.0.5
 
-  fdir@6.3.0(picomatch@2.3.1):
-    optionalDependencies:
-      picomatch: 2.3.1
+  fdir@6.3.0: {}
 
   fill-range@7.0.1:
     dependencies:
@@ -1055,11 +1053,11 @@ snapshots:
 
   source-map-js@1.2.0: {}
 
-  svelte-check@4.0.2(picomatch@2.3.1)(svelte@4.2.19)(typescript@5.6.2):
+  svelte-check@4.0.2(svelte@4.2.19)(typescript@5.6.2):
     dependencies:
       '@jridgewell/trace-mapping': 0.3.25
       chokidar: 3.5.3
-      fdir: 6.3.0(picomatch@2.3.1)
+      fdir: 6.3.0
       picocolors: 1.0.1
       sade: 1.8.1
       svelte: 4.2.19
