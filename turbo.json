@@ -3,7 +3,10 @@
     "globalDependencies": [
         "**/.env"
     ],
-    "pipeline": {
+    "globalEnv": [
+        "*"
+    ],
+    "tasks": {
         "build": {
             "dependsOn": [
                 "^build"
