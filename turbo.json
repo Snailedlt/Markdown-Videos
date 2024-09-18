@@ -3,6 +3,9 @@
     "globalDependencies": [
         "**/.env"
     ],
+    "globalEnv": [
+        "*"
+    ],
     "tasks": {
         "build": {
             "dependsOn": [

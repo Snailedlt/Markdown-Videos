@@ -7,15 +7,15 @@
         "node": ">=18.0.0"
     },
     "scripts": {
-        "build": "turbo run build --env-mode=loose",
-        "api:install": "turbo run api:install --env-mode=loose",
-        "dev": "turbo dev --parallel --env-mode=loose",
-        "start": "turbo start --parallel --env-mode=loose",
-        "preview": "turbo preview --parallel --env-mode=loose",
-        "test": "turbo run test --env-mode=loose",
-        "test:verbose": "turbo run test:verbose --env-mode=loose",
-        "lint": "turbo run lint --env-mode=loose",
-        "clean:workspaces": "turbo clean --env-mode=loose"
+        "build": "turbo run build",
+        "api:install": "turbo run api:install",
+        "dev": "turbo dev --parallel",
+        "start": "turbo start --parallel",
+        "preview": "turbo preview --parallel",
+        "test": "turbo run test",
+        "test:verbose": "turbo run test:verbose",
+        "lint": "turbo run lint",
+        "clean:workspaces": "turbo clean"
     },
     "devDependencies": {
         "dotenv-cli": "^7.4.2",
