@@ -14,9 +14,7 @@
   $: href = '';
 
   function handleSubmit(event: CustomEvent<{ url: string; alt: string }>) {
-    src =
-      `${import.meta.env.VITE_API_BASE_URL}/url?url=` +
-      encodeURIComponent(event.detail.url);
+    src = `${import.meta.env.VITE_API_BASE_URL}/url?url=${encodeURIComponent(event.detail.url)}`;
     alt = event.detail.alt;
     href = event.detail.url;
   }

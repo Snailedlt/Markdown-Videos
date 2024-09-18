@@ -8,10 +8,10 @@
   $: urlValue = '';
   $: titleValue = '';
   $: isUrl = isValidUrl(urlValue);
-  $: isNotUrlAndNotEmpty = urlValue != '' && !isUrl;
+  $: isNotUrlAndNotEmpty = urlValue !== '' && !isUrl;
 
-  let urlPlaceholder: string = 'https://youtu.be/dQw4w9WgXcQ';
-  let titlePlaceholder: string = 'Definitely not a rickroll';
+  const urlPlaceholder: string = 'https://youtu.be/dQw4w9WgXcQ';
+  const titlePlaceholder: string = 'Definitely not a rickroll';
 
   let result: { url: string; alt: string };
   $: result = {
@@ -37,7 +37,7 @@
               .json()
               .then((errorObj) =>
                 setErrorMessage(
-                  typeof errorObj.detail == 'string'
+                  typeof errorObj.detail === 'string'
                     ? errorObj.detail
                     : errorObj.detail.message
                 )
