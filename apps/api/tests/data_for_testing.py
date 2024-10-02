@@ -288,6 +288,18 @@ active_youtube_array_url_formats = [
     ("https://www.youtube.com/e/dQw4w9WgXcQ", "dQw4w9WgXcQ"),
     ("https://youtube.com/e/dQw4w9WgXcQ", "dQw4w9WgXcQ"),
     ("https://m.youtube.com/e/dQw4w9WgXcQ", "dQw4w9WgXcQ"),
+    ("http://www.youtube.com/shorts/j9rZxAF3C0I", "j9rZxAF3C0I"),
+    ("http://youtube.com/shorts/j9rZxAF3C0I", "j9rZxAF3C0I"),
+    ("http://m.youtube.com/shorts/j9rZxAF3C0I", "j9rZxAF3C0I"),
+    ("https://www.youtube.com/shorts/j9rZxAF3C0I", "j9rZxAF3C0I"),
+    ("https://youtube.com/shorts/j9rZxAF3C0I", "j9rZxAF3C0I"),
+    ("https://m.youtube.com/shorts/j9rZxAF3C0I", "j9rZxAF3C0I"),
+    ("http://www.youtube.com/shorts/j9rZxAF3C0I?app=desktop", "j9rZxAF3C0I"),
+    ("http://youtube.com/shorts/j9rZxAF3C0I?app=desktop", "j9rZxAF3C0I"),
+    ("http://m.youtube.com/shorts/j9rZxAF3C0I?app=desktop", "j9rZxAF3C0I"),
+    ("https://www.youtube.com/shorts/j9rZxAF3C0I?app=desktop", "j9rZxAF3C0I"),
+    ("https://youtube.com/shorts/j9rZxAF3C0I?app=desktop", "j9rZxAF3C0I"),
+    ("https://m.youtube.com/shorts/j9rZxAF3C0I?app=desktop", "j9rZxAF3C0I"),
 ]
 
 active_vimeo_array_url_formats = [
