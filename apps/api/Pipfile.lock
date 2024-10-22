@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "848f748c35f30ed6a490a2b75717b3a0b9676795a19ed7f72b4af01c80b149be"
+            "sha256": "f7fb8f850e73a651b85b45e62683626d7bbf310dafb3b39739f7f76e847d34c8"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -163,12 +163,12 @@
         },
         "fastapi": {
             "hashes": [
-                "sha256:3995739e0b09fa12f984bce8fa9ae197b35d433750d3d312422d846e283697ee",
-                "sha256:61704c71286579cc5a598763905928f24ee98bfcc07aabe84cfefb98812bbc86"
+                "sha256:8035e8f9a2b0aa89cea03b6c77721178ed5358e1aea4cd8570d9466895c0638c",
+                "sha256:c091c6a35599c036d676fa24bd4a6e19fa30058d93d950216cdc672881f6f7db"
             ],
             "index": "pypi",
             "markers": "python_version >= '3.8'",
-            "version": "==0.115.2"
+            "version": "==0.115.3"
         },
         "fastapi-analytics": {
             "hashes": [
@@ -589,11 +589,11 @@
         },
         "starlette": {
             "hashes": [
-                "sha256:134dd6deb655a9775991d352312d53f1879775e5cc8a481f966e83416a2c3f71",
-                "sha256:caaa3b87ef8518ef913dac4f073dea44e85f73343ad2bdc17941931835b2a26a"
+                "sha256:39cbd8768b107d68bfe1ff1672b38a2c38b49777de46d2a592841d58e3bf7c2a",
+                "sha256:a0193a3c413ebc9c78bff1c3546a45bb8c8bcb4a84cae8747d650a65bd37210a"
             ],
             "markers": "python_version >= '3.8'",
-            "version": "==0.39.2"
+            "version": "==0.41.0"
         },
         "tomli": {
             "hashes": [
