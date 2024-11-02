@@ -39,7 +39,14 @@ The simplest way to use markdown-videos is to use [the website](http://markdown-
 
 Markdown Videos is still under development, please open an [issue](https://github.com/Snailedlt/Markdown-Videos/issues) if you find any bugs, or if you want to suggest new features.
 
-Pull requests are also accepted and highly appreciated. If you have anything to contribute, please read on.
+Pull requests are also accepted and highly appreciated. 
+
+You can also contribute by [buying me a coffee on Ko-fi](https://ko-fi.com/H2H0GY0OU)
+
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/H2H0GY0OU)
+
+
+If you want to contribute to the codebase, please read on.
 
 ## Local development
 
