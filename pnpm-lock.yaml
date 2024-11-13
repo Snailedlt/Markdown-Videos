@@ -31,7 +31,7 @@ importers:
     devDependencies:
       '@sveltejs/vite-plugin-svelte':
         specifier: ^3.1.2
-        version: 3.1.2(svelte@4.2.19)(vite@5.4.11(sass@1.80.6))
+        version: 3.1.2(svelte@4.2.19)(vite@5.4.11(sass@1.80.7))
       '@tsconfig/svelte':
         specifier: ^5.0.4
         version: 5.0.4
@@ -39,8 +39,8 @@ importers:
         specifier: ^11.10.0
         version: 11.10.0
       sass:
-        specifier: ^1.80.6
-        version: 1.80.6
+        specifier: ^1.80.7
+        version: 1.80.7
       svelte:
         specifier: ^4.2.19
         version: 4.2.19
@@ -58,7 +58,7 @@ importers:
         version: 5.6.3
       vite:
         specifier: ^5.4.11
-        version: 5.4.11(sass@1.80.6)
+        version: 5.4.11(sass@1.80.7)
 
 packages:
 
@@ -498,8 +498,8 @@ packages:
     resolution: {integrity: sha512-SYVnVFswQER+zu1laSya563s+F8VDGt7o35d4utbamowvUNLLMovFqwCLSocpZTz3MgaSRA1IbqRWZv97dtErQ==}
     engines: {node: '>=12.0.0'}
 
-  immutable@4.3.2:
-    resolution: {integrity: sha512-oGXzbEDem9OOpDWZu88jGiYCvIsLHMvGw+8OXlpsvTFvIQplQbjg1B1cvKg8f7Hoch6+NGjpPsH1Fr+Mc2D1aA==}
+  immutable@5.0.2:
+    resolution: {integrity: sha512-1NU7hWZDkV7hJ4PJ9dur9gTNQ4ePNPN4k9/0YhwjzykTi/+3Q5pF93YU5QoVj8BuOnhLgaY8gs0U2pj4kSYVcw==}
 
   install@0.13.0:
     resolution: {integrity: sha512-zDml/jzr2PKU9I8J/xyZBQn8rPCAY//UOYNmR01XwNwyfhEWObo2SWfSl1+0tm1u6PhxLwDnfsT/6jB7OUxqFA==}
@@ -594,8 +594,8 @@ packages:
     resolution: {integrity: sha512-xal3CZX1Xlo/k4ApwCFrHVACi9fBqJ7V+mwhBsuf/1IOKbBy098Fex+Wa/5QMubw09pSZ/u8EY8PWgevJsXp1A==}
     engines: {node: '>=6'}
 
-  sass@1.80.6:
-    resolution: {integrity: sha512-ccZgdHNiBF1NHBsWvacvT5rju3y1d/Eu+8Ex6c21nHp2lZGLBEtuwc415QfiI1PJa1TpCo3iXwwSRjRpn2Ckjg==}
+  sass@1.80.7:
+    resolution: {integrity: sha512-MVWvN0u5meytrSjsU7AWsbhoXi1sc58zADXFllfZzbsBT1GHjjar6JwBINYPRrkx/zqnQ6uqbQuHgE95O+C+eQ==}
     engines: {node: '>=14.0.0'}
     hasBin: true
 
@@ -925,26 +925,26 @@ snapshots:
   '@rollup/rollup-win32-x64-msvc@4.21.0':
     optional: true
 
-  '@sveltejs/vite-plugin-svelte-inspector@2.1.0(@sveltejs/vite-plugin-svelte@3.1.2(svelte@4.2.19)(vite@5.4.11(sass@1.80.6)))(svelte@4.2.19)(vite@5.4.11(sass@1.80.6))':
+  '@sveltejs/vite-plugin-svelte-inspector@2.1.0(@sveltejs/vite-plugin-svelte@3.1.2(svelte@4.2.19)(vite@5.4.11(sass@1.80.7)))(svelte@4.2.19)(vite@5.4.11(sass@1.80.7))':
     dependencies:
-      '@sveltejs/vite-plugin-svelte': 3.1.2(svelte@4.2.19)(vite@5.4.11(sass@1.80.6))
+      '@sveltejs/vite-plugin-svelte': 3.1.2(svelte@4.2.19)(vite@5.4.11(sass@1.80.7))
       debug: 4.3.4
       svelte: 4.2.19
-      vite: 5.4.11(sass@1.80.6)
+      vite: 5.4.11(sass@1.80.7)
     transitivePeerDependencies:
       - supports-color
 
-  '@sveltejs/vite-plugin-svelte@3.1.2(svelte@4.2.19)(vite@5.4.11(sass@1.80.6))':
+  '@sveltejs/vite-plugin-svelte@3.1.2(svelte@4.2.19)(vite@5.4.11(sass@1.80.7))':
     dependencies:
-      '@sveltejs/vite-plugin-svelte-inspector': 2.1.0(@sveltejs/vite-plugin-svelte@3.1.2(svelte@4.2.19)(vite@5.4.11(sass@1.80.6)))(svelte@4.2.19)(vite@5.4.11(sass@1.80.6))
+      '@sveltejs/vite-plugin-svelte-inspector': 2.1.0(@sveltejs/vite-plugin-svelte@3.1.2(svelte@4.2.19)(vite@5.4.11(sass@1.80.7)))(svelte@4.2.19)(vite@5.4.11(sass@1.80.7))
       debug: 4.3.4
       deepmerge: 4.3.1
       kleur: 4.1.5
       magic-string: 0.30.10
       svelte: 4.2.19
       svelte-hmr: 0.16.0(svelte@4.2.19)
-      vite: 5.4.11(sass@1.80.6)
-      vitefu: 0.2.5(vite@5.4.11(sass@1.80.6))
+      vite: 5.4.11(sass@1.80.7)
+      vitefu: 0.2.5(vite@5.4.11(sass@1.80.7))
     transitivePeerDependencies:
       - supports-color
 
@@ -1058,7 +1058,7 @@ snapshots:
 
   highlight.js@11.10.0: {}
 
-  immutable@4.3.2: {}
+  immutable@5.0.2: {}
 
   install@0.13.0: {}
 
@@ -1157,10 +1157,10 @@ snapshots:
     dependencies:
       mri: 1.2.0
 
-  sass@1.80.6:
+  sass@1.80.7:
     dependencies:
       chokidar: 4.0.1
-      immutable: 4.3.2
+      immutable: 5.0.2
       source-map-js: 1.2.0
     optionalDependencies:
       '@parcel/watcher': 2.4.1
@@ -1246,18 +1246,18 @@ snapshots:
 
   typescript@5.6.3: {}
 
-  vite@5.4.11(sass@1.80.6):
+  vite@5.4.11(sass@1.80.7):
     dependencies:
       esbuild: 0.21.5
       postcss: 8.4.45
       rollup: 4.21.0
     optionalDependencies:
       fsevents: 2.3.3
-      sass: 1.80.6
+      sass: 1.80.7
 
-  vitefu@0.2.5(vite@5.4.11(sass@1.80.6)):
+  vitefu@0.2.5(vite@5.4.11(sass@1.80.7)):
     optionalDependencies:
-      vite: 5.4.11(sass@1.80.6)
+      vite: 5.4.11(sass@1.80.7)
 
   which@2.0.2:
     dependencies:
