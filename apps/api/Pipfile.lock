@@ -624,12 +624,12 @@
                 "standard"
             ],
             "hashes": [
-                "sha256:60b8f3a5ac027dcd31448f411ced12b5ef452c646f76f02f8cc3f25d8d26fd82",
-                "sha256:f78b36b143c16f54ccdb8190d0a26b5f1901fe5a3c777e1ab29f26391af8551e"
+                "sha256:82ad92fd58da0d12af7482ecdb5f2470a04c9c9a53ced65b9bbb4a205377602e",
+                "sha256:ee9519c246a72b1c084cea8d3b44ed6026e78a4a309cbedae9c37e4cb9fbb175"
             ],
             "index": "pypi",
             "markers": "python_version >= '3.8'",
-            "version": "==0.32.0"
+            "version": "==0.32.1"
         },
         "watchfiles": {
             "hashes": [
