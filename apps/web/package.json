@@ -20,7 +20,7 @@
     "svelte-check": "^4.0.9",
     "svelte-highlight": "^7.7.0",
     "tslib": "^2.8.1",
-    "typescript": "^5.6.3",
+    "typescript": "^5.7.2",
     "vite": "^5.4.11"
   },
   "dependencies": {
