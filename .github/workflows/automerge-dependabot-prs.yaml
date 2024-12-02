@@ -18,7 +18,7 @@ jobs:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
       - name: Enable auto-merge for Dependabot PRs
         run: gh pr merge --auto --squash "$PR_URL"
-        if: ${{ github.event.pull_request.mergeable == true && github.event.pull_request.mergeable_state == 'clean' }}
+        # if: ${{ github.event.pull_request.mergeable == true && github.event.pull_request.mergeable_state == 'clean' }}
         env:
           PR_URL: ${{github.event.pull_request.html_url}}
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
