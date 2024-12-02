@@ -12,7 +12,7 @@ jobs:
     if: ${{ github.actor == 'dependabot[bot]' && github.event.pull_request.user.login == 'dependabot[bot]'}}
     steps:
       - name: Approve PR
-        run: gh pr review --approve --body "Auto-approving this PR as it was opened by Dependabot" --pull-request "$PR_URL"
+        run: gh pr review "$PR_URL" --approve --body "Auto-approving this PR as it was opened by Dependabot"
         env:
           PR_URL: ${{github.event.pull_request.html_url}}
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
