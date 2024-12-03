@@ -31,7 +31,7 @@ importers:
     devDependencies:
       '@sveltejs/vite-plugin-svelte':
         specifier: ^3.1.2
-        version: 3.1.2(svelte@4.2.19)(vite@6.0.2(sass@1.81.0))
+        version: 3.1.2(svelte@4.2.19)(vite@6.0.2(sass@1.81.1))
       '@tsconfig/svelte':
         specifier: ^5.0.4
         version: 5.0.4
@@ -39,8 +39,8 @@ importers:
         specifier: ^11.10.0
         version: 11.10.0
       sass:
-        specifier: ^1.81.0
-        version: 1.81.0
+        specifier: ^1.81.1
+        version: 1.81.1
       svelte:
         specifier: ^4.2.19
         version: 4.2.19
@@ -58,7 +58,7 @@ importers:
         version: 5.7.2
       vite:
         specifier: ^6.0.2
-        version: 6.0.2(sass@1.81.0)
+        version: 6.0.2(sass@1.81.1)
 
 packages:
 
@@ -616,8 +616,8 @@ packages:
     resolution: {integrity: sha512-xal3CZX1Xlo/k4ApwCFrHVACi9fBqJ7V+mwhBsuf/1IOKbBy098Fex+Wa/5QMubw09pSZ/u8EY8PWgevJsXp1A==}
     engines: {node: '>=6'}
 
-  sass@1.81.0:
-    resolution: {integrity: sha512-Q4fOxRfhmv3sqCLoGfvrC9pRV8btc0UtqL9mN6Yrv6Qi9ScL55CVH1vlPP863ISLEEMNLLuu9P+enCeGHlnzhA==}
+  sass@1.81.1:
+    resolution: {integrity: sha512-VNLgf4FC5yFyKwAumAAwwNh8X4SevlVREq3Y8aDZIkm0lI/zO1feycMXQ4hn+eB6FVhRbleSQ1Yb/q8juSldTA==}
     engines: {node: '>=14.0.0'}
     hasBin: true
 
@@ -628,10 +628,6 @@ packages:
   shebang-regex@3.0.0:
     resolution: {integrity: sha512-7++dFhtcx3353uBaq8DDR4NuxBetBzC7ZQOhmTQInHEd6bSrXdiEyzCvG07Z44UYdLShWUyXt5M/yhz8ekcb1A==}
     engines: {node: '>=8'}
-
-  source-map-js@1.2.0:
-    resolution: {integrity: sha512-itJW8lvSA0TXEphiRoawsCksnlf8SyvmFzIhltqAHluXd88pkCd+cXJVHTDwdCr0IzwptSm035IHQktUu1QUMg==}
-    engines: {node: '>=0.10.0'}
 
   source-map-js@1.2.1:
     resolution: {integrity: sha512-UXWMKhLOwVKb728IUtQPXxfYU+usdybtUrK/8uGE8CQMvrhOpwvzDBwj0QhSL7MQc7vIsISBG8VQ8+IDQxpfQA==}
@@ -969,26 +965,26 @@ snapshots:
   '@rollup/rollup-win32-x64-msvc@4.27.4':
     optional: true
 
-  '@sveltejs/vite-plugin-svelte-inspector@2.1.0(@sveltejs/vite-plugin-svelte@3.1.2(svelte@4.2.19)(vite@6.0.2(sass@1.81.0)))(svelte@4.2.19)(vite@6.0.2(sass@1.81.0))':
+  '@sveltejs/vite-plugin-svelte-inspector@2.1.0(@sveltejs/vite-plugin-svelte@3.1.2(svelte@4.2.19)(vite@6.0.2(sass@1.81.1)))(svelte@4.2.19)(vite@6.0.2(sass@1.81.1))':
     dependencies:
-      '@sveltejs/vite-plugin-svelte': 3.1.2(svelte@4.2.19)(vite@6.0.2(sass@1.81.0))
+      '@sveltejs/vite-plugin-svelte': 3.1.2(svelte@4.2.19)(vite@6.0.2(sass@1.81.1))
       debug: 4.3.4
       svelte: 4.2.19
-      vite: 6.0.2(sass@1.81.0)
+      vite: 6.0.2(sass@1.81.1)
     transitivePeerDependencies:
       - supports-color
 
-  '@sveltejs/vite-plugin-svelte@3.1.2(svelte@4.2.19)(vite@6.0.2(sass@1.81.0))':
+  '@sveltejs/vite-plugin-svelte@3.1.2(svelte@4.2.19)(vite@6.0.2(sass@1.81.1))':
     dependencies:
-      '@sveltejs/vite-plugin-svelte-inspector': 2.1.0(@sveltejs/vite-plugin-svelte@3.1.2(svelte@4.2.19)(vite@6.0.2(sass@1.81.0)))(svelte@4.2.19)(vite@6.0.2(sass@1.81.0))
+      '@sveltejs/vite-plugin-svelte-inspector': 2.1.0(@sveltejs/vite-plugin-svelte@3.1.2(svelte@4.2.19)(vite@6.0.2(sass@1.81.1)))(svelte@4.2.19)(vite@6.0.2(sass@1.81.1))
       debug: 4.3.4
       deepmerge: 4.3.1
       kleur: 4.1.5
       magic-string: 0.30.10
       svelte: 4.2.19
       svelte-hmr: 0.16.0(svelte@4.2.19)
-      vite: 6.0.2(sass@1.81.0)
-      vitefu: 0.2.5(vite@6.0.2(sass@1.81.0))
+      vite: 6.0.2(sass@1.81.1)
+      vitefu: 0.2.5(vite@6.0.2(sass@1.81.1))
     transitivePeerDependencies:
       - supports-color
 
@@ -1034,7 +1030,7 @@ snapshots:
   css-tree@2.3.1:
     dependencies:
       mdn-data: 2.0.30
-      source-map-js: 1.2.0
+      source-map-js: 1.2.1
 
   debug@4.3.4:
     dependencies:
@@ -1208,11 +1204,11 @@ snapshots:
     dependencies:
       mri: 1.2.0
 
-  sass@1.81.0:
+  sass@1.81.1:
     dependencies:
       chokidar: 4.0.1
       immutable: 5.0.2
-      source-map-js: 1.2.0
+      source-map-js: 1.2.1
     optionalDependencies:
       '@parcel/watcher': 2.4.1
 
@@ -1221,8 +1217,6 @@ snapshots:
       shebang-regex: 3.0.0
 
   shebang-regex@3.0.0: {}
-
-  source-map-js@1.2.0: {}
 
   source-map-js@1.2.1: {}
 
@@ -1299,18 +1293,18 @@ snapshots:
 
   typescript@5.7.2: {}
 
-  vite@6.0.2(sass@1.81.0):
+  vite@6.0.2(sass@1.81.1):
     dependencies:
       esbuild: 0.24.0
       postcss: 8.4.49
       rollup: 4.27.4
     optionalDependencies:
       fsevents: 2.3.3
-      sass: 1.81.0
+      sass: 1.81.1
 
-  vitefu@0.2.5(vite@6.0.2(sass@1.81.0)):
+  vitefu@0.2.5(vite@6.0.2(sass@1.81.1)):
     optionalDependencies:
-      vite: 6.0.2(sass@1.81.0)
+      vite: 6.0.2(sass@1.81.1)
 
   which@2.0.2:
     dependencies:
