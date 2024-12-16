@@ -36,8 +36,8 @@ importers:
         specifier: ^5.0.4
         version: 5.0.4
       highlight.js:
-        specifier: ^11.10.0
-        version: 11.10.0
+        specifier: ^11.11.0
+        version: 11.11.0
       sass:
         specifier: ^1.83.0
         version: 1.83.0
@@ -515,6 +515,10 @@ packages:
 
   highlight.js@11.10.0:
     resolution: {integrity: sha512-SYVnVFswQER+zu1laSya563s+F8VDGt7o35d4utbamowvUNLLMovFqwCLSocpZTz3MgaSRA1IbqRWZv97dtErQ==}
+    engines: {node: '>=12.0.0'}
+
+  highlight.js@11.11.0:
+    resolution: {integrity: sha512-6ErL7JlGu2CNFHyRQEuDogOyGPNiqcuWdt4iSSFUPyferNTGlNTPFqeV36Y/XwA4V/TJ8l0sxp6FTnxud/mf8g==}
     engines: {node: '>=12.0.0'}
 
   immutable@5.0.2:
@@ -1097,6 +1101,8 @@ snapshots:
     optional: true
 
   highlight.js@11.10.0: {}
+
+  highlight.js@11.11.0: {}
 
   immutable@5.0.2: {}
 
