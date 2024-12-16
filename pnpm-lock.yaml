@@ -48,8 +48,8 @@ importers:
         specifier: ^4.1.1
         version: 4.1.1(picomatch@2.3.1)(svelte@4.2.19)(typescript@5.7.2)
       svelte-highlight:
-        specifier: ^7.7.0
-        version: 7.7.0
+        specifier: ^7.8.0
+        version: 7.8.0
       tslib:
         specifier: ^2.8.1
         version: 2.8.1
@@ -513,10 +513,6 @@ packages:
     engines: {node: ^8.16.0 || ^10.6.0 || >=11.0.0}
     os: [darwin]
 
-  highlight.js@11.10.0:
-    resolution: {integrity: sha512-SYVnVFswQER+zu1laSya563s+F8VDGt7o35d4utbamowvUNLLMovFqwCLSocpZTz3MgaSRA1IbqRWZv97dtErQ==}
-    engines: {node: '>=12.0.0'}
-
   highlight.js@11.11.0:
     resolution: {integrity: sha512-6ErL7JlGu2CNFHyRQEuDogOyGPNiqcuWdt4iSSFUPyferNTGlNTPFqeV36Y/XwA4V/TJ8l0sxp6FTnxud/mf8g==}
     engines: {node: '>=12.0.0'}
@@ -642,8 +638,8 @@ packages:
       svelte: ^4.0.0 || ^5.0.0-next.0
       typescript: '>=5.0.0'
 
-  svelte-highlight@7.7.0:
-    resolution: {integrity: sha512-umBiTz3fLbbNCA+wGlRhJOb54iC6ap8S/dxjauQ+g6a8oFGTOGQeOP2rJVoh/K1ssF7IjP4P0T3Yuiu+vtaG5Q==}
+  svelte-highlight@7.8.0:
+    resolution: {integrity: sha512-T7iwOq9ihrKze+Ec79OeP7xRbRRsqz4+ueY14MXpZGu6e19Ik8rOaAFYfm8ANf2+RUG/qZL6wTzEmX4P/2eVkQ==}
 
   svelte-hmr@0.16.0:
     resolution: {integrity: sha512-Gyc7cOS3VJzLlfj7wKS0ZnzDVdv3Pn2IuVeJPk9m2skfhcu5bq3wtIZyQGggr7/Iim5rH5cncyQft/kRLupcnA==}
@@ -1100,8 +1096,6 @@ snapshots:
   fsevents@2.3.3:
     optional: true
 
-  highlight.js@11.10.0: {}
-
   highlight.js@11.11.0: {}
 
   immutable@5.0.2: {}
@@ -1233,9 +1227,9 @@ snapshots:
     transitivePeerDependencies:
       - picomatch
 
-  svelte-highlight@7.7.0:
+  svelte-highlight@7.8.0:
     dependencies:
-      highlight.js: 11.10.0
+      highlight.js: 11.11.0
 
   svelte-hmr@0.16.0(svelte@4.2.19):
     dependencies:
