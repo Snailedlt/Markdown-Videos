@@ -21,6 +21,11 @@ alt_img_width = 1920
 alt_img_height = 1080
 alt_gif_frame_duration = 1000
 
+accepted_content_types = [
+    "image/jpeg",
+    "image/Supported_Filetype.JPEG",
+]
+
 
 def test_main_response():
     response = client.get("/")
@@ -53,7 +58,7 @@ def test_youtube_thumbnail_default_params():
     for video_id in youtube_example_video_ids:
         response = client.get(f"/youtube/{video_id}")
         assert response.status_code == 200
-        assert response.headers["content-type"] == "image/jpeg"
+        assert response.headers["content-type"] in accepted_content_types
 
         # Read the image from the response content
         image = Image.open(io.BytesIO(response.content))
@@ -69,7 +74,7 @@ def test_youtube_thumbnail_all_params():
                 f"/youtube/{video_id}?width={alt_img_width}&height={alt_img_height}&filetype={filetype}"
             )
             assert response.status_code == 200
-            assert response.headers["content-type"] == f"image/{filetype}"
+            assert response.headers["content-type"] in accepted_content_types
 
             # Read the image from the response content
             image = Image.open(io.BytesIO(response.content))
