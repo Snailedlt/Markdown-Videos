@@ -74,7 +74,7 @@ def test_youtube_thumbnail_all_params():
                 f"/youtube/{video_id}?width={alt_img_width}&height={alt_img_height}&filetype={filetype}"
             )
             assert response.status_code == 200
-            assert response.headers["content-type"] in accepted_content_types
+            assert response.headers["content-type"] == f"image/{filetype}"
 
             # Read the image from the response content
             image = Image.open(io.BytesIO(response.content))
