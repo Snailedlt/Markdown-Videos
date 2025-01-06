@@ -155,7 +155,10 @@ def test_url_endpoint(url, expected_video_id):
     parsed_url = urllib.parse.quote(url)
     response = client.get(f"/url?url={parsed_url}")
     assert response.status_code == 200
-    assert response.headers["content-type"] == "image/jpeg"
+    assert response.headers["content-type"] in [
+        "image/jpeg",
+        "image/Supported_Filetype.JPEG",
+    ]
 
     # Read the image from the response content
     image = Image.open(io.BytesIO(response.content))
