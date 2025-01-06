@@ -25,5 +25,6 @@ pydantic-settings = "==2.7.0"
 [dev-packages]
 
 [requires]
-python_version = "3" # TODO: Change this to minimum >=3.9 if pipenv ever starts supporting minimum python version
+python_version = "3" # >=3.9 required
+# TODO: Change this to minimum >=3.9 if pipenv ever starts supporting minimum python version
 
