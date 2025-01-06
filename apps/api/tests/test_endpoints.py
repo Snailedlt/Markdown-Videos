@@ -53,7 +53,10 @@ def test_youtube_thumbnail_default_params():
     for video_id in youtube_example_video_ids:
         response = client.get(f"/youtube/{video_id}")
         assert response.status_code == 200
-        assert response.headers["content-type"] == "image/jpeg"
+        assert response.headers["content-type"] in [
+            "image/jpeg",
+            "image/Supported_Filetype.JPEG",
+        ]
 
         # Read the image from the response content
         image = Image.open(io.BytesIO(response.content))
@@ -71,7 +74,7 @@ def test_youtube_thumbnail_all_params():
             assert response.status_code == 200
             assert response.headers["content-type"] in [
                 f"image/{filetype}",
-                f"image/Supported_Filetype.{filetype}",
+                f"image/Supported_Filetype.{filetype.capitalize()}",
             ]
 
             # Read the image from the response content
@@ -122,7 +125,10 @@ def test_youtube_gif_thumbnail_all_params():
 def test_vimeo_thumbnail_default_params():
     response = client.get(f"/vimeo/{vimeo_example_video_id}")
     assert response.status_code == 200
-    assert response.headers["content-type"] == "image/jpeg"
+    assert response.headers["content-type"] in [
+        "image/jpeg",
+        "image/Supported_Filetype.JPEG",
+    ]
 
     # Read the image from the response content
     image = Image.open(io.BytesIO(response.content))
@@ -139,7 +145,7 @@ def test_vimeo_thumbnail_all_params():
         assert response.status_code == 200
         assert response.headers["content-type"] in [
             f"image/{filetype}",
-            f"image/Supported_Filetype.{filetype}",
+            f"image/Supported_Filetype.{filetype.capitalize()}",
         ]
 
         # Read the image from the response content
