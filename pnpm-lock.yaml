@@ -45,8 +45,8 @@ importers:
         specifier: ^4.2.19
         version: 4.2.19
       svelte-check:
-        specifier: ^4.1.1
-        version: 4.1.1(picomatch@2.3.1)(svelte@4.2.19)(typescript@5.7.2)
+        specifier: ^4.1.4
+        version: 4.1.4(picomatch@2.3.1)(svelte@4.2.19)(typescript@5.7.2)
       svelte-highlight:
         specifier: ^7.8.0
         version: 7.8.0
@@ -640,8 +640,8 @@ packages:
     resolution: {integrity: sha512-UXWMKhLOwVKb728IUtQPXxfYU+usdybtUrK/8uGE8CQMvrhOpwvzDBwj0QhSL7MQc7vIsISBG8VQ8+IDQxpfQA==}
     engines: {node: '>=0.10.0'}
 
-  svelte-check@4.1.1:
-    resolution: {integrity: sha512-NfaX+6Qtc8W/CyVGS/F7/XdiSSyXz+WGYA9ZWV3z8tso14V2vzjfXviKaTFEzB7g8TqfgO2FOzP6XT4ApSTUTw==}
+  svelte-check@4.1.4:
+    resolution: {integrity: sha512-v0j7yLbT29MezzaQJPEDwksybTE2Ups9rUxEXy92T06TiA0cbqcO8wAOwNUVkFW6B0hsYHA+oAX3BS8b/2oHtw==}
     engines: {node: '>= 18.0.0'}
     hasBin: true
     peerDependencies:
@@ -1231,7 +1231,7 @@ snapshots:
 
   source-map-js@1.2.1: {}
 
-  svelte-check@4.1.1(picomatch@2.3.1)(svelte@4.2.19)(typescript@5.7.2):
+  svelte-check@4.1.4(picomatch@2.3.1)(svelte@4.2.19)(typescript@5.7.2):
     dependencies:
       '@jridgewell/trace-mapping': 0.3.25
       chokidar: 4.0.1
