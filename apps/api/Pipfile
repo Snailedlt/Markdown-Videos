@@ -17,7 +17,7 @@ requests = "==2.32.3"
 uvicorn = {extras = ["standard"], version = "*"}
 pytest = "==8.3.5"
 httpx = "==0.28.1"
-ruff = "==0.9.10"
+ruff = "==0.11.0"
 fastapi-analytics = "==1.2.2"
 python-dotenv = "==1.0.1"
 pydantic-settings = "==2.8.1"
