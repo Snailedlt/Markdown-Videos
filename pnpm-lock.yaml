@@ -48,8 +48,8 @@ importers:
         specifier: ^4.1.5
         version: 4.1.5(picomatch@2.3.1)(svelte@4.2.19)(typescript@5.8.2)
       svelte-highlight:
-        specifier: ^7.8.2
-        version: 7.8.2
+        specifier: ^7.8.3
+        version: 7.8.3
       tslib:
         specifier: ^2.8.1
         version: 2.8.1
@@ -667,8 +667,8 @@ packages:
       svelte: ^4.0.0 || ^5.0.0-next.0
       typescript: '>=5.0.0'
 
-  svelte-highlight@7.8.2:
-    resolution: {integrity: sha512-fJZOQtI71CIAOzv43h/cHVDABB3YfWFERGxZx4RisBVHjEuJXfnrrEOhPS0iE2uZUFyQKDWZyzPlcYyBAkH2iA==}
+  svelte-highlight@7.8.3:
+    resolution: {integrity: sha512-i4CE/6yda1fCh0ovUVATk1S1feu1y3+CV+l1brgtMPPRO9VTGq+hPpUjVEJWQkE7hPAgwgVpHccoa5M2gpKxYQ==}
 
   svelte-hmr@0.16.0:
     resolution: {integrity: sha512-Gyc7cOS3VJzLlfj7wKS0ZnzDVdv3Pn2IuVeJPk9m2skfhcu5bq3wtIZyQGggr7/Iim5rH5cncyQft/kRLupcnA==}
@@ -1276,7 +1276,7 @@ snapshots:
     transitivePeerDependencies:
       - picomatch
 
-  svelte-highlight@7.8.2:
+  svelte-highlight@7.8.3:
     dependencies:
       highlight.js: 11.11.1
 
