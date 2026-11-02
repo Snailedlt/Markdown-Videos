@@ -1,4 +1,4 @@
-export type Provider = 'youtube' | 'vimeo';
+export type Provider = 'youtube' | 'vimeo' | 'imgur';
 
 export type ParsedVideo = {
   provider: Provider;
@@ -28,7 +28,13 @@ const VIMEO_REGEX =
   /^(?:https?:\/\/)?(?:www\.)?(?:player\.)?vimeo\.com\/(?:[a-z]*\/)*(?:.*\/)?([0-9]{6,11})(?:[?#/].*)?$/i;
 const YOUTUBE_ID_REGEX = /^[A-Za-z0-9_-]{11}$/;
 
-/** Parse a YouTube/Vimeo link (or a bare YouTube video id) into its parts. */
+// Kept in sync with apps/api/src/providers.py
+const IMGUR_REGEXES = [
+  /^(?:https?:\/\/)?i\.imgur\.com\/([A-Za-z0-9]{5,10})\.(?:mp4|gifv|webm|gif|jpe?g|png)(?:[?#].*)?$/i,
+  /^(?:https?:\/\/)?(?:www\.|m\.)?imgur\.com\/([A-Za-z0-9]{5,10})(?:[?#].*)?$/i,
+];
+
+/** Parse a video link (or a bare YouTube video id) into its parts. */
 export function parseVideoUrl(input: string): ParsedVideo | null {
   const value = input.trim();
   if (!value) return null;
@@ -44,6 +50,11 @@ export function parseVideoUrl(input: string): ParsedVideo | null {
     return { provider: 'vimeo', id: vimeo[1], watchUrl: `https://vimeo.com/${vimeo[1]}` };
   }
 
+  for (const re of IMGUR_REGEXES) {
+    const imgur = value.match(re);
+    if (imgur) return { provider: 'imgur', id: imgur[1], watchUrl: `https://imgur.com/${imgur[1]}` };
+  }
+
   return null;
 }
 
@@ -54,9 +65,12 @@ export const DEFAULT_OPTIONS: EmbedOptions = {
   duration: 500,
 };
 
+/** Only YouTube has animated GIFs. */
+export const supportsGif = (provider: Provider) => provider === 'youtube';
+
 /** Build the thumbnail image URL, omitting params that equal the API defaults. */
 export function buildImageUrl(video: ParsedVideo, opts: EmbedOptions): string {
-  const isGif = opts.format === 'gif' && video.provider === 'youtube';
+  const isGif = opts.format === 'gif' && supportsGif(video.provider);
   const params = new URLSearchParams();
   if (opts.width !== DEFAULT_OPTIONS.width) params.set('width', String(opts.width));
   if (opts.height !== DEFAULT_OPTIONS.height) params.set('height', String(opts.height));
@@ -89,4 +103,11 @@ export function toHtml(title: string, src: string, href: string, width: number, 
 export const PROVIDER_LABEL: Record<Provider, string> = {
   youtube: 'YouTube',
   vimeo: 'Vimeo',
+  imgur: 'Imgur',
 };
+
+/** "YouTube, Vimeo or Imgur" */
+export const SUPPORTED_SERVICES = (() => {
+  const names = Object.values(PROVIDER_LABEL);
+  return `${names.slice(0, -1).join(', ')} or ${names[names.length - 1]}`;
+})();

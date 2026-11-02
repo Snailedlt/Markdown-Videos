@@ -82,7 +82,7 @@ describe('Generator', () => {
     render(Generator);
     await user.type(screen.getByLabelText('Video URL'), 'https://example.com/video');
 
-    expect(screen.getByText(/doesn’t look like a YouTube or Vimeo link/)).toBeInTheDocument();
+    expect(screen.getByText(/doesn’t look like a YouTube, Vimeo or Imgur link/)).toBeInTheDocument();
     expect(screen.getByLabelText('Video URL')).toHaveAttribute('aria-invalid', 'true');
     expect(preview()).toBeNull();
   });
@@ -93,6 +93,10 @@ describe('Generator', () => {
     const gif = screen.getByRole('radio', { name: 'Animated GIF' });
 
     await user.type(screen.getByLabelText('Video URL'), 'https://vimeo.com/76979871');
+    expect(gif).toBeDisabled();
+
+    await user.clear(screen.getByLabelText('Video URL'));
+    await user.type(screen.getByLabelText('Video URL'), 'https://i.imgur.com/A61SaA1.mp4');
     expect(gif).toBeDisabled();
 
     await user.clear(screen.getByLabelText('Video URL'));

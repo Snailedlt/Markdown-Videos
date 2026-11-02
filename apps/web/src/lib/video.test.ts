@@ -48,7 +48,27 @@ describe('parseVideoUrl', () => {
     expect(parseVideoUrl(url)).toEqual({ provider: 'vimeo', id, watchUrl: `https://vimeo.com/${id}` });
   });
 
-  it.each(['', '   ', 'hello', 'https://example.com/watch?v=dQw4w9WgXcQ', 'https://vimeo.com/about', 'dQw4w9WgXc'])(
+  it.each([
+    ['https://i.imgur.com/A61SaA1.mp4', 'A61SaA1'],
+    ['https://i.imgur.com/A61SaA1.gifv', 'A61SaA1'],
+    ['i.imgur.com/A61SaA1.gif', 'A61SaA1'],
+    ['https://imgur.com/A61SaA1', 'A61SaA1'],
+  ])('finds the Imgur video in %s', (url, id) => {
+    expect(parseVideoUrl(url)).toEqual({ provider: 'imgur', id, watchUrl: `https://imgur.com/${id}` });
+  });
+
+  it.each([
+    '',
+    '   ',
+    'hello',
+    'https://example.com/watch?v=dQw4w9WgXcQ',
+    'https://vimeo.com/about',
+    'dQw4w9WgXc',
+    'https://www.tiktok.com/@scout2015',
+    'https://www.tiktok.com/@scout2015/video/67183353',
+    'https://imgur.com/a/AbCdE12',
+    'https://imgur.com/gallery/some-title-AbCdE12',
+  ])(
     'rejects %j',
     (input) => {
       expect(parseVideoUrl(input)).toBeNull();
@@ -79,6 +99,18 @@ describe('buildImageUrl', () => {
 
   it('falls back to a still image for Vimeo, which has no GIF endpoint', () => {
     expect(buildImageUrl(vimeo, opts({ format: 'gif', duration: 300 }))).toBe(`${API_BASE_URL}/vimeo/76979871`);
+  });
+
+  it('builds Imgur URLs from the ID', () => {
+    const imgur = parseVideoUrl('https://i.imgur.com/A61SaA1.mp4')!;
+    expect(buildImageUrl(imgur, opts({ width: 640, height: 360 }))).toBe(
+      `${API_BASE_URL}/imgur/A61SaA1?width=640&height=360`
+    );
+  });
+
+  it('never builds GIF URLs for services without GIFs', () => {
+    const imgur = parseVideoUrl('https://imgur.com/A61SaA1')!;
+    expect(buildImageUrl(imgur, opts({ format: 'gif' }))).toBe(`${API_BASE_URL}/imgur/A61SaA1`);
   });
 
   it('uses the API base URL from the environment', () => {

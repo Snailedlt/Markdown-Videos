@@ -75,22 +75,24 @@ def _resized(path: str, size: typing.Tuple[int, int]) -> Image.Image:
     return _load_rgba(path).resize(size)
 
 
-def add_play_button_to_thumbnail(
-    thumbnail: Image.Image, play_button_path: str
-) -> Image.Image:
-    # Resize play button
-    play_size_ideal = (int(thumbnail.width / 4.75), int(thumbnail.width / 4.75 * 0.7))
-    play_size_max = (132, 84)
-    play_size_new = (
-        max(1, min(play_size_ideal[0], play_size_max[0])),
-        max(1, min(play_size_ideal[1], play_size_max[1])),
-    )
-    play = _resized(play_button_path, play_size_new)
+def play_button_size(thumbnail: Image.Image) -> typing.Tuple[int, int]:
+    """Play buttons scale with the thumbnail, up to 132x84."""
+    ideal = (int(thumbnail.width / 4.75), int(thumbnail.width / 4.75 * 0.7))
+    return (max(1, min(ideal[0], 132)), max(1, min(ideal[1], 84)))
+
+
+def overlay_play_button(thumbnail: Image.Image, play: Image.Image) -> Image.Image:
+    """Darken the edges with the backdrop and put the play button in the middle."""
     backdrop = _resized(BACKDROP_PATH, (thumbnail.width, thumbnail.height))
-    # Determine position of play button image
     play_x = int(thumbnail.width / 2) - int(play.width / 2)
     play_y = int(thumbnail.height / 2) - int(play.height / 2)
-    # Add backdrop and play button
     thumbnail.paste(backdrop, (0, 0), backdrop)
     thumbnail.paste(play, (play_x, play_y), play)
     return thumbnail
+
+
+def add_play_button_to_thumbnail(
+    thumbnail: Image.Image, play_button_path: str
+) -> Image.Image:
+    play = _resized(play_button_path, play_button_size(thumbnail))
+    return overlay_play_button(thumbnail, play)

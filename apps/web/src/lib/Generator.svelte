@@ -7,6 +7,8 @@
     API_BASE_URL,
     DEFAULT_OPTIONS,
     PROVIDER_LABEL,
+    SUPPORTED_SERVICES,
+    supportsGif,
     buildImageUrl,
     parseVideoUrl,
     toHtml,
@@ -52,7 +54,7 @@
   const video = $derived(parseVideoUrl(urlInput));
   const hasInput = $derived(urlInput.trim().length > 0);
   const invalid = $derived(hasInput && !video);
-  const canAnimate = $derived(video?.provider !== 'vimeo');
+  const canAnimate = $derived(!video || supportsGif(video.provider));
   const isGif = $derived(animated && canAnimate);
   const height = $derived(Math.round((width * 9) / 16));
 
@@ -225,7 +227,7 @@
 
   <p id="url-help" class="help" class:error={invalid}>
     {#if invalid}
-      That doesn’t look like a YouTube or Vimeo link. Try something like <code>https://youtu.be/dQw4w9WgXcQ</code>.
+      That doesn’t look like a {SUPPORTED_SERVICES} link. Try something like <code>https://youtu.be/dQw4w9WgXcQ</code>.
     {:else}
       <span class="muted">Try an example:</span>
       {#each EXAMPLES as ex}
@@ -458,6 +460,10 @@
     background: var(--accent-soft);
     color: var(--accent);
     white-space: nowrap;
+  }
+  .detected.imgur {
+    background: color-mix(in srgb, #1bb76e 18%, transparent);
+    color: #13945a;
   }
   .detected.vimeo {
     background: color-mix(in srgb, #1ab7ea 18%, transparent);
