@@ -203,3 +203,19 @@ def test_tiktok_thumbnail_live():
     assert response.status_code == 200, response.text
     assert response.headers["content-type"] == "image/jpeg"
     assert Image.open(io.BytesIO(response.content)).size == (default_img_width, default_img_height)
+
+
+# Live checks for Loom, Dailymotion and Streamable, using the example videos
+# from each service's own developer documentation.
+@pytest.mark.parametrize(
+    "path",
+    [
+        "/loom/0281766fa2d04bb788eaf19e65135184",
+        "/dailymotion/x7tgad0",
+        "/streamable/moo",
+    ],
+)
+def test_more_services_live(path):
+    response = client.get(path)
+    assert response.status_code == 200, response.text
+    assert Image.open(io.BytesIO(response.content)).size == (default_img_width, default_img_height)

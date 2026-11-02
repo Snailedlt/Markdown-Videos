@@ -21,7 +21,7 @@
       icon: MessageSquareText,
       color: 'var(--green)',
       title: 'Issues, PRs & discussions',
-      text: 'Show a bug reproduction or a demo right in the conversation. It works anywhere GitHub renders Markdown.',
+      text: 'Show a bug reproduction or a Loom demo right in the conversation. It works anywhere GitHub renders Markdown.',
     },
     {
       icon: Globe,
@@ -38,7 +38,7 @@
   ];
 
   const steps = [
-    { title: 'Paste a link', text: 'A YouTube, Vimeo, TikTok or Imgur link. We find the video for you.' },
+    { title: 'Paste a link', text: 'From YouTube, Vimeo, Loom, TikTok, Imgur, Dailymotion or Streamable. We find the video for you.' },
     { title: 'Tweak it', text: 'Pick a size, a still image or an animated GIF, and add a title for screen readers.' },
     { title: 'Copy & paste', text: 'Grab the Markdown or HTML snippet and drop it wherever you need it.' },
   ];
@@ -64,9 +64,9 @@
       badges: [{ label: 'Vimeo', color: 'var(--vimeo)' }],
     },
     {
-      path: '/imgur/{video_id}',
-      desc: 'Still thumbnail of an Imgur video or GIF',
-      badges: [{ label: 'Imgur', color: 'var(--green)' }],
+      path: '/{service}/{video_id}',
+      desc: 'Still thumbnail for imgur, loom, dailymotion or streamable',
+      badges: [{ label: 'More services', color: 'var(--green)' }],
     },
     {
       path: '/url?url={video_url}',
@@ -116,7 +116,7 @@
         in your Markdown
       </h1>
       <p class="lead">
-        Turn a YouTube, Vimeo, TikTok or Imgur link into a clickable thumbnail with a play button, ready for GitHub READMEs, websites
+        Turn a YouTube, Vimeo, Loom or TikTok link (and more) into a clickable thumbnail with a play button, ready for GitHub READMEs, websites
         and docs.
       </p>
       <div class="generator-wrap">

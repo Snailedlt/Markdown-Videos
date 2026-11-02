@@ -227,7 +227,7 @@
 
   <p id="url-help" class="help" class:error={invalid}>
     {#if invalid}
-      That doesn’t look like a {SUPPORTED_SERVICES} link. Try something like <code>https://youtu.be/dQw4w9WgXcQ</code>.
+      That isn’t a link we support yet ({SUPPORTED_SERVICES}). Try something like <code>https://youtu.be/dQw4w9WgXcQ</code>.
     {:else}
       <span class="muted">Try an example:</span>
       {#each EXAMPLES as ex}
@@ -468,6 +468,18 @@
   .detected.imgur {
     background: color-mix(in srgb, #1bb76e 18%, transparent);
     color: #13945a;
+  }
+  .detected.loom {
+    background: color-mix(in srgb, #625df5 16%, transparent);
+    color: #5650e0;
+  }
+  .detected.dailymotion {
+    background: color-mix(in srgb, #0066dc 15%, transparent);
+    color: #0a5fc4;
+  }
+  .detected.streamable {
+    background: color-mix(in srgb, #0f90fa 15%, transparent);
+    color: #0b7ad6;
   }
   .detected.vimeo {
     background: color-mix(in srgb, #1ab7ea 18%, transparent);
