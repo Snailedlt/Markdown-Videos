@@ -1,0 +1,9 @@
+# Lives in ruff.toml rather than pyproject.toml on purpose: Vercel's Python
+# builder installs dependencies from pyproject.toml when one exists, which
+# would bypass Pipfile.lock and deploy the API without its packages.
+target-version = "py311"
+
+[lint]
+# Pin the rule set so new ruff releases (CI installs the latest) don't
+# change what is enforced. These are ruff's classic defaults.
+select = ["E4", "E7", "E9", "F"]

@@ -13,7 +13,11 @@ jobs:
       runs-on: ubuntu-latest
       strategy:
         matrix:
-          python-version: ["3.9", "3.10"]
+          python-version: ["3.11", "3.13", "3.14"]
+      env:
+        # Make pipenv use this job's Python. Pipfile only asks for "3", so
+        # otherwise pipenv picks the newest interpreter on the runner.
+        PIPENV_PYTHON: ${{ matrix.python-version }}
 
       steps:
         - name: Check out code
@@ -28,7 +32,7 @@ jobs:
         - name: Setup Node.js environment
           uses: actions/setup-node@v4
           with:
-            node-version: "20.5"
+            node-version: "22"
             cache: 'pnpm'
 
         - name: Set up Python ${{ matrix.python-version }}

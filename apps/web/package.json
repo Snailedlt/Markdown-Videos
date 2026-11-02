@@ -2,6 +2,9 @@
   "name": "web",
   "private": true,
   "version": "0.0.0",
+  "engines": {
+    "node": ">=20.19.0"
+  },
   "type": "module",
   "scripts": {
     "dev": "pnpm with-env vite",
@@ -12,20 +15,15 @@
     "with-env": "dotenv -e ../../.env"
   },
   "devDependencies": {
-    "@sveltejs/vite-plugin-svelte": "^3.1.2",
-    "@tsconfig/svelte": "^5.0.4",
-    "highlight.js": "^11.11.1",
-    "sass": "^1.87.0",
-    "svelte": "^4.2.19",
-    "svelte-check": "^4.1.6",
-    "svelte-highlight": "^7.8.3",
-    "tslib": "^2.8.1",
-    "typescript": "^5.8.3",
-    "vite": "^6.3.3"
+    "@sveltejs/vite-plugin-svelte": "^7.3.1",
+    "@tsconfig/svelte": "^5.0.8",
+    "svelte": "^5.57.3",
+    "svelte-check": "^4.7.8",
+    "tslib": "^2.9.1",
+    "typescript": "^6.0.3",
+    "vite": "^8.3.5"
   },
   "dependencies": {
-    "dedent-js": "^1.0.1",
-    "install": "^0.13.0",
-    "lucide-svelte": "^0.503.0"
+    "@lucide/svelte": "^1.66.0"
   }
 }

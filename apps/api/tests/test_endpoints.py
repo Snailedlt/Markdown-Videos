@@ -69,11 +69,11 @@ def test_youtube_thumbnail_all_params():
     for video_id in youtube_example_video_ids:
         for filetype in util.Supported_Filetype:
             response = client.get(
-                f"/youtube/{video_id}?width={alt_img_width}&height={alt_img_height}&filetype={filetype}"
+                f"/youtube/{video_id}?width={alt_img_width}&height={alt_img_height}&filetype={filetype.value}"
             )
             assert response.status_code == 200
             assert response.headers["content-type"] in [
-                f"image/{filetype}",
+                f"image/{filetype.value}",
                 f"image/Supported_Filetype.{filetype.capitalize()}",
             ]
 
@@ -140,11 +140,11 @@ def test_vimeo_thumbnail_default_params():
 def test_vimeo_thumbnail_all_params():
     for filetype in util.Supported_Filetype:
         response = client.get(
-            f"/vimeo/{vimeo_example_video_id}?width={alt_img_width}&height={alt_img_height}&filetype={filetype}"
+            f"/vimeo/{vimeo_example_video_id}?width={alt_img_width}&height={alt_img_height}&filetype={filetype.value}"
         )
         assert response.status_code == 200
         assert response.headers["content-type"] in [
-            f"image/{filetype}",
+            f"image/{filetype.value}",
             f"image/Supported_Filetype.{filetype.capitalize()}",
         ]
 

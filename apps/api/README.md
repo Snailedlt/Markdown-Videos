@@ -55,9 +55,11 @@ For the full documentation see the Swagger and ReDoc docs
 |---------|----------|-----------------------------|-------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------|---------------------------|
 |width    |int       |320                          |The width of the thumbnail                                               |http://markdown-videos-api.jorgenkh.no/youtube/8lGpZkjnkt4?width=320                                                   |All Endpoints              |
 |height   |int       |180                          |The height of the thumbnail                                              |http://markdown-videos-api.jorgenkh.no/youtube/8lGpZkjnkt4?height=180                                                  |All Endpoints              |
-|duration |int       |500                          |The duration you want to display each image in the gif (in milliseconds) |http://markdown-videos-api.jorgenkh.no/youtube/8lGpZkjnkt4.gif?duration=500                                            |Endpoints ending with .gif |
+|duration |int       |500                          |The duration you want to display each image in the gif (in milliseconds, 20–10000) |http://markdown-videos-api.jorgenkh.no/youtube/8lGpZkjnkt4.gif?duration=500                                            |Endpoints ending with .gif |
 |filetype |str       |jpeg                         |Valid filetypes are: `jpeg`, `jpg`, `png`, `webp`, `bmp`, `gif`          |http://markdown-videos-api.jorgenkh.no/youtube/8lGpZkjnkt4.gif?filetype=jpeg                                           |All still-image endpoints  |
 |url      |str       |https://youtu.be/dQw4w9WgXcQ |The url of the video you want the thumbnail of                           |http://markdown-videos-api.jorgenkh.no/url?url=https%3A%2F%2Fyoutu.be%2FdQw4w9WgXcQ&width=320&height=180&filetype=jpeg |/url                       |
+
+Responses are cached by browsers, GitHub's image proxy and Vercel's CDN (`Cache-Control: public, max-age=86400, s-maxage=2592000`), so a changed YouTube thumbnail can take up to 30 days to show up.
 
 Examples with multiple parameters:
 - normal -> http://markdown-videos-api.jorgenkh.no/youtube/8lGpZkjnkt4?width=320&height=180&filetype=jpeg

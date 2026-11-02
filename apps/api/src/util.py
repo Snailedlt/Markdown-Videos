@@ -5,6 +5,9 @@ from requests.adapters import HTTPAdapter, Retry
 from io import BytesIO
 from enum import Enum
 import re
+from functools import lru_cache
+
+BACKDROP_PATH = "src/img/backdrop.png"
 
 
 class Supported_Filetype(str, Enum):
@@ -32,6 +35,22 @@ def get_video_id_by_url(url, regex) -> typing.Optional[str]:
     raise Exception("Something went wrong while trying to get the video id.")
 
 
+# One shared HTTP session per (warm) serverless instance, so connections to
+# img.youtube.com / vumbnail.com are reused instead of re-negotiated per request.
+_session = requests.Session()
+_session.mount(
+    "https://",
+    HTTPAdapter(max_retries=Retry(total=3, backoff_factor=0.2, status_forcelist=(502, 503, 504))),
+)
+
+# Never let a slow upstream keep a (billed) function running for long.
+REQUEST_TIMEOUT_SECONDS = 8
+
+
+def request_with_retry(url: str) -> requests.Response:
+    return _session.get(url, timeout=REQUEST_TIMEOUT_SECONDS)
+
+
 def read_img_from_url(url: str, alt_url: typing.Optional[str] = None) -> Image.Image:
     res = request_with_retry(url)
     try:
@@ -40,37 +59,38 @@ def read_img_from_url(url: str, alt_url: typing.Optional[str] = None) -> Image.I
         if alt_url is not None and res.status_code == 404:
             res = request_with_retry(alt_url)
             res.raise_for_status()
+        else:
+            raise
     return Image.open(BytesIO(res.content))
 
 
+@lru_cache(maxsize=None)
+def _load_rgba(path: str) -> Image.Image:
+    """Static overlay images are read from disk once per instance."""
+    return Image.open(path).convert("RGBA")
+
+
+@lru_cache(maxsize=64)
+def _resized(path: str, size: typing.Tuple[int, int]) -> Image.Image:
+    return _load_rgba(path).resize(size)
+
+
 def add_play_button_to_thumbnail(
-    thumbnail: Image, play_button_path: str
+    thumbnail: Image.Image, play_button_path: str
 ) -> Image.Image:
-    # Read images
-    play = Image.open(play_button_path).convert("RGBA")
     # Resize play button
     play_size_ideal = (int(thumbnail.width / 4.75), int(thumbnail.width / 4.75 * 0.7))
     play_size_max = (132, 84)
-    play_size_new = min(play_size_ideal[0], play_size_max[0]), min(
-        play_size_ideal[1], play_size_max[1]
+    play_size_new = (
+        max(1, min(play_size_ideal[0], play_size_max[0])),
+        max(1, min(play_size_ideal[1], play_size_max[1])),
     )
-    play = play.resize(play_size_new)
-    # Create backdrop
-    backdrop = Image.open("src/img/backdrop.png")
-    # Resize backdrop
-    backdrop = backdrop.resize((thumbnail.width, thumbnail.height))
+    play = _resized(play_button_path, play_size_new)
+    backdrop = _resized(BACKDROP_PATH, (thumbnail.width, thumbnail.height))
     # Determine position of play button image
     play_x = int(thumbnail.width / 2) - int(play.width / 2)
     play_y = int(thumbnail.height / 2) - int(play.height / 2)
-    play_pos = (play_x, play_y)
-    # Add backdrop
+    # Add backdrop and play button
     thumbnail.paste(backdrop, (0, 0), backdrop)
-    # Add play button image
-    thumbnail.paste(play, (play_pos), play)
+    thumbnail.paste(play, (play_x, play_y), play)
     return thumbnail
-
-
-def request_with_retry(url, retries: typing.Union[Retry, int] = 5):
-    s = requests.Session()
-    s.mount("https://", HTTPAdapter(max_retries=retries))
-    return s.get(url)

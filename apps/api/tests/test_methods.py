@@ -1,3 +1,5 @@
+import functools
+
 from fastapi.testclient import TestClient
 import pytest
 import requests
@@ -9,6 +11,13 @@ from main import app
 client = TestClient(app)
 
 
+@functools.cache
+def youtube_video_status(video_id: str) -> int:
+    """Check each video once: ~150 URL formats share about a dozen IDs, and
+    requesting YouTube for every one of them gets CI rate limited (429)."""
+    return requests.get(f"https://youtu.be/{video_id}", timeout=15).status_code
+
+
 @pytest.mark.parametrize(
     "url, expected_video_id",
     data_for_testing.active_youtube_array_url_formats,
@@ -17,8 +26,7 @@ def test_get_youtube_video_id_by_valid_url(url, expected_video_id):
     assert util.get_video_id_by_url(url, util.URL_Regex.YOUTUBE) == expected_video_id
 
     # Test if the urls are valid with the expected video id
-    url_input_response = requests.get(f"https://youtu.be/{expected_video_id}")
-    assert url_input_response.status_code == 200
+    assert youtube_video_status(expected_video_id) == 200
 
 
 @pytest.mark.parametrize(
