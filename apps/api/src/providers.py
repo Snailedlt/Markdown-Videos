@@ -137,18 +137,6 @@ def oembed_thumbnail(endpoint: str, video_url: str, provider: Provider, ref: str
     return _image(provider, ref, urljoin("https:", thumbnail_url))
 
 
-def _tiktok(provider: Provider, ref: str) -> Image.Image:
-    video_url = ref
-    if not re.match(r"^https://www\.tiktok\.com/@", ref):
-        # Short share links (vm.tiktok.com/..., tiktok.com/t/...) redirect to the
-        # full link, which is what TikTok's oEmbed understands.
-        res = _get(ref, headers=OEMBED_HEADERS, allow_redirects=True)
-        video_url = res.url.split("?")[0]
-        if "/video/" not in video_url:
-            raise VideoNotFound(provider, ref)
-    return oembed_thumbnail("https://www.tiktok.com/oembed", video_url, provider, ref)
-
-
 def _imgur(provider: Provider, video_id: str) -> Image.Image:
     # "h" is Imgur's largest thumbnail (1024px). For videos and GIFs it's a
     # still frame. Missing posts redirect to a "removed" placeholder image,
@@ -193,30 +181,7 @@ def _streamable(provider: Provider, video_id: str) -> Image.Image:
 _STREAMABLE_PAGES = r"(?!(?:login|signup|upload|pricing|settings|about|blog|terms|privacy|documentation|clipper|tools|enterprise)\b)"
 
 
-def _tiktok_ref(m: re.Match) -> str:
-    if m.groupdict().get("user"):
-        return f"https://www.tiktok.com/@{m.group('user')}/video/{m.group('id')}"
-    return m.group(0).split("?")[0]
-
-
 PROVIDERS: typing.Tuple[Provider, ...] = (
-    Provider(
-        key="tiktok",
-        name="TikTok",
-        patterns=(
-            # Video IDs are 19 digits today; allow a little growth, and require the
-            # ID to end so a half-typed link isn't taken for a different video
-            re.compile(r"^(?:https?://)?(?:www\.|m\.)?tiktok\.com/@(?P<user>[\w.-]+)/video/(?P<id>\d{19,21})(?=[/?#]|$)", re.I),
-            re.compile(r"^(?:https?://)?(?:vm|vt)\.tiktok\.com/(?P<id>[A-Za-z0-9]+)/?(?:[?#].*)?$", re.I),
-            re.compile(r"^(?:https?://)?(?:www\.)?tiktok\.com/t/(?P<id>[A-Za-z0-9]+)/?(?:[?#].*)?$", re.I),
-        ),
-        color=(0, 0, 0),
-        fetch=_tiktok,
-        ref=_tiktok_ref,
-        # TikTok's oEmbed needs the full link (with the username), so TikTok
-        # videos go through /url?url=... instead of /tiktok/{id}.
-        id_route=False,
-    ),
     Provider(
         key="imgur",
         name="Imgur",
@@ -267,7 +232,7 @@ PROVIDERS += (
 )
 
 def _resolve_short_link(provider: Provider, url: str) -> str:
-    """Follow a share short link (b23.tv/..., xhslink.com/...) to the page it points to."""
+    """Follow a share short link to the page it points to."""
     res = _get(url if url.startswith("http") else f"https://{url}", headers=OEMBED_HEADERS, allow_redirects=True)
     if res.status_code in NOT_FOUND_STATUSES:
         raise VideoNotFound(provider, url)
@@ -277,30 +242,6 @@ def _resolve_short_link(provider: Provider, url: str) -> str:
 def _rumble(provider: Provider, ref: str) -> Image.Image:
     return oembed_thumbnail("https://rumble.com/api/Media/oembed.json", ref, provider, ref)
 
-
-def _bilibili(provider: Provider, ref: str) -> Image.Image:
-    if ref.startswith(("http://", "https://")):
-        # A b23.tv short link: find the BV/av ID it points to
-        target = _resolve_short_link(provider, ref)
-        found = _BILIBILI_ID.search(target)
-        if not found:
-            raise VideoNotFound(provider, ref)
-        ref = found.group("id")
-    param = f"aid={ref[2:]}" if ref.lower().startswith("av") else f"bvid={ref}"
-    res = _get(f"https://api.bilibili.com/x/web-interface/view?{param}", headers=OEMBED_HEADERS)
-    _check(res, provider, ref)
-    body = res.json()
-    # Bilibili answers HTTP 200 with its own error codes: -404/62002/62004 =
-    # missing or hidden video, -412 = request refused
-    code = body.get("code")
-    if code == -412:
-        raise UpstreamError(provider, 412)
-    if code != 0 or not body.get("data", {}).get("pic"):
-        raise VideoNotFound(provider, ref)
-    return _image(provider, ref, urljoin("https:", body["data"]["pic"].replace("http://", "https://", 1)))
-
-
-_BILIBILI_ID = re.compile(r"/video/(?P<id>BV[0-9A-Za-z]{10}|av\d{1,12})(?=[/?#]|$)", re.I)
 
 PROVIDERS += (
     Provider(
@@ -316,19 +257,6 @@ PROVIDERS += (
         # Rumble videos go through /url?url=...
         ref=lambda m: m.group(0).split("?")[0] if m.group(0).startswith("http") else f"https://{m.group(0).split('?')[0]}",
         id_route=False,
-    ),
-    Provider(
-        key="bilibili",
-        name="Bilibili",
-        patterns=(
-            re.compile(r"^(?:https?://)?(?:www\.|m\.)?bilibili\.com/video/(?P<id>BV[0-9A-Za-z]{10}|av\d{1,12})(?=[/?#]|$)", re.I),
-            re.compile(r"^(?:https?://)?b23\.tv/(?P<id>[0-9A-Za-z]{5,12})/?(?:[?#].*)?$", re.I),
-        ),
-        color=(0, 161, 214),
-        fetch=_bilibili,
-        # BV/av IDs are used as-is; b23.tv short links are resolved first
-        ref=lambda m: m.group("id") if m.group("id")[:2].lower() in ("bv", "av") else f"https://b23.tv/{m.group('id')}",
-        id_pattern=r"(?:BV[0-9A-Za-z]{10}|av\d{1,12})",
     ),
 )
 
@@ -603,7 +531,7 @@ def play_button(color: typing.Tuple[int, int, int], size: typing.Tuple[int, int]
 def fit_frame(image: Image.Image, width: int, height: int) -> Image.Image:
     """Fill width x height without stretching.
 
-    Close to the target shape: crop to fill. Very different (a vertical TikTok
+    Close to the target shape: crop to fill. Very different (a vertical video
     in a 16:9 thumbnail): show the whole frame on a blurred, darkened copy of
     itself, like video apps do.
     """
