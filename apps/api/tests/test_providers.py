@@ -547,6 +547,11 @@ PAGE = """<html><head><title>x</title>
             "https://www.xiaohongshu.com/discovery/item/674051740000000007027a15?xsec_token=CBge",
             ("rednote", "https://www.xiaohongshu.com/discovery/item/674051740000000007027a15?xsec_token=CBge"),
         ),
+        (
+            "https://www.rednote.com/en/discovery/item/6a151ded0000000008026217",
+            ("rednote", "https://www.rednote.com/en/discovery/item/6a151ded0000000008026217"),
+        ),
+        ("rednote.com/explore/6a151ded0000000008026217", ("rednote", "https://rednote.com/explore/6a151ded0000000008026217")),
         ("http://xhslink.com/a/AbCd1234", ("rednote", "http://xhslink.com/a/AbCd1234")),
     ],
 )
@@ -555,7 +560,9 @@ def test_recognises_page_preview_links(url, expected):
     assert (provider.key, ref) == expected
 
 
-@pytest.mark.parametrize("url", ["https://www.xiaohongshu.com/", "https://www.xiaohongshu.com/user/profile/abc"])
+@pytest.mark.parametrize(
+    "url", ["https://www.xiaohongshu.com/", "https://www.xiaohongshu.com/user/profile/abc", "https://www.rednote.com/en/user/profile/abc"]
+)
 def test_ignores_non_video_pages(url):
     assert providers.match(url) is None
 

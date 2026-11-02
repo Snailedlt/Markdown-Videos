@@ -136,7 +136,8 @@ const RULES: Rule[] = [
   {
     provider: 'rednote',
     // Notes usually need their xsec_token, so keep the query string
-    re: /^(?:https?:\/\/)?(?:www\.)?xiaohongshu\.com\/(?:explore|discovery\/item)\/([0-9a-f]{24})(?:\?[^#]*)?/i,
+    // xiaohongshu.com or rednote.com, with or without a language prefix (/en/)
+    re: /^(?:https?:\/\/)?(?:www\.)?(?:xiaohongshu|rednote)\.com\/(?:[a-z]{2}(?:-[a-z]{2,4})?\/)?(?:explore|discovery\/item)\/([0-9a-f]{24})(?:\?[^#]*)?/i,
     video: (m, value) => ({ id: m[1], watchUrl: asLink(value, true), viaUrl: true }),
   },
   {

@@ -545,7 +545,12 @@ PROVIDERS += (
         name="Rednote",
         patterns=(
             # Notes usually need their xsec_token, so keep the query string
-            re.compile(r"^(?:https?://)?(?:www\.)?xiaohongshu\.com/(?:explore|discovery/item)/[0-9a-f]{24}(?:\?[^#]*)?", re.I),
+            # Both domains (xiaohongshu.com and the newer rednote.com), with or
+            # without a language prefix (rednote.com/en/...)
+            re.compile(
+                r"^(?:https?://)?(?:www\.)?(?:xiaohongshu|rednote)\.com/(?:[a-z]{2}(?:-[a-z]{2,4})?/)?(?:explore|discovery/item)/[0-9a-f]{24}(?:\?[^#]*)?",
+                re.I,
+            ),
             re.compile(r"^(?:https?://)?xhslink\.com/(?:[a-z]/)?[A-Za-z0-9]{4,20}/?", re.I),
         ),
         color=(255, 36, 66),

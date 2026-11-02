@@ -84,6 +84,12 @@ describe('parseVideoUrl', () => {
       '674051740000000007027a15',
       'https://www.xiaohongshu.com/discovery/item/674051740000000007027a15?xsec_token=CBge',
     ],
+    [
+      'https://www.rednote.com/en/discovery/item/6a151ded0000000008026217',
+      'rednote',
+      '6a151ded0000000008026217',
+      'https://www.rednote.com/en/discovery/item/6a151ded0000000008026217',
+    ],
   ])('sends %s through /url', (url, provider, id, watchUrl) => {
     expect(parseVideoUrl(url)).toEqual({ provider, id, watchUrl, viaUrl: true });
   });
@@ -102,6 +108,7 @@ describe('parseVideoUrl', () => {
     'https://www.twitch.tv/some_streamer',
     'https://www.reddit.com/r/videos/',
     'https://www.xiaohongshu.com/user/profile/abc',
+    'https://www.rednote.com/en/user/profile/abc',
     'hello',
     'https://example.com/watch?v=dQw4w9WgXcQ',
     'https://vimeo.com/about',
