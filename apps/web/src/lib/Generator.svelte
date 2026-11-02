@@ -497,14 +497,6 @@
     background: color-mix(in srgb, #ff4500 14%, transparent);
     color: #e03d00;
   }
-  .detected.tencent {
-    background: color-mix(in srgb, #ff6a00 15%, transparent);
-    color: #d95a00;
-  }
-  .detected.iqiyi {
-    background: color-mix(in srgb, #00be06 15%, transparent);
-    color: #079a0b;
-  }
   .detected.rednote {
     background: color-mix(in srgb, #ff2442 14%, transparent);
     color: #e01b37;

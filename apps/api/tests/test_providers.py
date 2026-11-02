@@ -532,7 +532,7 @@ def test_wrong_credentials_are_a_502(upstream, oauth, monkeypatch):
     assert "Reddit answered 401" in response.json()["detail"]
 
 
-# --- Tencent Video, iQIYI, Rednote (page preview images) ----------------------------
+# --- Rednote (page preview images) ---------------------------------------------
 
 PAGE = """<html><head><title>x</title>
 <meta property="og:title" content="A video">
@@ -543,11 +543,6 @@ PAGE = """<html><head><title>x</title>
 @pytest.mark.parametrize(
     "url, expected",
     [
-        ("https://v.qq.com/x/page/q326831cny0.html", ("tencent", "q326831cny0")),
-        ("https://v.qq.com/x/cover/7ce5noezvafma27/a00269ix3l8.html", ("tencent", "a00269ix3l8")),
-        ("https://m.v.qq.com/x/m/play?cid=abc&vid=a00269ix3l8", ("tencent", "a00269ix3l8")),
-        ("http://www.iqiyi.com/v_19rrojlavg.html", ("iqiyi", "https://www.iqiyi.com/v_19rrojlavg.html")),
-        ("https://www.iq.com/play/some-drama-19rrhnnclk?lang=en_us", ("iqiyi", "https://www.iq.com/play/some-drama-19rrhnnclk")),
         (
             "https://www.xiaohongshu.com/discovery/item/674051740000000007027a15?xsec_token=CBge",
             ("rednote", "https://www.xiaohongshu.com/discovery/item/674051740000000007027a15?xsec_token=CBge"),
@@ -560,16 +555,19 @@ def test_recognises_page_preview_links(url, expected):
     assert (provider.key, ref) == expected
 
 
-@pytest.mark.parametrize("url", ["https://v.qq.com/", "https://www.iqiyi.com/", "https://www.xiaohongshu.com/user/profile/abc"])
+@pytest.mark.parametrize("url", ["https://www.xiaohongshu.com/", "https://www.xiaohongshu.com/user/profile/abc"])
 def test_ignores_non_video_pages(url):
     assert providers.match(url) is None
 
 
-def test_tencent_reads_the_pages_preview_image(upstream):
+NOTE = "https://www.xiaohongshu.com/explore/6411cf99000000001300b6d9"
+
+
+def test_rednote_reads_the_pages_preview_image(upstream):
     routes, calls = upstream
-    routes["https://v.qq.com/x/page/q326831cny0.html"] = FakeResponse(content=PAGE.encode(), url="https://v.qq.com/x/page/q326831cny0.html")
+    routes[NOTE] = FakeResponse(content=PAGE.encode(), url=NOTE)
     routes["https://puui.qpic.cn/"] = FakeResponse(content=jpeg((1280, 720)))
-    response = client.get("/tencent/q326831cny0")
+    response = client.get("/url", params={"url": NOTE})
     assert response.status_code == 200
     # HTML entities in the content attribute are decoded
     assert calls[1] == "https://puui.qpic.cn/vpic_cover/q326831cny0/q326831cny0_hz.jpg/1280?a=1&b=2"
@@ -585,25 +583,23 @@ def test_tencent_reads_the_pages_preview_image(upstream):
 )
 def test_preview_image_variants(upstream, tag):
     routes, calls = upstream
-    page = "https://www.iqiyi.com/v_19rrojlavg.html"
-    routes[page] = FakeResponse(content=f"<head>{tag}</head>".encode(), url=page)
+    routes[NOTE] = FakeResponse(content=f"<head>{tag}</head>".encode(), url=NOTE)
     routes["https://img.example.test/"] = FakeResponse(content=jpeg((1280, 720)))
-    routes["https://www.iqiyi.com/a.jpg"] = FakeResponse(content=jpeg((1280, 720)))
-    assert client.get("/url", params={"url": page}).status_code == 200
-    assert calls[1] in ("https://img.example.test/a.jpg", "https://www.iqiyi.com/a.jpg")
+    routes["https://www.xiaohongshu.com/a.jpg"] = FakeResponse(content=jpeg((1280, 720)))
+    assert client.get("/url", params={"url": NOTE}).status_code == 200
+    assert calls[1] in ("https://img.example.test/a.jpg", "https://www.xiaohongshu.com/a.jpg")
 
 
 def test_page_without_a_preview_image_is_a_404(upstream):
     routes, _ = upstream
-    routes["https://v.qq.com/"] = FakeResponse(content=b"<html><head></head></html>", url="https://v.qq.com/x/page/q326831cny0.html")
-    assert client.get("/tencent/q326831cny0").status_code == 404
+    routes[NOTE] = FakeResponse(content=b"<html><head></head></html>", url=NOTE)
+    assert client.get("/url", params={"url": NOTE}).status_code == 404
 
 
 def test_redirect_to_a_login_page_is_a_refusal_not_a_404(upstream):
     routes, _ = upstream
-    note = "https://www.xiaohongshu.com/explore/6411cf99000000001300b6d9"
-    routes[note] = FakeResponse(content=PAGE.encode(), url="https://www.xiaohongshu.com/website-login/captcha?redirect=x")
-    response = client.get("/url", params={"url": note})
+    routes[NOTE] = FakeResponse(content=PAGE.encode(), url="https://www.xiaohongshu.com/website-login/captcha?redirect=x")
+    response = client.get("/url", params={"url": NOTE})
     assert response.status_code == 502
     assert "sent us to another page instead of the video" in response.json()["detail"]
 

@@ -497,8 +497,8 @@ PROVIDERS += (
     ),
 )
 
-# --- Page preview images (Tencent Video, iQIYI, Rednote) ---------------------------
-# These services have no public thumbnail API, so we read the preview image a
+# --- Page preview images (Rednote) ---------------------------------------------
+# Rednote has no public thumbnail API, so we read the preview image a
 # video page declares for link previews (og:image and friends), like chat apps
 # do when they unfurl a link. We identify ourselves and don't try to get past
 # logins or captchas: a page that sends us there is reported as a refusal.
@@ -528,15 +528,6 @@ def page_preview_image(provider: Provider, ref: str, page_url: str, still_there:
     raise VideoNotFound(provider, ref)
 
 
-def _tencent(provider: Provider, vid: str) -> Image.Image:
-    return page_preview_image(provider, vid, f"https://v.qq.com/x/page/{vid}.html", lambda url: vid in url)
-
-
-def _iqiyi(provider: Provider, page_url: str) -> Image.Image:
-    video_key = re.search(r"(v_[0-9a-z]+|play/[\w-]+)", page_url, re.I).group(1)
-    return page_preview_image(provider, page_url, page_url, lambda url: video_key.lower() in url.lower())
-
-
 def _rednote(provider: Provider, ref: str) -> Image.Image:
     page_url = ref
     if "xhslink.com" in ref:
@@ -549,30 +540,6 @@ def _rednote(provider: Provider, ref: str) -> Image.Image:
 
 
 PROVIDERS += (
-    Provider(
-        key="tencent",
-        name="Tencent Video",
-        patterns=(
-            # v.qq.com/x/cover/<cover id>/<vid>.html and v.qq.com/x/page/<vid>.html
-            re.compile(r"^(?:https?://)?(?:v|m\.v)\.qq\.com/x/(?:cover/[0-9a-z]+/|page/)(?P<id>[0-9a-z]{11})\.html", re.I),
-            re.compile(r"^(?:https?://)?(?:v|m\.v)\.qq\.com/x/m/play\?(?:[^#]*&)?vid=(?P<id>[0-9a-z]{11})", re.I),
-        ),
-        color=(255, 106, 0),
-        fetch=_tencent,
-        id_pattern=r"[0-9a-z]{11}",
-    ),
-    Provider(
-        key="iqiyi",
-        name="iQIYI",
-        patterns=(
-            re.compile(r"^(?:https?://)?(?:www\.|m\.)?iqiyi\.com/v_[0-9a-z]{6,20}\.html", re.I),
-            re.compile(r"^(?:https?://)?(?:www\.)?iq\.com/play/[\w-]+", re.I),
-        ),
-        color=(0, 190, 6),
-        fetch=_iqiyi,
-        ref=lambda m: "https://" + re.sub(r"^https?://", "", m.group(0)).split("?")[0],
-        id_route=False,
-    ),
     Provider(
         key="rednote",
         name="Rednote",

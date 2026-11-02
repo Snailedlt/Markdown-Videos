@@ -10,8 +10,6 @@ export type Provider =
   | 'facebook'
   | 'twitch'
   | 'reddit'
-  | 'tencent'
-  | 'iqiyi'
   | 'rednote';
 
 export type ParsedVideo = {
@@ -134,21 +132,7 @@ const RULES: Rule[] = [
     re: /^(?:https?:\/\/)?(?:www\.)?reddit\.com\/r\/\w+\/s\/([A-Za-z0-9]{6,20})\/?(?:[?#].*)?$/i,
     video: (m, value) => ({ id: m[1], watchUrl: asLink(value), viaUrl: true }),
   },
-  ...[
-    /^(?:https?:\/\/)?(?:v|m\.v)\.qq\.com\/x\/(?:cover\/[0-9a-z]+\/|page\/)([0-9a-z]{11})\.html/i,
-    /^(?:https?:\/\/)?(?:v|m\.v)\.qq\.com\/x\/m\/play\?(?:[^#]*&)?vid=([0-9a-z]{11})/i,
-  ].map((re): Rule => ({ provider: 'tencent', re, link: (id) => `https://v.qq.com/x/page/${id}.html` })),
-  // iQIYI and Rednote thumbnails come from the video page, so they go through /url
-  ...[
-    /^(?:https?:\/\/)?(?:www\.|m\.)?iqiyi\.com\/(v_[0-9a-z]{6,20})\.html/i,
-    /^(?:https?:\/\/)?(?:www\.)?iq\.com\/play\/([\w-]+)/i,
-  ].map(
-    (re): Rule => ({
-      provider: 'iqiyi',
-      re,
-      video: (m, value) => ({ id: m[1], watchUrl: asLink(value.replace(/^http:\/\//, 'https://')), viaUrl: true }),
-    })
-  ),
+  // Rednote thumbnails come from the note's page, so they go through /url
   {
     provider: 'rednote',
     // Notes usually need their xsec_token, so keep the query string
@@ -245,8 +229,6 @@ export const PROVIDER_LABEL: Record<Provider, string> = {
   facebook: 'Facebook',
   twitch: 'Twitch',
   reddit: 'Reddit',
-  tencent: 'Tencent Video',
-  iqiyi: 'iQIYI',
   rednote: 'Rednote',
 };
 
