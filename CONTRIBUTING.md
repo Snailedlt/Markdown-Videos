@@ -98,7 +98,7 @@ The root `package.json` version is the project's release version. `apps/web` and
 pnpm version:bump web patch     # or: api, and minor / major
 ```
 
-This updates the app's `package.json` and the root version, and for the API also the version in its docs (`apps/api/main.py`). Use `pnpm version:bump / patch` to bump only the root.
+This updates the app's `package.json` and the root version, and for the API also the version in its docs (`apps/api/main.py`). Changed both apps? Use `pnpm version:bump web,api minor`, which bumps the root only once. Use `pnpm version:bump / patch` to bump only the root.
 
 The **Version check** in CI fails if an app changed without a bump. These don't need one:
 - docs (`*.md`) and tests

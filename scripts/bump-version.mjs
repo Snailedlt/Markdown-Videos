@@ -3,9 +3,10 @@
 //
 //   pnpm version:bump <app> <major|minor|patch>
 //
-//   <app>  /      the root package.json only
-//          web    apps/web (and the root)
-//          api    apps/api, including the version FastAPI reports (and the root)
+//   <app>  /        the root package.json only
+//          web      apps/web (and the root)
+//          api      apps/api, including the version FastAPI reports (and the root)
+//          web,api  several apps at once; the root is bumped only once
 //
 // Every bump of an app also bumps the root version by the same step, since
 // the root version is the project's release version.
@@ -18,7 +19,7 @@ const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const TYPES = ['major', 'minor', 'patch'];
 
 function usage(message) {
-  console.error(`${message}\n\nUsage: pnpm version:bump <app> <major|minor|patch>\n  <app>: / (root only), web, api`);
+  console.error(`${message}\n\nUsage: pnpm version:bump <app> <major|minor|patch>\n  <app>: / (root only), web, api, or several like web,api`);
   process.exit(1);
 }
 
@@ -26,10 +27,18 @@ const [rawApp, type] = process.argv.slice(2);
 if (!rawApp || !type) usage('Missing arguments.');
 if (!TYPES.includes(type)) usage(`Unknown version type "${type}".`);
 
-// Accept "/", "root", "web", "/web", "apps/web", "./apps/web/"...
-const app = rawApp.replace(/^\.?\/?(apps\/)?/, '').replace(/\/$/, '') || 'root';
-const appDir = app === 'root' ? null : join(root, 'apps', app);
-if (appDir && !existsSync(join(appDir, 'package.json'))) usage(`Unknown app "${rawApp}". Apps live in apps/.`);
+// Accept "/", "root", "web", "/web", "apps/web", "./apps/web/", and comma-separated lists
+const apps = [
+  ...new Set(
+    rawApp
+      .split(',')
+      .map((a) => a.trim().replace(/^\.?\/?(apps\/)?/, '').replace(/\/$/, '') || 'root')
+      .filter((a) => a !== 'root')
+  ),
+];
+for (const app of apps) {
+  if (!existsSync(join(root, 'apps', app, 'package.json'))) usage(`Unknown app "${app}". Apps live in apps/.`);
+}
 
 function bumpPackage(dir) {
   const file = join(dir, 'package.json');
@@ -42,11 +51,12 @@ function bumpPackage(dir) {
 }
 
 const changes = [];
-if (appDir) changes.push(bumpPackage(appDir));
+for (const app of apps) changes.push(bumpPackage(join(root, 'apps', app)));
 changes.push(bumpPackage(root));
 
 // The API also reports its version in its OpenAPI docs (main.py)
-if (app === 'api') {
+if (apps.includes('api')) {
+  const appDir = join(root, 'apps', 'api');
   const file = join(appDir, 'main.py');
   const text = readFileSync(file, 'utf8');
   const to = readVersion(join(appDir, 'package.json'));
