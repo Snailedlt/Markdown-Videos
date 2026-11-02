@@ -1,0 +1,27 @@
+// Dev container for Markdown Videos: open the repo in GitHub Codespaces, Ona
+// (formerly Gitpod) or VS Code's Dev Containers and everything is installed.
+// Then run `pnpm dev`. See CONTRIBUTING.md.
+{
+  "name": "Markdown Videos",
+  "image": "mcr.microsoft.com/devcontainers/python:3.13",
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": { "version": "22" }
+  },
+  "postCreateCommand": "bash .devcontainer/setup.sh",
+  "forwardPorts": [5173, 8000],
+  "portsAttributes": {
+    "5173": { "label": "Website", "onAutoForward": "openBrowser" },
+    "8000": { "label": "API", "onAutoForward": "silent" }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "charliermarsh.ruff",
+        "ms-python.black-formatter",
+        "svelte.svelte-vscode",
+        "esbenp.prettier-vscode"
+      ]
+    }
+  }
+}

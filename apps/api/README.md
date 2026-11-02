@@ -79,7 +79,7 @@ Hosted on
 [![Vercel](https://img.shields.io/badge/vercel-%23000000.svg?style=for-the-badge&logo=vercel&logoColor=white)](https://vercel.com/)
 
 ### Local development
-It is recommended that you follow the root [README](https://github.com/Snailedlt/Markdown-Videos/blob/main/apps/api/README.md#L82)
+It is recommended that you follow [CONTRIBUTING.md](https://github.com/Snailedlt/Markdown-Videos/blob/main/CONTRIBUTING.md), which sets up the API and the website together
 
 Install [pipenv](https://pipenv.pypa.io/en/latest/) if you haven't already
 
