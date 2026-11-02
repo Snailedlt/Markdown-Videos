@@ -59,6 +59,16 @@
 | Streamable | `/streamable/{video_id}` | `streamable.com/ID` |
 | Rumble | `/url?url={rumble_link}` | Needs the page link (`rumble.com/v…-title.html`); page and embed IDs differ |
 | Bilibili | `/bilibili/{video_id}` | BV or av IDs (`bilibili.com/video/BV1GJ411x7h7`); `b23.tv` short links through `/url` |
+| Instagram | `/instagram/{shortcode}` | **Needs credentials** (below). Posts, reels and IGTV |
+| Facebook | `/facebook/{video_id}` | **Needs credentials** (below). Public videos and reels |
+
+### Services that need credentials
+
+Instagram and Facebook only offer thumbnails through Meta's Graph API. Without credentials these endpoints answer **501** with a message saying what's missing; everything else keeps working.
+
+1. Create an app at [developers.facebook.com/apps](https://developers.facebook.com/apps) and add the **oEmbed Read** product (Instagram), plus **Page Public Content Access** if you want Facebook videos from Pages you don't manage.
+2. Set either `META_APP_ID` and `META_CLIENT_TOKEN` (Settings → Advanced → Client token), or a `META_ACCESS_TOKEN`, as environment variables on Vercel (and in `.env` locally).
+3. To run the live tests in CI too, add the same names as GitHub Actions repository secrets.
 
 Every service also works through `/url?url={link}`. Thumbnails from the newer services (everything except YouTube and Vimeo) keep their shape: frames with a different aspect ratio, such as vertical TikToks, sit on a blurred copy of themselves instead of being stretched.
 

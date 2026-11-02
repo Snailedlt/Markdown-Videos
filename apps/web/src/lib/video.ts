@@ -7,7 +7,9 @@ export type Provider =
   | 'dailymotion'
   | 'streamable'
   | 'rumble'
-  | 'bilibili';
+  | 'bilibili'
+  | 'instagram'
+  | 'facebook';
 
 export type ParsedVideo = {
   provider: Provider;
@@ -109,6 +111,16 @@ const RULES: Rule[] = [
     re: /^(?:https?:\/\/)?b23\.tv\/([0-9A-Za-z]{5,12})\/?(?:[?#].*)?$/i,
     video: (m) => ({ id: m[1], watchUrl: `https://b23.tv/${m[1]}`, viaUrl: true }),
   },
+  {
+    provider: 'instagram',
+    re: /^(?:https?:\/\/)?(?:www\.|m\.)?instagram\.com\/(?:[\w.]+\/)?(?:p|reels?|tv)\/([A-Za-z0-9_-]{5,40})(?=[/?#]|$)/i,
+    link: (id) => `https://www.instagram.com/p/${id}/`,
+  },
+  {
+    provider: 'facebook',
+    re: /^(?:https?:\/\/)?(?:www\.|m\.|web\.)?facebook\.com\/(?:[\w.-]+\/videos\/(?:[\w.-]+\/)?|watch\/?\?(?:[^#]*&)?v=|reel\/|video\.php\?(?:[^#]*&)?v=)(\d{8,20})(?=[/?#&]|$)/i,
+    link: (id) => `https://www.facebook.com/watch/?v=${id}`,
+  },
 ];
 
 /** Parse a video link (or a bare YouTube video id) into its parts. */
@@ -192,6 +204,8 @@ export const PROVIDER_LABEL: Record<Provider, string> = {
   streamable: 'Streamable',
   rumble: 'Rumble',
   bilibili: 'Bilibili',
+  instagram: 'Instagram',
+  facebook: 'Facebook',
 };
 
 /** "YouTube, Vimeo, TikTok or Imgur" */

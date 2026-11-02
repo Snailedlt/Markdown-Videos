@@ -21,7 +21,7 @@ import requests
 from fastapi import HTTPException
 from PIL import Image, ImageDraw, ImageEnhance, ImageFilter, ImageOps
 
-from src import util
+from src import config, util
 
 # Some services answer oEmbed requests from scripts only with a browser-like
 # User-Agent; identify ourselves honestly while looking like one.
@@ -58,6 +58,21 @@ def _check(res: requests.Response, provider: "Provider", ref: str) -> None:
     res.raise_for_status()
 
 
+class NotConfigured(HTTPException):
+    def __init__(self, provider: "Provider", needs: str):
+        super().__init__(
+            status_code=501,
+            detail=(
+                f"{provider.name} thumbnails aren't set up on this server: it needs {needs}."
+                " See https://github.com/Snailedlt/Markdown-Videos/blob/main/apps/api/README.md#supported-services"
+            ),
+        )
+
+
+def _setting(name: str) -> str:
+    return (getattr(config.settings, name, "") or "").strip()
+
+
 class VideoNotFound(HTTPException):
     def __init__(self, provider: "Provider", ref: str):
         super().__init__(
@@ -85,6 +100,8 @@ class Provider:
     id_route: bool = True
     """Whether /{key}/{video_id} exists (needs a fetch that works from the ID alone)."""
     id_pattern: str = r"[A-Za-z0-9_-]+"
+    missing_credentials: typing.Optional[typing.Callable[[], typing.Optional[str]]] = None
+    """For services behind an authenticated API: returns what's missing, or None when configured."""
 
     def match(self, url: str) -> typing.Optional[str]:
         for pattern in self.patterns:
@@ -313,6 +330,85 @@ PROVIDERS += (
     ),
 )
 
+# --- Meta (Instagram, Facebook) ---------------------------------------------------
+
+GRAPH_API = "https://graph.facebook.com"
+# Graph API error codes that mean "we were refused" (bad/expired token,
+# rate limits, app limits) rather than "this post doesn't exist"
+_META_REFUSED_CODES = {4, 10, 17, 32, 190, 200, 368, 613}
+
+
+def _meta_token() -> str:
+    return _setting("meta_access_token") or f"{_setting('meta_app_id')}|{_setting('meta_client_token')}"
+
+
+def _meta_missing() -> typing.Optional[str]:
+    if _setting("meta_access_token") or (_setting("meta_app_id") and _setting("meta_client_token")):
+        return None
+    return "META_APP_ID and META_CLIENT_TOKEN (or META_ACCESS_TOKEN)"
+
+
+def _meta_get(provider: Provider, ref: str, path: str, **params: str) -> dict:
+    query = "&".join(f"{k}={quote(v, safe='')}" for k, v in {**params, "access_token": _meta_token()}.items())
+    res = _get(f"{GRAPH_API}/{path}?{query}", headers=OEMBED_HEADERS)
+    if res.status_code >= 400:
+        try:
+            code = res.json().get("error", {}).get("code")
+        except ValueError:
+            code = None
+        if code in _META_REFUSED_CODES or res.status_code >= 500 or res.status_code == 429:
+            raise UpstreamError(provider, res.status_code)
+        raise VideoNotFound(provider, ref)
+    return res.json()
+
+
+def _instagram(provider: Provider, shortcode: str) -> Image.Image:
+    data = _meta_get(
+        provider,
+        shortcode,
+        "instagram_oembed",
+        url=f"https://www.instagram.com/p/{shortcode}/",
+        fields="thumbnail_url",
+    )
+    if not data.get("thumbnail_url"):
+        raise VideoNotFound(provider, shortcode)
+    return _image(provider, shortcode, data["thumbnail_url"])
+
+
+def _facebook(provider: Provider, video_id: str) -> Image.Image:
+    # Facebook's oEmbed has no thumbnail; the video node's `picture` does
+    data = _meta_get(provider, video_id, video_id, fields="picture")
+    if not data.get("picture"):
+        raise VideoNotFound(provider, video_id)
+    return _image(provider, video_id, data["picture"])
+
+
+PROVIDERS += (
+    Provider(
+        key="instagram",
+        name="Instagram",
+        patterns=(
+            # instagram.com/p/<code>/, /reel/<code>/, /reels/<code>/, /tv/<code>/
+            re.compile(r"^(?:https?://)?(?:www\.|m\.)?instagram\.com/(?:[\w.]+/)?(?:p|reels?|tv)/(?P<id>[A-Za-z0-9_-]{5,40})(?=[/?#]|$)", re.I),
+        ),
+        color=(225, 48, 108),
+        fetch=_instagram,
+        id_pattern=r"[A-Za-z0-9_-]{5,40}",
+        missing_credentials=_meta_missing,
+    ),
+    Provider(
+        key="facebook",
+        name="Facebook",
+        patterns=(
+            re.compile(r"^(?:https?://)?(?:www\.|m\.|web\.)?facebook\.com/(?:[\w.-]+/videos/(?:[\w.-]+/)?|watch/?\?(?:[^#]*&)?v=|reel/|video\.php\?(?:[^#]*&)?v=)(?P<id>\d{8,20})(?=[/?#&]|$)", re.I),
+        ),
+        color=(24, 119, 242),
+        fetch=_facebook,
+        id_pattern=r"\d{8,20}",
+        missing_credentials=_meta_missing,
+    ),
+)
+
 BY_KEY = {p.key: p for p in PROVIDERS}
 
 
@@ -366,6 +462,10 @@ def fit_frame(image: Image.Image, width: int, height: int) -> Image.Image:
 
 
 def thumbnail(provider: Provider, ref: str, width: int, height: int) -> Image.Image:
+    if provider.missing_credentials is not None:
+        missing = provider.missing_credentials()
+        if missing:
+            raise NotConfigured(provider, missing)
     try:
         source = provider.fetch(provider, ref)
         source.load()

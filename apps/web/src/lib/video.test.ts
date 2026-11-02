@@ -77,6 +77,8 @@ describe('parseVideoUrl', () => {
     ['https://streamable.com/e/moo?autoplay=1', 'streamable', 'moo', 'https://streamable.com/moo'],
     ['https://www.bilibili.com/video/BV1GJ411x7h7/?spm_id_from=333.337', 'bilibili', 'BV1GJ411x7h7', 'https://www.bilibili.com/video/BV1GJ411x7h7'],
     ['https://m.bilibili.com/video/av170001', 'bilibili', 'av170001', 'https://www.bilibili.com/video/av170001'],
+    ['https://www.instagram.com/reel/Chunk8-jurw/?igsh=abc', 'instagram', 'Chunk8-jurw', 'https://www.instagram.com/p/Chunk8-jurw/'],
+    ['https://www.facebook.com/cnn/videos/10155529876156509/', 'facebook', '10155529876156509', 'https://www.facebook.com/watch/?v=10155529876156509'],
   ])('finds the video in %s', (url, provider, id, watchUrl) => {
     expect(parseVideoUrl(url)).toEqual({ provider, id, watchUrl });
   });
@@ -96,6 +98,8 @@ describe('parseVideoUrl', () => {
     'https://streamable.com/login',
     'https://streamable.com/upload',
     'https://rumble.com/c/SomeChannel',
+    'https://www.instagram.com/someuser/',
+    'https://www.facebook.com/SomePage',
     'https://www.bilibili.com/read/cv123',
     'hello',
     'https://example.com/watch?v=dQw4w9WgXcQ',

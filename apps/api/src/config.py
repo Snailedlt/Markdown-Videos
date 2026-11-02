@@ -18,6 +18,13 @@ class Settings(BaseSettings):
     }
     # The following get filled out by the .env file
     analytics_api_key: str = ""
+    # Optional: services that only offer thumbnails through an authenticated
+    # API. Each one is switched off (answers 501) until its credentials are set.
+    # Instagram and Facebook: a Meta app (https://developers.facebook.com/apps)
+    # with oEmbed Read. Either the app ID + client token, or an access token.
+    meta_app_id: str = ""
+    meta_client_token: str = ""
+    meta_access_token: str = ""
     model_config = SettingsConfigDict(env_file=".env")
 
 

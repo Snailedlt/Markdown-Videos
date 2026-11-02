@@ -116,6 +116,12 @@ jobs:
           if: ${{ steps.run.outputs.api == 'true' }}
           working-directory: apps/api
           run: pipenv run coverage -v
+          env:
+            # Optional: services behind an authenticated API. Their live tests
+            # run only when these repository secrets are set.
+            META_APP_ID: ${{ secrets.META_APP_ID }}
+            META_CLIENT_TOKEN: ${{ secrets.META_CLIENT_TOKEN }}
+            META_ACCESS_TOKEN: ${{ secrets.META_ACCESS_TOKEN }}
 
         - name: Lint api
           if: ${{ steps.run.outputs.api == 'true' }}

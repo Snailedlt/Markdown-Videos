@@ -407,3 +407,85 @@ def test_bilibili_error_codes(upstream, code, status):
 def test_rumble_has_no_id_route_but_bilibili_does():
     assert client.get("/rumble/vdmum1").status_code == 404
     assert client.get("/bilibili/not-an-id").status_code == 422
+
+
+# --- Instagram, Facebook (Meta Graph API; need credentials) -------------------------
+
+
+@pytest.fixture
+def meta_credentials(monkeypatch):
+    from src import config
+
+    monkeypatch.setattr(config.settings, "meta_app_id", "123")
+    monkeypatch.setattr(config.settings, "meta_client_token", "abc")
+    monkeypatch.setattr(config.settings, "meta_access_token", "")
+
+
+@pytest.mark.parametrize(
+    "url, expected",
+    [
+        ("https://www.instagram.com/p/C1a2B3c4D5e/", ("instagram", "C1a2B3c4D5e")),
+        ("https://www.instagram.com/reel/C1a2B3c4D5e/?igsh=abc", ("instagram", "C1a2B3c4D5e")),
+        ("https://instagram.com/someuser/reel/C1a2B3c4D5e", ("instagram", "C1a2B3c4D5e")),
+        ("https://www.facebook.com/SomePage/videos/1234567890123456/", ("facebook", "1234567890123456")),
+        ("https://www.facebook.com/watch/?v=1234567890123456", ("facebook", "1234567890123456")),
+        ("https://www.facebook.com/reel/1234567890123456", ("facebook", "1234567890123456")),
+    ],
+)
+def test_recognises_meta_links(url, expected):
+    provider, ref = providers.match(url)
+    assert (provider.key, ref) == expected
+
+
+@pytest.mark.parametrize("url", ["https://www.instagram.com/someuser/", "https://www.facebook.com/SomePage"])
+def test_ignores_meta_profiles(url):
+    assert providers.match(url) is None
+
+
+@pytest.mark.parametrize("path", ["/instagram/C1a2B3c4D5e", "/facebook/1234567890123456"])
+def test_meta_services_say_when_they_are_not_set_up(upstream, monkeypatch, path):
+    from src import config
+
+    for name in ("meta_app_id", "meta_client_token", "meta_access_token"):
+        monkeypatch.setattr(config.settings, name, "")
+    routes, calls = upstream
+    response = client.get(path)
+    assert response.status_code == 501
+    assert "META_APP_ID and META_CLIENT_TOKEN" in response.json()["detail"]
+    assert "cache-control" not in response.headers
+    assert calls == []  # nothing was requested from Meta
+
+
+def test_instagram_thumbnail(upstream, meta_credentials):
+    routes, calls = upstream
+    routes["https://graph.facebook.com/instagram_oembed"] = FakeResponse(
+        data={"thumbnail_url": "https://scontent.cdninstagram.com/v/t51/x.jpg?stp=1"}
+    )
+    routes["https://scontent.cdninstagram.com/"] = FakeResponse(content=jpeg((640, 1136)))
+    response = client.get("/url", params={"url": "https://www.instagram.com/reel/C1a2B3c4D5e/"})
+    assert response.status_code == 200
+    assert calls[0] == (
+        "https://graph.facebook.com/instagram_oembed?url=https%3A%2F%2Fwww.instagram.com%2Fp%2FC1a2B3c4D5e%2F"
+        "&fields=thumbnail_url&access_token=123%7Cabc"
+    )
+
+
+def test_facebook_thumbnail_uses_an_access_token_when_given(upstream, monkeypatch):
+    from src import config
+
+    monkeypatch.setattr(config.settings, "meta_access_token", "EAAG-token")
+    routes, calls = upstream
+    routes["https://graph.facebook.com/1234567890123456"] = FakeResponse(data={"picture": "https://scontent.xx.fbcdn.net/p.jpg"})
+    routes["https://scontent.xx.fbcdn.net/"] = FakeResponse(content=jpeg((1280, 720)))
+    assert client.get("/facebook/1234567890123456").status_code == 200
+    assert calls[0] == "https://graph.facebook.com/1234567890123456?fields=picture&access_token=EAAG-token"
+
+
+@pytest.mark.parametrize(
+    "status, code, expected",
+    [(400, 100, 404), (404, 803, 404), (400, 190, 502), (403, 200, 502), (400, 4, 502), (500, 1, 502)],
+)
+def test_meta_errors(upstream, meta_credentials, status, code, expected):
+    routes, _ = upstream
+    routes["https://graph.facebook.com/"] = FakeResponse(status=status, data={"error": {"code": code}})
+    assert client.get("/instagram/C1a2B3c4D5e").status_code == expected

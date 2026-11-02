@@ -82,7 +82,7 @@ describe('Generator', () => {
     render(Generator);
     await user.type(screen.getByLabelText('Video URL'), 'https://example.com/video');
 
-    expect(screen.getByText(/isn’t a link we support yet \(YouTube, Vimeo, TikTok, Imgur, Loom, Dailymotion, Streamable, Rumble or Bilibili\)/)).toBeInTheDocument();
+    expect(screen.getByText(/isn’t a link we support yet \(YouTube, Vimeo, TikTok, Imgur, Loom, Dailymotion, Streamable, Rumble, Bilibili, Instagram or Facebook\)/)).toBeInTheDocument();
     expect(screen.getByLabelText('Video URL')).toHaveAttribute('aria-invalid', 'true');
     expect(preview()).toBeNull();
   });
