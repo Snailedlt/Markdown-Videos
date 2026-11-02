@@ -122,6 +122,10 @@ jobs:
             META_APP_ID: ${{ secrets.META_APP_ID }}
             META_CLIENT_TOKEN: ${{ secrets.META_CLIENT_TOKEN }}
             META_ACCESS_TOKEN: ${{ secrets.META_ACCESS_TOKEN }}
+            TWITCH_CLIENT_ID: ${{ secrets.TWITCH_CLIENT_ID }}
+            TWITCH_CLIENT_SECRET: ${{ secrets.TWITCH_CLIENT_SECRET }}
+            REDDIT_CLIENT_ID: ${{ secrets.REDDIT_CLIENT_ID }}
+            REDDIT_CLIENT_SECRET: ${{ secrets.REDDIT_CLIENT_SECRET }}
 
         - name: Lint api
           if: ${{ steps.run.outputs.api == 'true' }}

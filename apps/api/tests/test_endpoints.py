@@ -246,3 +246,27 @@ needs_meta = pytest.mark.skipif(
 def test_meta_live(url):
     response = client.get("/url", params={"url": url})
     assert response.status_code == 200, response.text
+
+
+needs_twitch = pytest.mark.skipif(
+    not (os.getenv("TWITCH_CLIENT_ID") and os.getenv("TWITCH_CLIENT_SECRET")), reason="Twitch credentials not configured"
+)
+needs_reddit = pytest.mark.skipif(
+    not (os.getenv("REDDIT_CLIENT_ID") and os.getenv("REDDIT_CLIENT_SECRET")), reason="Reddit credentials not configured"
+)
+
+
+# Example clips/videos/posts from yt-dlp's Twitch and Reddit extractor tests
+@needs_twitch
+@pytest.mark.parametrize(
+    "url", ["https://clips.twitch.tv/FaintLightGullWholeWheat", "https://www.twitch.tv/videos/635475444"]
+)
+def test_twitch_live(url):
+    response = client.get("/url", params={"url": url})
+    assert response.status_code == 200, response.text
+
+
+@needs_reddit
+def test_reddit_live():
+    response = client.get("/url", params={"url": "https://www.reddit.com/r/videos/comments/6rrwyj/that_small_heart_attack/"})
+    assert response.status_code == 200, response.text

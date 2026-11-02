@@ -61,14 +61,20 @@
 | Bilibili | `/bilibili/{video_id}` | BV or av IDs (`bilibili.com/video/BV1GJ411x7h7`); `b23.tv` short links through `/url` |
 | Instagram | `/instagram/{shortcode}` | **Needs credentials** (below). Posts, reels and IGTV |
 | Facebook | `/facebook/{video_id}` | **Needs credentials** (below). Public videos and reels |
+| Twitch | `/url?url={twitch_link}` | **Needs credentials** (below). Clips and past broadcasts (not live streams) |
+| Reddit | `/reddit/{post_id}` | **Needs credentials** (below). The post's preview image; share links (`/r/…/s/…`) through `/url` |
 
 ### Services that need credentials
 
-Instagram and Facebook only offer thumbnails through Meta's Graph API. Without credentials these endpoints answer **501** with a message saying what's missing; everything else keeps working.
+Instagram, Facebook, Twitch and Reddit only offer thumbnails through authenticated APIs. Without credentials these services answer **501** with a message saying what's missing; everything else keeps working.
 
 1. Create an app at [developers.facebook.com/apps](https://developers.facebook.com/apps) and add the **oEmbed Read** product (Instagram), plus **Page Public Content Access** if you want Facebook videos from Pages you don't manage.
 2. Set either `META_APP_ID` and `META_CLIENT_TOKEN` (Settings → Advanced → Client token), or a `META_ACCESS_TOKEN`, as environment variables on Vercel (and in `.env` locally).
 3. To run the live tests in CI too, add the same names as GitHub Actions repository secrets.
+
+**Twitch:** register an app at [dev.twitch.tv/console/apps](https://dev.twitch.tv/console/apps) (any OAuth redirect URL, e.g. `http://localhost`) and set `TWITCH_CLIENT_ID` and `TWITCH_CLIENT_SECRET`. The API fetches and caches an app access token itself.
+
+**Reddit:** create a "web app" at [reddit.com/prefs/apps](https://www.reddit.com/prefs/apps) and set `REDDIT_CLIENT_ID` (the string under the app name) and `REDDIT_CLIENT_SECRET`. Reddit's API terms apply; app-only access is read-only.
 
 Every service also works through `/url?url={link}`. Thumbnails from the newer services (everything except YouTube and Vimeo) keep their shape: frames with a different aspect ratio, such as vertical TikToks, sit on a blurred copy of themselves instead of being stretched.
 

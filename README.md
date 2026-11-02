@@ -30,8 +30,10 @@ Markdown Videos lets you embed Youtube videos into GitHub markdown with ease!
 | Bilibili | `bilibili.com/video/BV…`, `…/video/av…`, `b23.tv/…` | |
 | Instagram¹ | `instagram.com/p/…`, `/reel/…`, `/tv/…` | |
 | Facebook¹ | `facebook.com/…/videos/ID`, `/watch/?v=ID`, `/reel/ID` | |
+| Twitch¹ | `clips.twitch.tv/…`, `twitch.tv/…/clip/…`, `twitch.tv/videos/ID` | |
+| Reddit¹ | `reddit.com/r/…/comments/ID/…`, `redd.it/ID`, `reddit.com/r/…/s/…` | |
 
-¹ Needs Meta API credentials on the server (see the [API README](apps/api/README.md#supported-services)).
+¹ Needs API credentials on the server (see the [API README](apps/api/README.md#supported-services)).
 
 Missing a service? [Open an issue](https://github.com/Snailedlt/Markdown-Videos/issues). New services are added in [`apps/api/src/providers.py`](apps/api/src/providers.py).
 

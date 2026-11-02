@@ -497,6 +497,14 @@
     background: color-mix(in srgb, #1877f2 15%, transparent);
     color: #1466d1;
   }
+  .detected.twitch {
+    background: color-mix(in srgb, #9146ff 15%, transparent);
+    color: #7a35e6;
+  }
+  .detected.reddit {
+    background: color-mix(in srgb, #ff4500 14%, transparent);
+    color: #e03d00;
+  }
   .detected.vimeo {
     background: color-mix(in srgb, #1ab7ea 18%, transparent);
     color: #1590bb;
