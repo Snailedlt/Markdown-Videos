@@ -4,10 +4,14 @@ on:
   push:
     branches: ["main"]
   pull_request:
-    types: [opened, synchronize]
+    types: [opened, synchronize, reopened]
 
 jobs:
   build:
+      # Keep this name and matrix: the "Build and Test (3.x)" checks may be
+      # required by branch protection. Instead of skipping the whole job, each
+      # step below only runs when the files it checks have changed, so a
+      # docs-only PR still reports every check as passed, just quickly.
       name: Build and Test
       timeout-minutes: 15
       runs-on: ubuntu-latest
@@ -25,57 +29,109 @@ jobs:
           with:
             fetch-depth: 2
 
+        # Which apps does this change touch? Pushes to main always test
+        # everything. Files shared by both apps (lockfile, root package.json,
+        # turbo, this workflow) count as changes to both.
+        - name: Detect changed apps
+          id: changes
+          if: ${{ github.event_name == 'pull_request' }}
+          uses: dorny/paths-filter@v4
+          with:
+            filters: |
+              shared: &shared
+                - 'package.json'
+                - 'pnpm-lock.yaml'
+                - 'pnpm-workspace.yaml'
+                - 'turbo.json'
+                - '.github/workflows/build_test_lint.yml'
+                - '.github/scripts/**'
+              web:
+                - *shared
+                - 'apps/web/**'
+              api:
+                - *shared
+                - 'apps/api/**'
+
+        - name: Decide what to run
+          id: run
+          run: |
+            if [ "${{ github.event_name }}" != "pull_request" ]; then
+              web=true; api=true
+            else
+              web="${{ steps.changes.outputs.web }}"; api="${{ steps.changes.outputs.api }}"
+            fi
+            # The website doesn't depend on Python, so test it in one job only
+            if [ "${{ matrix.python-version }}" != "3.13" ]; then web=false; fi
+            echo "web=$web" >> "$GITHUB_OUTPUT"
+            echo "api=$api" >> "$GITHUB_OUTPUT"
+            echo "Website checks: $web · API checks: $api" >> "$GITHUB_STEP_SUMMARY"
+
         - uses: pnpm/action-setup@v4.1.0
+          if: ${{ steps.run.outputs.web == 'true' || steps.run.outputs.api == 'true' }}
           with:
             version: 9.0.6
 
         - name: Setup Node.js environment
+          if: ${{ steps.run.outputs.web == 'true' || steps.run.outputs.api == 'true' }}
           uses: actions/setup-node@v4
           with:
             node-version: "22"
             cache: 'pnpm'
 
+        - name: Install web dependencies
+          if: ${{ steps.run.outputs.web == 'true' }}
+          run: pnpm install
+
+        - name: Build web
+          if: ${{ steps.run.outputs.web == 'true' }}
+          run: pnpm --filter web build
+
+        - name: Test web (with coverage)
+          if: ${{ steps.run.outputs.web == 'true' }}
+          run: pnpm --filter web test:coverage
+
+        - name: Lint web
+          if: ${{ steps.run.outputs.web == 'true' }}
+          run: pnpm --filter web lint
+
         - name: Set up Python ${{ matrix.python-version }}
+          if: ${{ steps.run.outputs.api == 'true' }}
           uses: actions/setup-python@v5
           with:
             python-version: ${{ matrix.python-version }}
             cache: 'pipenv' #caching pipenv deps
 
-        - name: Install web dependencies
-          run: pnpm install
-
         - name: Install api dependencies
+          if: ${{ steps.run.outputs.api == 'true' }}
+          working-directory: apps/api
           run: |
             pip install --upgrade pip
             pip install --user pipenv
-            pnpm api:install
+            pipenv install --dev
 
-        - name: Build
-          run: pnpm build
+        - name: Test api (with coverage)
+          if: ${{ steps.run.outputs.api == 'true' }}
+          working-directory: apps/api
+          run: pipenv run coverage -v
 
-        - name: Test (with coverage)
-          run: pnpm test:coverage
+        - name: Lint api
+          if: ${{ steps.run.outputs.api == 'true' }}
+          uses: chartboost/ruff-action@v1
+          with:
+            src: "./apps/api"
 
         - name: Coverage summary
-          if: ${{ !cancelled() }}
+          if: ${{ !cancelled() && (steps.run.outputs.web == 'true' || steps.run.outputs.api == 'true') }}
           run: node .github/scripts/coverage-summary.mjs
 
         # Optional: upload to Codecov (https://about.codecov.io). Needs the
         # Codecov GitHub app and a CODECOV_TOKEN secret; without them this step
-        # is skipped or reports the problem without failing the build.
+        # reports the problem without failing the build.
         - name: Upload coverage to Codecov
-          if: ${{ matrix.python-version == '3.13' && !cancelled() }}
+          if: ${{ matrix.python-version == '3.13' && !cancelled() && (steps.run.outputs.web == 'true' || steps.run.outputs.api == 'true') }}
           continue-on-error: true
           uses: codecov/codecov-action@v7
           with:
             token: ${{ secrets.CODECOV_TOKEN }}
             files: ./apps/api/coverage.xml,./apps/web/coverage/lcov.info
             fail_ci_if_error: false
-
-        - name: Lint web
-          run: pnpm --filter web lint
-
-        - name: Lint api
-          uses: chartboost/ruff-action@v1
-          with:
-            src: "./apps/api"
