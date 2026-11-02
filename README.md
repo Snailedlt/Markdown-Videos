@@ -89,6 +89,8 @@ pnpm lint
 pnpm test
 ```
 
+To see test coverage for both apps, run `pnpm test:coverage`. CI runs it on every PR and shows a coverage table in the job summary.
+
 ## Additional info
 
 In case you want more documentation on either the website or the api.

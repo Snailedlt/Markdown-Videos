@@ -14,6 +14,7 @@
                 "lint": "pipenv run lint",
                 "test": "pipenv run test",
                 "test:verbose": "pipenv run test -v",
+                "test:coverage": "pipenv run coverage -v",
                 "with-env": "dotenv -e ../../.env"
         }
 }
