@@ -88,6 +88,27 @@ Every pull request runs the **Build and Test** workflow. It only runs the checks
 
 Each run's summary page shows test coverage.
 
+## Versions and releases
+
+The root `package.json` version is the project's release version. `apps/web` and `apps/api` each have their own version too.
+
+**If your PR changes an app's code, bump its version:**
+
+```sh
+pnpm version:bump web patch     # or: api, and minor / major
+```
+
+This updates the app's `package.json` and the root version, and for the API also the version in its docs (`apps/api/main.py`). Changed both apps? Use `pnpm version:bump web,api minor`, which bumps the root only once. Use `pnpm version:bump / patch` to bump only the root.
+
+The **Version check** in CI fails if an app changed without a bump. These don't need one:
+- docs (`*.md`) and tests
+- Dependabot PRs
+- PRs labelled `skip-version-check`
+
+Their changes go out with the next release. Run `pnpm version:check` to check locally.
+
+**When a version bump is merged into `main`,** the release workflow tags it (`vX.Y.Z`) and publishes a [GitHub release](https://github.com/Snailedlt/Markdown-Videos/releases). The release lists every change since the previous one, and the same list is added to [CHANGELOG.md](CHANGELOG.md). You don't need to edit the changelog by hand.
+
 ## Code style
 
 - **Python:** [PEP 8](https://peps.python.org/pep-0008/), linted with [ruff](https://docs.astral.sh/ruff/) (`apps/api/ruff.toml`) and formatted with [black](https://black.readthedocs.io/).
