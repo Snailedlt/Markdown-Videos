@@ -1,5 +1,6 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
+  "relatedProjects": ["prj_Vv8SV0LFPQ88Tn5LnBBjmiQLQxm0"],
   "headers": [
     {
       "source": "/assets/(.*)",
