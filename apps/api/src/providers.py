@@ -247,6 +247,72 @@ PROVIDERS += (
     ),
 )
 
+def _resolve_short_link(provider: Provider, url: str) -> str:
+    """Follow a share short link (b23.tv/..., xhslink.com/...) to the page it points to."""
+    res = _get(url if url.startswith("http") else f"https://{url}", headers=OEMBED_HEADERS, allow_redirects=True)
+    if res.status_code in NOT_FOUND_STATUSES:
+        raise VideoNotFound(provider, url)
+    return res.url
+
+
+def _rumble(provider: Provider, ref: str) -> Image.Image:
+    return oembed_thumbnail("https://rumble.com/api/Media/oembed.json", ref, provider, ref)
+
+
+def _bilibili(provider: Provider, ref: str) -> Image.Image:
+    if ref.startswith(("http://", "https://")):
+        # A b23.tv short link: find the BV/av ID it points to
+        target = _resolve_short_link(provider, ref)
+        found = _BILIBILI_ID.search(target)
+        if not found:
+            raise VideoNotFound(provider, ref)
+        ref = found.group("id")
+    param = f"aid={ref[2:]}" if ref.lower().startswith("av") else f"bvid={ref}"
+    res = _get(f"https://api.bilibili.com/x/web-interface/view?{param}", headers=OEMBED_HEADERS)
+    _check(res, provider, ref)
+    body = res.json()
+    # Bilibili answers HTTP 200 with its own error codes: -404/62002/62004 =
+    # missing or hidden video, -412 = request refused
+    code = body.get("code")
+    if code == -412:
+        raise UpstreamError(provider, 412)
+    if code != 0 or not body.get("data", {}).get("pic"):
+        raise VideoNotFound(provider, ref)
+    return _image(provider, ref, urljoin("https:", body["data"]["pic"].replace("http://", "https://", 1)))
+
+
+_BILIBILI_ID = re.compile(r"/video/(?P<id>BV[0-9A-Za-z]{10}|av\d{1,12})(?=[/?#]|$)", re.I)
+
+PROVIDERS += (
+    Provider(
+        key="rumble",
+        name="Rumble",
+        patterns=(
+            # rumble.com/v5abc12-some-title.html and rumble.com/embed/v4xyz9/
+            re.compile(r"^(?:https?://)?(?:www\.)?rumble\.com/(?:embed/)?(?P<id>v[0-9a-z]{3,10})(?:-[\w-]*\.html|/)?(?:[?#].*)?$", re.I),
+        ),
+        color=(133, 199, 66),
+        fetch=_rumble,
+        # Rumble's oEmbed wants the page link; page and embed IDs differ, so
+        # Rumble videos go through /url?url=...
+        ref=lambda m: m.group(0).split("?")[0] if m.group(0).startswith("http") else f"https://{m.group(0).split('?')[0]}",
+        id_route=False,
+    ),
+    Provider(
+        key="bilibili",
+        name="Bilibili",
+        patterns=(
+            re.compile(r"^(?:https?://)?(?:www\.|m\.)?bilibili\.com/video/(?P<id>BV[0-9A-Za-z]{10}|av\d{1,12})(?=[/?#]|$)", re.I),
+            re.compile(r"^(?:https?://)?b23\.tv/(?P<id>[0-9A-Za-z]{5,12})/?(?:[?#].*)?$", re.I),
+        ),
+        color=(0, 161, 214),
+        fetch=_bilibili,
+        # BV/av IDs are used as-is; b23.tv short links are resolved first
+        ref=lambda m: m.group("id") if m.group("id")[:2].lower() in ("bv", "av") else f"https://b23.tv/{m.group('id')}",
+        id_pattern=r"(?:BV[0-9A-Za-z]{10}|av\d{1,12})",
+    ),
+)
+
 BY_KEY = {p.key: p for p in PROVIDERS}
 
 

@@ -333,3 +333,77 @@ def test_streamable_thumbnail_with_protocol_relative_url(upstream):
 )
 def test_malformed_ids_are_rejected(path):
     assert client.get(path).status_code == 422
+
+
+# --- Rumble, Bilibili ----------------------------------------------------------------
+
+RUMBLE = "https://rumble.com/vdmum1-moose-the-dog-helps-girls-dig-a-snow-fort.html"
+
+
+@pytest.mark.parametrize(
+    "url, expected",
+    [
+        (RUMBLE, ("rumble", RUMBLE)),
+        (RUMBLE + "?e9s=src_v1_upp", ("rumble", RUMBLE)),
+        ("https://www.bilibili.com/video/BV1GJ411x7h7", ("bilibili", "BV1GJ411x7h7")),
+        ("https://www.bilibili.com/video/BV1GJ411x7h7/?spm_id_from=333.337", ("bilibili", "BV1GJ411x7h7")),
+        ("https://m.bilibili.com/video/av170001", ("bilibili", "av170001")),
+        ("https://b23.tv/abc123X", ("bilibili", "https://b23.tv/abc123X")),
+    ],
+)
+def test_recognises_rumble_and_bilibili(url, expected):
+    provider, ref = providers.match(url)
+    assert (provider.key, ref) == expected
+
+
+@pytest.mark.parametrize(
+    "url", ["https://rumble.com/c/SomeChannel", "https://www.bilibili.com/read/cv123", "https://space.bilibili.com/123"]
+)
+def test_ignores_rumble_and_bilibili_pages(url):
+    assert providers.match(url) is None
+
+
+def test_rumble_thumbnail_through_oembed(upstream):
+    routes, calls = upstream
+    routes["https://rumble.com/api/Media/oembed.json"] = FakeResponse(
+        data={"thumbnail_url": "https://sp.rmbl.ws/s8/1/a/b/c/d/x.OvCc.1.jpg"}
+    )
+    routes["https://sp.rmbl.ws/"] = FakeResponse(content=jpeg((1280, 720)))
+    response = client.get("/url", params={"url": RUMBLE})
+    assert response.status_code == 200
+    assert calls[0].startswith("https://rumble.com/api/Media/oembed.json?url=https%3A%2F%2Frumble.com%2Fvdmum1-")
+
+
+def test_bilibili_thumbnail(upstream):
+    routes, calls = upstream
+    routes["https://api.bilibili.com/x/web-interface/view"] = FakeResponse(
+        data={"code": 0, "data": {"pic": "http://i0.hdslb.com/bfs/archive/cover.jpg"}}
+    )
+    routes["https://i0.hdslb.com/"] = FakeResponse(content=jpeg((1146, 717)))
+    response = client.get("/bilibili/BV1GJ411x7h7")
+    assert response.status_code == 200
+    assert calls == [
+        "https://api.bilibili.com/x/web-interface/view?bvid=BV1GJ411x7h7",
+        "https://i0.hdslb.com/bfs/archive/cover.jpg",  # upgraded to https
+    ]
+
+
+def test_bilibili_av_ids_and_short_links(upstream):
+    routes, calls = upstream
+    routes["https://b23.tv/"] = FakeResponse(url="https://www.bilibili.com/video/av170001?share=1")
+    routes["https://api.bilibili.com/"] = FakeResponse(data={"code": 0, "data": {"pic": "//i0.hdslb.com/c.jpg"}})
+    routes["https://i0.hdslb.com/"] = FakeResponse(content=jpeg((1146, 717)))
+    assert client.get("/url", params={"url": "https://b23.tv/abc123X"}).status_code == 200
+    assert calls[1] == "https://api.bilibili.com/x/web-interface/view?aid=170001"
+
+
+@pytest.mark.parametrize("code, status", [(-404, 404), (62002, 404), (62004, 404), (-412, 502)])
+def test_bilibili_error_codes(upstream, code, status):
+    routes, _ = upstream
+    routes["https://api.bilibili.com/"] = FakeResponse(data={"code": code, "message": "x"})
+    assert client.get("/bilibili/BV1GJ411x7h7").status_code == status
+
+
+def test_rumble_has_no_id_route_but_bilibili_does():
+    assert client.get("/rumble/vdmum1").status_code == 404
+    assert client.get("/bilibili/not-an-id").status_code == 422

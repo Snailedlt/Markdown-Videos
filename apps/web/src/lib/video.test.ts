@@ -55,7 +55,7 @@ describe('parseVideoUrl', () => {
     ['https://vm.tiktok.com/ZMabcdEfG/', 'ZMabcdEfG', 'https://vm.tiktok.com/ZMabcdEfG/'],
     ['https://www.tiktok.com/t/ZT8abcdEf/?k=1', 'ZT8abcdEf', 'https://www.tiktok.com/t/ZT8abcdEf/'],
   ])('finds the TikTok video in %s', (url, id, watchUrl) => {
-    expect(parseVideoUrl(url)).toEqual({ provider: 'tiktok', id, watchUrl });
+    expect(parseVideoUrl(url)).toEqual({ provider: 'tiktok', id, watchUrl, viaUrl: true });
   });
 
   it.each([
@@ -75,8 +75,17 @@ describe('parseVideoUrl', () => {
     ['https://dai.ly/x7tgad0', 'dailymotion', 'x7tgad0', 'https://www.dailymotion.com/video/x7tgad0'],
     ['https://streamable.com/moo', 'streamable', 'moo', 'https://streamable.com/moo'],
     ['https://streamable.com/e/moo?autoplay=1', 'streamable', 'moo', 'https://streamable.com/moo'],
+    ['https://www.bilibili.com/video/BV1GJ411x7h7/?spm_id_from=333.337', 'bilibili', 'BV1GJ411x7h7', 'https://www.bilibili.com/video/BV1GJ411x7h7'],
+    ['https://m.bilibili.com/video/av170001', 'bilibili', 'av170001', 'https://www.bilibili.com/video/av170001'],
   ])('finds the video in %s', (url, provider, id, watchUrl) => {
     expect(parseVideoUrl(url)).toEqual({ provider, id, watchUrl });
+  });
+
+  it.each([
+    ['https://rumble.com/vdmum1-moose-the-dog-helps-girls-dig-a-snow-fort.html?e9s=src_v1', 'rumble', 'vdmum1', 'https://rumble.com/vdmum1-moose-the-dog-helps-girls-dig-a-snow-fort.html'],
+    ['https://b23.tv/abc123X', 'bilibili', 'abc123X', 'https://b23.tv/abc123X'],
+  ])('sends %s through /url', (url, provider, id, watchUrl) => {
+    expect(parseVideoUrl(url)).toEqual({ provider, id, watchUrl, viaUrl: true });
   });
 
   it.each([
@@ -86,6 +95,8 @@ describe('parseVideoUrl', () => {
     'https://www.dailymotion.com/user/someone',
     'https://streamable.com/login',
     'https://streamable.com/upload',
+    'https://rumble.com/c/SomeChannel',
+    'https://www.bilibili.com/read/cv123',
     'hello',
     'https://example.com/watch?v=dQw4w9WgXcQ',
     'https://vimeo.com/about',
@@ -145,6 +156,8 @@ describe('buildImageUrl', () => {
     ['https://www.loom.com/share/0281766fa2d04bb788eaf19e65135184', '/loom/0281766fa2d04bb788eaf19e65135184'],
     ['https://dai.ly/x7tgad0', '/dailymotion/x7tgad0'],
     ['https://streamable.com/moo', '/streamable/moo'],
+    ['https://www.bilibili.com/video/BV1GJ411x7h7', '/bilibili/BV1GJ411x7h7'],
+    ['https://rumble.com/vdmum1-moose.html', '/url?url=https%3A%2F%2Frumble.com%2Fvdmum1-moose.html'],
   ])('builds the %s thumbnail URL from the ID', (url, path) => {
     expect(buildImageUrl(parseVideoUrl(url)!, opts())).toBe(`${API_BASE_URL}${path}`);
   });
