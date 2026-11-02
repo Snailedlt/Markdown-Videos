@@ -37,66 +37,10 @@ The simplest way to use markdown-videos is to use [the website](http://markdown-
 
 ## Contributing
 
-Markdown Videos is still under development, please open an [issue](https://github.com/Snailedlt/Markdown-Videos/issues) if you find any bugs, or if you want to suggest new features.
+Markdown Videos is still under development. Please open an [issue](https://github.com/Snailedlt/Markdown-Videos/issues) if you find a bug or want to suggest a feature.
 
-Pull requests are also accepted and highly appreciated. 
+Pull requests are also accepted and highly appreciated! See [CONTRIBUTING.md](CONTRIBUTING.md) for how to set up the project (locally or in a ready-to-use dev container), run the tests, and what CI checks.
 
 You can also contribute by [buying me a coffee on Ko-fi](https://ko-fi.com/H2H0GY0OU)
 
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/H2H0GY0OU)
-
-
-If you want to contribute to the codebase, please read on.
-
-## Local development
-
-Wanna work only with the python or javascript stuff? check out [Additional info](#additional-info)
-
-### Prerequisites
-
-- [python](https://www.python.org/downloads/) 3.11 or higher
-- [pipenv](https://pipenv.pypa.io/en/latest/)
-- [pnpm](https://pnpm.io/installation)
-- [node](https://nodejs.org/en) 20.19 or higher
-
-I also highly recommend using [VS Code](https://code.visualstudio.com/) for local development, and installing the workspace's [recommended extensions](https://code.visualstudio.com/docs/editor/extension-marketplace#_recommended-extensions).
-
-### install, run, build, etc...
-
-install dependencies
-
-```sh
-pnpm install # installs web dependencies
-pnpm api:install # installs api dependencies
-```
-
-create a new .env file from the .env.example
-
-```sh
-cp .env.example .env
-```
-
-run the api and website
-
-```sh
-pnpm dev
-```
-
-If you make changes make sure to run linting and testing before opening a PR
-
-```sh
-pnpm lint
-pnpm test
-```
-
-To see test coverage for both apps, run `pnpm test:coverage`. CI runs it on every PR and shows a coverage table in the job summary.
-
-## Additional info
-
-In case you want more documentation on either the website or the api.
-
-The API is built with Python, FastAPI, Pillow and Pipenv
-- [API README](https://github.com/Snailedlt/Markdown-Videos/blob/main/apps/api/README.md)
-
-The website is built with Svelte, Vite, TypeScript and pnpm
-- [Website README](https://github.com/Snailedlt/Markdown-Videos/blob/main/apps/web/README.md)

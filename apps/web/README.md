@@ -10,7 +10,7 @@ Powered by Svelte, Vite, TypeScript and the [Markdown-Videos api](http://markdow
 
 ## Local development
 
-I recommend using the root [README](https://github.com/Snailedlt/Markdown-Videos/blob/main/README.md).
+I recommend following [CONTRIBUTING.md](https://github.com/Snailedlt/Markdown-Videos/blob/main/CONTRIBUTING.md), which sets up the API and the website together.
 
 If you wish to only develop using svelte, keep in mind that it might not work, since this documentation is rarely updated. You might have to install additional packages and change the `package.json` scripts. If you're still willing to try, do the following.
 
