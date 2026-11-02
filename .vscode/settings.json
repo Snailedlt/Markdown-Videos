@@ -8,6 +8,9 @@
       "editor.defaultFormatter": "ms-python.black-formatter",
       "editor.formatOnSave": true,
     },
+    // Was [tool.black] preview = true in apps/api/pyproject.toml, which had to
+    // go because Vercel installs dependencies from pyproject.toml if present.
+    "black-formatter.args": ["--preview"],
     "[svelte]": {
       "editor.defaultFormatter": "svelte.svelte-vscode",
       "editor.formatOnSave": true,
