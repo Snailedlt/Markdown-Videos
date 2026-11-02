@@ -481,10 +481,6 @@
     background: color-mix(in srgb, #85c742 20%, transparent);
     color: #4f8a14;
   }
-  .detected.bilibili {
-    background: color-mix(in srgb, #00a1d6 16%, transparent);
-    color: #0086b3;
-  }
   .detected.vimeo {
     background: color-mix(in srgb, #1ab7ea 18%, transparent);
     color: #1590bb;

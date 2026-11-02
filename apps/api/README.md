@@ -57,7 +57,6 @@
 | Dailymotion | `/dailymotion/{video_id}` | IDs start with `x` (`dailymotion.com/video/x7tgad0`, `dai.ly/x7tgad0`) |
 | Streamable | `/streamable/{video_id}` | `streamable.com/ID` |
 | Rumble | `/url?url={rumble_link}` | Needs the page link (`rumble.com/v…-title.html`); page and embed IDs differ |
-| Bilibili | `/bilibili/{video_id}` | BV or av IDs (`bilibili.com/video/BV1GJ411x7h7`); `b23.tv` short links through `/url` |
 
 Every service also works through `/url?url={link}`. Thumbnails from the newer services (everything except YouTube and Vimeo) keep their shape: frames with a different aspect ratio, such as vertical videos, sit on a blurred copy of themselves instead of being stretched.
 

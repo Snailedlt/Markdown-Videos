@@ -38,7 +38,7 @@
   ];
 
   const steps = [
-    { title: 'Paste a link', text: 'From YouTube, Vimeo, Loom, Bilibili and more. We find the video for you.' },
+    { title: 'Paste a link', text: 'From YouTube, Vimeo, Loom, Rumble and more. We find the video for you.' },
     { title: 'Tweak it', text: 'Pick a size, a still image or an animated GIF, and add a title for screen readers.' },
     { title: 'Copy & paste', text: 'Grab the Markdown or HTML snippet and drop it wherever you need it.' },
   ];
@@ -65,7 +65,7 @@
     },
     {
       path: '/{service}/{video_id}',
-      desc: 'Still thumbnail for imgur, loom, dailymotion, streamable or bilibili',
+      desc: 'Still thumbnail for imgur, loom, dailymotion or streamable',
       badges: [{ label: 'More services', color: 'var(--green)' }],
     },
     {

@@ -5,8 +5,7 @@ export type Provider =
   | 'loom'
   | 'dailymotion'
   | 'streamable'
-  | 'rumble'
-  | 'bilibili';
+  | 'rumble';
 
 export type ParsedVideo = {
   provider: Provider;
@@ -85,16 +84,6 @@ const RULES: Rule[] = [
     // Page and embed IDs differ, so Rumble goes through /url with the page link
     re: /^(?:https?:\/\/)?(?:www\.)?rumble\.com\/(?:embed\/)?(v[0-9a-z]{3,10})(?:-[\w-]*\.html|\/)?(?:[?#].*)?$/i,
     video: (m, value) => ({ id: m[1], watchUrl: asLink(value), viaUrl: true }),
-  },
-  {
-    provider: 'bilibili',
-    re: /^(?:https?:\/\/)?(?:www\.|m\.)?bilibili\.com\/video\/(BV[0-9A-Za-z]{10}|av\d{1,12})(?=[/?#]|$)/i,
-    link: (id) => `https://www.bilibili.com/video/${id}`,
-  },
-  {
-    provider: 'bilibili',
-    re: /^(?:https?:\/\/)?b23\.tv\/([0-9A-Za-z]{5,12})\/?(?:[?#].*)?$/i,
-    video: (m) => ({ id: m[1], watchUrl: `https://b23.tv/${m[1]}`, viaUrl: true }),
   },
 ];
 
@@ -177,7 +166,6 @@ export const PROVIDER_LABEL: Record<Provider, string> = {
   dailymotion: 'Dailymotion',
   streamable: 'Streamable',
   rumble: 'Rumble',
-  bilibili: 'Bilibili',
 };
 
 /** "YouTube, Vimeo, Imgur, …" */
