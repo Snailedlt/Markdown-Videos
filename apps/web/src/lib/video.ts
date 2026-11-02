@@ -5,7 +5,9 @@ export type Provider =
   | 'loom'
   | 'dailymotion'
   | 'streamable'
-  | 'rumble';
+  | 'rumble'
+  | 'instagram'
+  | 'facebook';
 
 export type ParsedVideo = {
   provider: Provider;
@@ -84,6 +86,16 @@ const RULES: Rule[] = [
     // Page and embed IDs differ, so Rumble goes through /url with the page link
     re: /^(?:https?:\/\/)?(?:www\.)?rumble\.com\/(?:embed\/)?(v[0-9a-z]{3,10})(?:-[\w-]*\.html|\/)?(?:[?#].*)?$/i,
     video: (m, value) => ({ id: m[1], watchUrl: asLink(value), viaUrl: true }),
+  },
+  {
+    provider: 'instagram',
+    re: /^(?:https?:\/\/)?(?:www\.|m\.)?instagram\.com\/(?:[\w.]+\/)?(?:p|reels?|tv)\/([A-Za-z0-9_-]{5,40})(?=[/?#]|$)/i,
+    link: (id) => `https://www.instagram.com/p/${id}/`,
+  },
+  {
+    provider: 'facebook',
+    re: /^(?:https?:\/\/)?(?:www\.|m\.|web\.)?facebook\.com\/(?:[\w.-]+\/videos\/(?:[\w.-]+\/)?|watch\/?\?(?:[^#]*&)?v=|reel\/|video\.php\?(?:[^#]*&)?v=)(\d{8,20})(?=[/?#&]|$)/i,
+    link: (id) => `https://www.facebook.com/watch/?v=${id}`,
   },
 ];
 
@@ -166,6 +178,8 @@ export const PROVIDER_LABEL: Record<Provider, string> = {
   dailymotion: 'Dailymotion',
   streamable: 'Streamable',
   rumble: 'Rumble',
+  instagram: 'Instagram',
+  facebook: 'Facebook',
 };
 
 /** "YouTube, Vimeo, Imgur, …" */

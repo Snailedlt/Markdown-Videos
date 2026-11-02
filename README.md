@@ -26,6 +26,10 @@ Markdown Videos lets you embed Youtube videos into GitHub markdown with ease!
 | Dailymotion | `dailymotion.com/video/ID`, `dai.ly/ID` | |
 | Streamable | `streamable.com/ID` | |
 | Rumble | `rumble.com/ID-title.html` | |
+| Instagram¹ | `instagram.com/p/…`, `/reel/…`, `/tv/…` | |
+| Facebook¹ | `facebook.com/…/videos/ID`, `/watch/?v=ID`, `/reel/ID` | |
+
+¹ Needs Meta API credentials on the server (see the [API README](apps/api/README.md#supported-services)).
 
 Missing a service? [Open an issue](https://github.com/Snailedlt/Markdown-Videos/issues). New services are added in [`apps/api/src/providers.py`](apps/api/src/providers.py).
 

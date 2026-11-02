@@ -65,6 +65,8 @@ describe('parseVideoUrl', () => {
     ['https://dai.ly/x7tgad0', 'dailymotion', 'x7tgad0', 'https://www.dailymotion.com/video/x7tgad0'],
     ['https://streamable.com/moo', 'streamable', 'moo', 'https://streamable.com/moo'],
     ['https://streamable.com/e/moo?autoplay=1', 'streamable', 'moo', 'https://streamable.com/moo'],
+    ['https://www.instagram.com/reel/Chunk8-jurw/?igsh=abc', 'instagram', 'Chunk8-jurw', 'https://www.instagram.com/p/Chunk8-jurw/'],
+    ['https://www.facebook.com/cnn/videos/10155529876156509/', 'facebook', '10155529876156509', 'https://www.facebook.com/watch/?v=10155529876156509'],
   ])('finds the video in %s', (url, provider, id, watchUrl) => {
     expect(parseVideoUrl(url)).toEqual({ provider, id, watchUrl });
   });
@@ -83,6 +85,8 @@ describe('parseVideoUrl', () => {
     'https://streamable.com/login',
     'https://streamable.com/upload',
     'https://rumble.com/c/SomeChannel',
+    'https://www.instagram.com/someuser/',
+    'https://www.facebook.com/SomePage',
     'hello',
     'https://example.com/watch?v=dQw4w9WgXcQ',
     'https://vimeo.com/about',

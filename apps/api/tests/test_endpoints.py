@@ -1,6 +1,7 @@
 from fastapi.testclient import TestClient
 from PIL import Image, ImageSequence
 import io
+import os
 import pytest
 import urllib
 
@@ -212,3 +213,25 @@ def test_more_services_live(path):
     response = client.get(path)
     assert response.status_code == 200, response.text
     assert Image.open(io.BytesIO(response.content)).size == (default_img_width, default_img_height)
+
+
+# Instagram and Facebook need Meta credentials (see the API README). These run
+# when they're configured, e.g. as GitHub Actions secrets.
+needs_meta = pytest.mark.skipif(
+    not (os.getenv("META_ACCESS_TOKEN") or (os.getenv("META_APP_ID") and os.getenv("META_CLIENT_TOKEN"))),
+    reason="Meta credentials not configured",
+)
+
+
+# Example videos from yt-dlp's Instagram and Facebook extractor tests
+@needs_meta
+@pytest.mark.parametrize(
+    "url",
+    [
+        "https://www.instagram.com/reel/Chunk8-jurw/",
+        "https://www.facebook.com/cnn/videos/10155529876156509/",
+    ],
+)
+def test_meta_live(url):
+    response = client.get("/url", params={"url": url})
+    assert response.status_code == 200, response.text

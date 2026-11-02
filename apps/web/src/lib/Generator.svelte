@@ -481,6 +481,14 @@
     background: color-mix(in srgb, #85c742 20%, transparent);
     color: #4f8a14;
   }
+  .detected.instagram {
+    background: color-mix(in srgb, #e1306c 15%, transparent);
+    color: #c1275b;
+  }
+  .detected.facebook {
+    background: color-mix(in srgb, #1877f2 15%, transparent);
+    color: #1466d1;
+  }
   .detected.vimeo {
     background: color-mix(in srgb, #1ab7ea 18%, transparent);
     color: #1590bb;
