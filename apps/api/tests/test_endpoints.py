@@ -183,7 +183,9 @@ def test_url_endpoint(url, expected_video_id):
 # real services (like the YouTube and Vimeo tests above), so they also catch
 # a service changing its thumbnail URLs or blocking our requests.
 IMGUR_VIDEO_ID = "A61SaA1"  # a public Imgur video (.mp4)
-TIKTOK_VIDEO_URL = "https://www.tiktok.com/@scout2015/video/6718335390845095173"  # TikTok's oEmbed docs example
+# A long-lived public video (also used by yt-dlp's TikTok tests). TikTok's own
+# oEmbed docs example (@scout2015) no longer exists.
+TIKTOK_VIDEO_URL = "https://www.tiktok.com/@hankgreen1/video/7047596209028074758"
 
 
 def test_imgur_thumbnail_live():

@@ -35,11 +35,27 @@ OEMBED_HEADERS = {
 
 
 class UpstreamError(HTTPException):
-    def __init__(self, provider: "Provider"):
+    def __init__(self, provider: "Provider", status: typing.Optional[int] = None):
+        reason = f" ({provider.name} answered {status})" if status else ""
         super().__init__(
             status_code=502,
-            detail=f"Couldn't get a thumbnail from {provider.name} right now. Please try again later.",
+            detail=f"Couldn't get a thumbnail from {provider.name} right now{reason}. Please try again later.",
         )
+
+
+# Statuses that mean "this video doesn't exist (or isn't public)". Anything
+# else, notably 401/403/429 (refused or rate-limited), is the service's
+# problem and becomes a 502 that says so, instead of a misleading 404.
+NOT_FOUND_STATUSES = (400, 404, 410)
+REFUSED_STATUSES = (401, 403, 429)
+
+
+def _check(res: requests.Response, provider: "Provider", ref: str) -> None:
+    if res.status_code in NOT_FOUND_STATUSES:
+        raise VideoNotFound(provider, ref)
+    if res.status_code in REFUSED_STATUSES or res.status_code >= 500:
+        raise UpstreamError(provider, res.status_code)
+    res.raise_for_status()
 
 
 class VideoNotFound(HTTPException):
@@ -87,18 +103,14 @@ def _get(url: str, **kwargs) -> requests.Response:
 
 def _image(provider: Provider, ref: str, url: str) -> Image.Image:
     res = _get(url, headers=OEMBED_HEADERS)
-    if res.status_code in (400, 401, 403, 404, 410):
-        raise VideoNotFound(provider, ref)
-    res.raise_for_status()
+    _check(res, provider, ref)
     return Image.open(BytesIO(res.content))
 
 
 def oembed_thumbnail(endpoint: str, video_url: str, provider: Provider, ref: str) -> Image.Image:
     """Most services publish the thumbnail URL in their oEmbed response."""
     res = _get(f"{endpoint}?url={quote(video_url, safe='')}&format=json", headers=OEMBED_HEADERS)
-    if res.status_code in (400, 401, 403, 404, 410, 501):
-        raise VideoNotFound(provider, ref)
-    res.raise_for_status()
+    _check(res, provider, ref)
     thumbnail_url = res.json().get("thumbnail_url")
     if not thumbnail_url:
         raise VideoNotFound(provider, ref)
@@ -124,9 +136,9 @@ def _imgur(provider: Provider, video_id: str) -> Image.Image:
     # which must not get a play button.
     # Imgur rate-limits (429) requests with python-requests' default User-Agent
     res = _get(f"https://i.imgur.com/{video_id}h.jpg", headers=OEMBED_HEADERS, allow_redirects=False)
-    if res.is_redirect or res.status_code == 404:
+    if res.is_redirect:
         raise VideoNotFound(provider, video_id)
-    res.raise_for_status()
+    _check(res, provider, video_id)
     return Image.open(BytesIO(res.content))
 
 
