@@ -128,13 +128,22 @@ def test_removed_imgur_post_is_a_404_not_a_placeholder(upstream):
     assert "cache-control" not in response.headers
 
 
-def test_upstream_failures_are_a_502(upstream):
+@pytest.mark.parametrize("status", [401, 403, 429, 500, 503])
+def test_refusals_and_outages_are_a_502_not_a_404(upstream, status):
     routes, _ = upstream
-    routes["https://i.imgur.com/"] = FakeResponse(status=429)
+    routes["https://i.imgur.com/"] = FakeResponse(status=status)
     response = client.get("/imgur/A61SaA1")
     assert response.status_code == 502
-    assert "Couldn't get a thumbnail from Imgur" in response.json()["detail"]
+    assert f"Couldn't get a thumbnail from Imgur right now (Imgur answered {status})" in response.json()["detail"]
     assert "cache-control" not in response.headers
+
+
+def test_tiktok_refusing_us_is_a_502(upstream):
+    routes, _ = upstream
+    routes["https://www.tiktok.com/oembed"] = FakeResponse(status=403)
+    response = client.get("/url", params={"url": TIKTOK})
+    assert response.status_code == 502
+    assert "TikTok answered 403" in response.json()["detail"]
 
 
 def test_imgur_is_requested_with_a_user_agent(monkeypatch):
