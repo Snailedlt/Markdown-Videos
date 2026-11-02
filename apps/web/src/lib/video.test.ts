@@ -95,6 +95,7 @@ describe('parseVideoUrl', () => {
     'https://clips.twitch.tv/embed',
     'https://www.twitch.tv/some_streamer',
     'https://www.reddit.com/r/videos/',
+    'https://www.xiaohongshu.com/explore/6411cf99000000001300b6d9',
     'hello',
     'https://example.com/watch?v=dQw4w9WgXcQ',
     'https://vimeo.com/about',

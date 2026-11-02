@@ -16,8 +16,9 @@ import time
 import typing
 from dataclasses import dataclass
 from functools import lru_cache
+from html import unescape as html_unescape
 from io import BytesIO
-from urllib.parse import quote, urljoin
+from urllib.parse import quote, urljoin, urlsplit
 
 import requests
 from fastapi import HTTPException
@@ -37,8 +38,8 @@ OEMBED_HEADERS = {
 
 
 class UpstreamError(HTTPException):
-    def __init__(self, provider: "Provider", status: typing.Optional[int] = None):
-        reason = f" ({provider.name} answered {status})" if status else ""
+    def __init__(self, provider: "Provider", status: typing.Optional[int] = None, why: str = ""):
+        reason = f" ({why or f'{provider.name} answered {status}'})" if (status or why) else ""
         super().__init__(
             status_code=502,
             detail=f"Couldn't get a thumbnail from {provider.name} right now{reason}. Please try again later.",
@@ -230,14 +231,6 @@ PROVIDERS += (
         id_pattern=r"[a-z0-9]{3,10}",
     ),
 )
-
-def _resolve_short_link(provider: Provider, url: str) -> str:
-    """Follow a share short link to the page it points to."""
-    res = _get(url if url.startswith("http") else f"https://{url}", headers=OEMBED_HEADERS, allow_redirects=True)
-    if res.status_code in NOT_FOUND_STATUSES:
-        raise VideoNotFound(provider, url)
-    return res.url
-
 
 def _rumble(provider: Provider, ref: str) -> Image.Image:
     return oembed_thumbnail("https://rumble.com/api/Media/oembed.json", ref, provider, ref)
@@ -495,6 +488,46 @@ PROVIDERS += (
         missing_credentials=_reddit_missing,
     ),
 )
+
+# --- Page preview images -------------------------------------------------------
+# For a service with no thumbnail API: read the preview image a video page
+# declares for link previews (og:image and friends), like chat apps do when
+# they unfurl a link. We identify ourselves and don't try to get past logins
+# or captchas: a page that sends us there is reported as a refusal.
+# No service uses this at the moment. Rednote did, but it sends servers to a
+# login or error page instead of the note.
+
+PAGE_HEADERS = {**OEMBED_HEADERS, "Accept": "text/html,application/xhtml+xml"}
+_META_IMAGE = [
+    re.compile(rf'<meta[^>]+(?:property|name|itemprop)=["\']{key}["\'][^>]*content=["\']([^"\']+)', re.I)
+    for key in (r"og:image(?::secure_url)?", r"twitter:image(?::src)?", "image", "thumbnailUrl")
+] + [
+    re.compile(rf'<meta[^>]+content=["\']([^"\']+)["\'][^>]*(?:property|name|itemprop)=["\']{key}["\']', re.I)
+    for key in (r"og:image(?::secure_url)?", r"twitter:image(?::src)?", "image", "thumbnailUrl")
+]
+
+
+def page_preview_image(provider: Provider, ref: str, page_url: str, still_there: typing.Callable[[str], bool]) -> Image.Image:
+    """The preview image of a video page.
+
+    `still_there` gets the URL we ended up on after redirects, without its query
+    string or fragment, and says whether it is still the video's page. The query
+    is left out because login and error pages often carry the original URL in
+    it (?redirectPath=...), which would make them look like the video's page.
+    """
+    res = _get(page_url, headers=PAGE_HEADERS, allow_redirects=True)
+    _check(res, provider, ref)
+    if not still_there(urlsplit(res.url)._replace(query="", fragment="").geturl()):
+        # Redirected to a login, captcha or home page instead of the video
+        raise UpstreamError(provider, why=f"{provider.name} sent us to another page instead of the video, e.g. a login or captcha")
+    head = res.content[:1_000_000].decode(getattr(res, "encoding", None) or "utf-8", errors="replace")
+    for pattern in _META_IMAGE:
+        found = pattern.search(head)
+        if found:
+            image_url = html_unescape(found.group(1)).strip()
+            return _image(provider, ref, urljoin(res.url, image_url))
+    raise VideoNotFound(provider, ref)
+
 
 BY_KEY = {p.key: p for p in PROVIDERS}
 

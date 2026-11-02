@@ -530,3 +530,71 @@ def test_wrong_credentials_are_a_502(upstream, oauth, monkeypatch):
     response = client.get("/reddit/6rrwyj")
     assert response.status_code == 502
     assert "Reddit answered 401" in response.json()["detail"]
+
+
+# --- Page preview images ---------------------------------------------------------
+# No service uses this right now, so these call it with an example service.
+
+EXAMPLE = providers.Provider(key="example", name="Example", patterns=(), color=(0, 0, 0), fetch=lambda p, r: None)
+VIDEO_PAGE = "https://video.example.test/watch/abc123"
+PAGE = """<html><head><title>x</title>
+<meta property="og:title" content="A video">
+<meta property="og:image" content="https://img.example.test/covers/abc123.jpg?a=1&amp;b=2">
+</head><body></body></html>"""
+
+
+def preview():
+    return providers.page_preview_image(EXAMPLE, "abc123", VIDEO_PAGE, lambda url: url.endswith("/watch/abc123"))
+
+
+def test_reads_the_pages_preview_image(upstream):
+    routes, calls = upstream
+    routes[VIDEO_PAGE] = FakeResponse(content=PAGE.encode(), url=VIDEO_PAGE)
+    routes["https://img.example.test/"] = FakeResponse(content=jpeg((1280, 720)))
+    assert preview().size == (1280, 720)
+    # HTML entities in the content attribute are decoded
+    assert calls[1] == "https://img.example.test/covers/abc123.jpg?a=1&b=2"
+
+
+@pytest.mark.parametrize(
+    "tag",
+    [
+        '<meta content="//img.example.test/a.jpg" property="og:image">',  # attribute order, protocol-relative
+        '<meta name="twitter:image" content="/a.jpg">',  # relative to the page
+        '<meta itemprop="image" content="https://img.example.test/a.jpg">',
+    ],
+)
+def test_preview_image_variants(upstream, tag):
+    routes, calls = upstream
+    routes[VIDEO_PAGE] = FakeResponse(content=f"<head>{tag}</head>".encode(), url=VIDEO_PAGE)
+    routes["https://img.example.test/"] = FakeResponse(content=jpeg((1280, 720)))
+    routes["https://video.example.test/a.jpg"] = FakeResponse(content=jpeg((1280, 720)))
+    preview()
+    assert calls[1] in ("https://img.example.test/a.jpg", "https://video.example.test/a.jpg")
+
+
+def test_page_without_a_preview_image_is_not_found(upstream):
+    routes, _ = upstream
+    routes[VIDEO_PAGE] = FakeResponse(content=b"<html><head></head></html>", url=VIDEO_PAGE)
+    with pytest.raises(providers.VideoNotFound):
+        preview()
+
+
+@pytest.mark.parametrize(
+    "landed_on",
+    [
+        "https://video.example.test/login",
+        # Login and error pages often carry the original URL in the query
+        # string. That must not count as still being on the video's page.
+        "https://video.example.test/404?redirectPath=https%3A%2F%2Fvideo.example.test%2Fwatch%2Fabc123",
+        "https://video.example.test/login?redirectPath=https://video.example.test/watch/abc123",
+    ],
+)
+def test_redirect_away_from_the_video_is_a_refusal(upstream, landed_on):
+    routes, calls = upstream
+    # The page we're sent to has a preview image too (usually the site's logo)
+    routes[VIDEO_PAGE] = FakeResponse(content=PAGE.encode(), url=landed_on)
+    with pytest.raises(providers.UpstreamError) as refused:
+        preview()
+    assert "sent us to another page instead of the video" in refused.value.detail
+    assert len(calls) == 1  # the logo is never downloaded

@@ -159,6 +159,7 @@
     const initial = new URLSearchParams(location.search).get('video');
     if (initial) urlInput = initial;
     synced = true;
+    canPaste = !!navigator.clipboard?.readText;
     if (!matchMedia('(pointer: coarse)').matches) inputEl?.focus();
   });
 
@@ -183,7 +184,8 @@
     inputEl?.focus();
   }
 
-  const canPaste = typeof navigator !== 'undefined' && !!navigator.clipboard?.readText;
+  // Decided after mount so the prerendered HTML and the first client render match
+  let canPaste = $state(false);
   async function paste() {
     try {
       const text = await navigator.clipboard.readText();
