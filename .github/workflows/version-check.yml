@@ -1,0 +1,28 @@
+name: Version check
+
+# Fails when a PR changes an app (apps/*) without bumping its version (#72).
+# Docs and tests don't count. Dependabot PRs and PRs labelled
+# "skip-version-check" are exempt; their changes go out with the next release.
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, labeled, unlabeled]
+
+jobs:
+  version:
+    name: Version bumped
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    if: >-
+      ${{ github.event.pull_request.user.login != 'dependabot[bot]' &&
+          !contains(github.event.pull_request.labels.*.name, 'skip-version-check') }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Check versions against ${{ github.base_ref }}
+        run: node scripts/check-version.mjs "origin/${{ github.base_ref }}"

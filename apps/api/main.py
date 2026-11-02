@@ -18,7 +18,7 @@ def get_settings():
 app = FastAPI(
     title=get_settings().app_name,
     description=get_settings().app_description,
-    version="0.0.1-alpha",
+    version="0.1.0",
     terms_of_service="https://choosealicense.com/licenses/mit/",
     contact=get_settings().contact,
     license_info={

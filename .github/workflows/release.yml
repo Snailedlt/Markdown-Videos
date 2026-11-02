@@ -1,0 +1,73 @@
+name: Release
+
+# When a version bump lands on main, tag it, publish a GitHub release with
+# the changes since the previous release, and add them to CHANGELOG.md (#96).
+on:
+  push:
+    branches: ["main"]
+    paths: ["package.json"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Find the new version
+        id: version
+        run: |
+          version="$(node -p "require('./package.json').version")"
+          tag="v$version"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+          if git rev-parse -q --verify "refs/tags/$tag" >/dev/null; then
+            echo "$tag already exists: nothing to release."
+            echo "new=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          echo "new=true" >> "$GITHUB_OUTPUT"
+          # The newest existing release tag, if any
+          echo "previous=$(git tag -l 'v*' --sort=-v:refname | head -n 1)" >> "$GITHUB_OUTPUT"
+
+      - name: Write release notes
+        if: ${{ steps.version.outputs.new == 'true' }}
+        run: node scripts/changelog.mjs section "${{ steps.version.outputs.version }}" ${{ steps.version.outputs.previous }} > release-notes.md && cat release-notes.md
+
+      - name: Create the GitHub release
+        if: ${{ steps.version.outputs.new == 'true' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "${{ steps.version.outputs.tag }}" \
+            --target "$GITHUB_SHA" \
+            --title "${{ steps.version.outputs.tag }}" \
+            --notes-file release-notes.md
+
+      - name: Add the release to CHANGELOG.md
+        if: ${{ steps.version.outputs.new == 'true' }}
+        run: |
+          node scripts/changelog.mjs prepend "${{ steps.version.outputs.version }}" ${{ steps.version.outputs.previous }}
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -am "Update CHANGELOG for ${{ steps.version.outputs.tag }} [skip ci]"
+          # main is protected: this push needs "Allow GitHub Actions to bypass"
+          # (or an exception for github-actions) in the branch rules.
+          if ! git push origin HEAD:main; then
+            echo "::warning title=CHANGELOG not updated::The release was published, but pushing CHANGELOG.md to main was blocked by branch protection. Allow GitHub Actions to bypass the rules for main, or run 'pnpm changelog prepend ${{ steps.version.outputs.version }} ${{ steps.version.outputs.previous }}' and commit it yourself."
+          fi

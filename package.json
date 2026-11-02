@@ -1,7 +1,7 @@
 {
     "name": "markdown-videos",
     "private": true,
-    "version": "0.0.0",
+    "version": "0.1.0",
     "packageManager": "pnpm@9.0.6",
     "engines": {
         "node": ">=20.19.0"
@@ -16,7 +16,10 @@
         "test:verbose": "turbo run test:verbose",
         "test:coverage": "turbo run test:coverage",
         "lint": "turbo run lint",
-        "clean:workspaces": "turbo clean"
+        "clean:workspaces": "turbo clean",
+        "version:bump": "node scripts/bump-version.mjs",
+        "version:check": "node scripts/check-version.mjs origin/main",
+        "changelog": "node scripts/changelog.mjs"
     },
     "devDependencies": {
         "dotenv-cli": "^8.0.0",
