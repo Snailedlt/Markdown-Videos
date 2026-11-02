@@ -63,6 +63,11 @@
 | Facebook | `/facebook/{video_id}` | **Needs credentials** (below). Public videos and reels |
 | Twitch | `/url?url={twitch_link}` | **Needs credentials** (below). Clips and past broadcasts (not live streams) |
 | Reddit | `/reddit/{post_id}` | **Needs credentials** (below). The post's preview image; share links (`/r/…/s/…`) through `/url` |
+| Tencent Video | `/tencent/{vid}` | The 11-character video ID (`v.qq.com/x/page/<vid>.html`, `/x/cover/…/<vid>.html`) |
+| iQIYI | `/url?url={iqiyi_link}` | `iqiyi.com/v_….html` and `iq.com/play/…` |
+| Rednote (Xiaohongshu) | `/url?url={note_link}` | Keep the link's `xsec_token`; `xhslink.com` short links are resolved |
+
+Tencent Video, iQIYI and Rednote have no public thumbnail API, so the thumbnail is the preview image the video page declares for link previews (`og:image`), like chat apps use when they unfurl a link. The API identifies itself and doesn't try to get past logins or captchas: if a page redirects there (Rednote often does for servers), it answers **502** saying so.
 
 ### Services that need credentials
 

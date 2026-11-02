@@ -32,8 +32,12 @@ Markdown Videos lets you embed Youtube videos into GitHub markdown with ease!
 | Facebook¹ | `facebook.com/…/videos/ID`, `/watch/?v=ID`, `/reel/ID` | |
 | Twitch¹ | `clips.twitch.tv/…`, `twitch.tv/…/clip/…`, `twitch.tv/videos/ID` | |
 | Reddit¹ | `reddit.com/r/…/comments/ID/…`, `redd.it/ID`, `reddit.com/r/…/s/…` | |
+| Tencent Video² | `v.qq.com/x/page/ID.html`, `v.qq.com/x/cover/…/ID.html` | |
+| iQIYI² | `iqiyi.com/v_ID.html`, `iq.com/play/…` | |
+| Rednote (Xiaohongshu)² | `xiaohongshu.com/explore/ID`, `xhslink.com/…` | |
 
 ¹ Needs API credentials on the server (see the [API README](apps/api/README.md#supported-services)).
+² Uses the preview image the video page declares. These services can refuse servers outside China or behind a bot check; when they do, the API says so.
 
 Missing a service? [Open an issue](https://github.com/Snailedlt/Markdown-Videos/issues). New services are added in [`apps/api/src/providers.py`](apps/api/src/providers.py).
 

@@ -81,6 +81,7 @@ describe('parseVideoUrl', () => {
     ['https://www.facebook.com/cnn/videos/10155529876156509/', 'facebook', '10155529876156509', 'https://www.facebook.com/watch/?v=10155529876156509'],
     ['https://old.reddit.com/r/videos/comments/6RRWYJ/that_small_heart_attack/', 'reddit', '6rrwyj', 'https://redd.it/6rrwyj'],
     ['https://redd.it/6rrwyj', 'reddit', '6rrwyj', 'https://redd.it/6rrwyj'],
+    ['https://v.qq.com/x/cover/7ce5noezvafma27/a00269ix3l8.html', 'tencent', 'a00269ix3l8', 'https://v.qq.com/x/page/a00269ix3l8.html'],
   ])('finds the video in %s', (url, provider, id, watchUrl) => {
     expect(parseVideoUrl(url)).toEqual({ provider, id, watchUrl });
   });
@@ -91,6 +92,13 @@ describe('parseVideoUrl', () => {
     ['https://www.twitch.tv/some_streamer/clip/FaintLightGullWholeWheat?filter=clips', 'twitch', 'FaintLightGullWholeWheat', 'https://clips.twitch.tv/FaintLightGullWholeWheat'],
     ['https://www.twitch.tv/videos/635475444', 'twitch', '635475444', 'https://www.twitch.tv/videos/635475444'],
     ['https://www.reddit.com/r/videos/s/AbCdEf1234?utm=x', 'reddit', 'AbCdEf1234', 'https://www.reddit.com/r/videos/s/AbCdEf1234'],
+    ['http://www.iqiyi.com/v_19rrojlavg.html', 'iqiyi', 'v_19rrojlavg', 'https://www.iqiyi.com/v_19rrojlavg.html'],
+    [
+      'https://www.xiaohongshu.com/discovery/item/674051740000000007027a15?xsec_token=CBge',
+      'rednote',
+      '674051740000000007027a15',
+      'https://www.xiaohongshu.com/discovery/item/674051740000000007027a15?xsec_token=CBge',
+    ],
   ])('sends %s through /url', (url, provider, id, watchUrl) => {
     expect(parseVideoUrl(url)).toEqual({ provider, id, watchUrl, viaUrl: true });
   });
@@ -108,6 +116,8 @@ describe('parseVideoUrl', () => {
     'https://clips.twitch.tv/embed',
     'https://www.twitch.tv/some_streamer',
     'https://www.reddit.com/r/videos/',
+    'https://v.qq.com/',
+    'https://www.xiaohongshu.com/user/profile/abc',
     'https://www.bilibili.com/read/cv123',
     'hello',
     'https://example.com/watch?v=dQw4w9WgXcQ',

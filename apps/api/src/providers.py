@@ -16,6 +16,7 @@ import time
 import typing
 from dataclasses import dataclass
 from functools import lru_cache
+from html import unescape as html_unescape
 from io import BytesIO
 from urllib.parse import quote, urljoin
 
@@ -37,8 +38,8 @@ OEMBED_HEADERS = {
 
 
 class UpstreamError(HTTPException):
-    def __init__(self, provider: "Provider", status: typing.Optional[int] = None):
-        reason = f" ({provider.name} answered {status})" if status else ""
+    def __init__(self, provider: "Provider", status: typing.Optional[int] = None, why: str = ""):
+        reason = f" ({why or f'{provider.name} answered {status}'})" if (status or why) else ""
         super().__init__(
             status_code=502,
             detail=f"Couldn't get a thumbnail from {provider.name} right now{reason}. Please try again later.",
@@ -565,6 +566,97 @@ PROVIDERS += (
         ref=lambda m: m.group("id").lower() if m.groupdict().get("id") else f"https://www.reddit.com{m.group(0)[m.group(0).index('/r/'):].split('?')[0]}",
         id_pattern=r"[a-z0-9]{5,10}",
         missing_credentials=_reddit_missing,
+    ),
+)
+
+# --- Page preview images (Tencent Video, iQIYI, Rednote) ---------------------------
+# These services have no public thumbnail API, so we read the preview image a
+# video page declares for link previews (og:image and friends), like chat apps
+# do when they unfurl a link. We identify ourselves and don't try to get past
+# logins or captchas: a page that sends us there is reported as a refusal.
+
+PAGE_HEADERS = {**OEMBED_HEADERS, "Accept": "text/html,application/xhtml+xml"}
+_META_IMAGE = [
+    re.compile(rf'<meta[^>]+(?:property|name|itemprop)=["\']{key}["\'][^>]*content=["\']([^"\']+)', re.I)
+    for key in (r"og:image(?::secure_url)?", r"twitter:image(?::src)?", "image", "thumbnailUrl")
+] + [
+    re.compile(rf'<meta[^>]+content=["\']([^"\']+)["\'][^>]*(?:property|name|itemprop)=["\']{key}["\']', re.I)
+    for key in (r"og:image(?::secure_url)?", r"twitter:image(?::src)?", "image", "thumbnailUrl")
+]
+
+
+def page_preview_image(provider: Provider, ref: str, page_url: str, still_there: typing.Callable[[str], bool]) -> Image.Image:
+    res = _get(page_url, headers=PAGE_HEADERS, allow_redirects=True)
+    _check(res, provider, ref)
+    if not still_there(res.url):
+        # Redirected to a login, captcha or home page instead of the video
+        raise UpstreamError(provider, why=f"{provider.name} sent us to another page instead of the video, e.g. a login or captcha")
+    head = res.content[:1_000_000].decode(getattr(res, "encoding", None) or "utf-8", errors="replace")
+    for pattern in _META_IMAGE:
+        found = pattern.search(head)
+        if found:
+            image_url = html_unescape(found.group(1)).strip()
+            return _image(provider, ref, urljoin(res.url, image_url))
+    raise VideoNotFound(provider, ref)
+
+
+def _tencent(provider: Provider, vid: str) -> Image.Image:
+    return page_preview_image(provider, vid, f"https://v.qq.com/x/page/{vid}.html", lambda url: vid in url)
+
+
+def _iqiyi(provider: Provider, page_url: str) -> Image.Image:
+    video_key = re.search(r"(v_[0-9a-z]+|play/[\w-]+)", page_url, re.I).group(1)
+    return page_preview_image(provider, page_url, page_url, lambda url: video_key.lower() in url.lower())
+
+
+def _rednote(provider: Provider, ref: str) -> Image.Image:
+    page_url = ref
+    if "xhslink.com" in ref:
+        page_url = _resolve_short_link(provider, ref)
+    note = re.search(r"/(?:explore|discovery/item)/([0-9a-f]{24})", page_url)
+    if not note:
+        # The short link led somewhere else (e.g. a login page)
+        raise UpstreamError(provider, why=f"{provider.name}'s short link didn't lead to a note")
+    return page_preview_image(provider, ref, page_url, lambda url: note.group(1) in url)
+
+
+PROVIDERS += (
+    Provider(
+        key="tencent",
+        name="Tencent Video",
+        patterns=(
+            # v.qq.com/x/cover/<cover id>/<vid>.html and v.qq.com/x/page/<vid>.html
+            re.compile(r"^(?:https?://)?(?:v|m\.v)\.qq\.com/x/(?:cover/[0-9a-z]+/|page/)(?P<id>[0-9a-z]{11})\.html", re.I),
+            re.compile(r"^(?:https?://)?(?:v|m\.v)\.qq\.com/x/m/play\?(?:[^#]*&)?vid=(?P<id>[0-9a-z]{11})", re.I),
+        ),
+        color=(255, 106, 0),
+        fetch=_tencent,
+        id_pattern=r"[0-9a-z]{11}",
+    ),
+    Provider(
+        key="iqiyi",
+        name="iQIYI",
+        patterns=(
+            re.compile(r"^(?:https?://)?(?:www\.|m\.)?iqiyi\.com/v_[0-9a-z]{6,20}\.html", re.I),
+            re.compile(r"^(?:https?://)?(?:www\.)?iq\.com/play/[\w-]+", re.I),
+        ),
+        color=(0, 190, 6),
+        fetch=_iqiyi,
+        ref=lambda m: "https://" + re.sub(r"^https?://", "", m.group(0)).split("?")[0],
+        id_route=False,
+    ),
+    Provider(
+        key="rednote",
+        name="Rednote",
+        patterns=(
+            # Notes usually need their xsec_token, so keep the query string
+            re.compile(r"^(?:https?://)?(?:www\.)?xiaohongshu\.com/(?:explore|discovery/item)/[0-9a-f]{24}(?:\?[^#]*)?", re.I),
+            re.compile(r"^(?:https?://)?xhslink\.com/(?:[a-z]/)?[A-Za-z0-9]{4,20}/?", re.I),
+        ),
+        color=(255, 36, 66),
+        fetch=_rednote,
+        ref=lambda m: m.group(0) if m.group(0).startswith("http") else f"https://{m.group(0)}",
+        id_route=False,
     ),
 )
 

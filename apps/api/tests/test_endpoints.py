@@ -270,3 +270,18 @@ def test_twitch_live(url):
 def test_reddit_live():
     response = client.get("/url", params={"url": "https://www.reddit.com/r/videos/comments/6rrwyj/that_small_heart_attack/"})
     assert response.status_code == 200, response.text
+
+
+# Page preview images. These services may refuse servers outside China or
+# behind a bot check; a refusal fails here with a 502 that says so.
+@pytest.mark.parametrize(
+    "url",
+    [
+        "https://v.qq.com/x/page/q326831cny0.html",
+        "https://www.iqiyi.com/v_19rrojlavg.html",
+        "https://www.xiaohongshu.com/explore/6411cf99000000001300b6d9",
+    ],
+)
+def test_page_preview_services_live(url):
+    response = client.get("/url", params={"url": url})
+    assert response.status_code == 200, response.text
