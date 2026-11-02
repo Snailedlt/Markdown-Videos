@@ -9,8 +9,7 @@ export type Provider =
   | 'instagram'
   | 'facebook'
   | 'twitch'
-  | 'reddit'
-  | 'rednote';
+  | 'reddit';
 
 export type ParsedVideo = {
   provider: Provider;
@@ -132,19 +131,6 @@ const RULES: Rule[] = [
     re: /^(?:https?:\/\/)?(?:www\.)?reddit\.com\/r\/\w+\/s\/([A-Za-z0-9]{6,20})\/?(?:[?#].*)?$/i,
     video: (m, value) => ({ id: m[1], watchUrl: asLink(value), viaUrl: true }),
   },
-  // Rednote thumbnails come from the note's page, so they go through /url
-  {
-    provider: 'rednote',
-    // Notes usually need their xsec_token, so keep the query string
-    // xiaohongshu.com or rednote.com, with or without a language prefix (/en/)
-    re: /^(?:https?:\/\/)?(?:www\.)?(?:xiaohongshu|rednote)\.com\/(?:[a-z]{2}(?:-[a-z]{2,4})?\/)?(?:explore|discovery\/item)\/([0-9a-f]{24})(?:\?[^#]*)?/i,
-    video: (m, value) => ({ id: m[1], watchUrl: asLink(value, true), viaUrl: true }),
-  },
-  {
-    provider: 'rednote',
-    re: /^(?:https?:\/\/)?xhslink\.com\/(?:[a-z]\/)?([A-Za-z0-9]{4,20})\/?/i,
-    video: (m, value) => ({ id: m[1], watchUrl: asLink(value), viaUrl: true }),
-  },
 ];
 
 /** Parse a video link (or a bare YouTube video id) into its parts. */
@@ -230,7 +216,6 @@ export const PROVIDER_LABEL: Record<Provider, string> = {
   facebook: 'Facebook',
   twitch: 'Twitch',
   reddit: 'Reddit',
-  rednote: 'Rednote',
 };
 
 /** "YouTube, Vimeo, Imgur, …" */

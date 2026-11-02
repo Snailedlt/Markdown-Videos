@@ -30,10 +30,8 @@ Markdown Videos lets you embed Youtube videos into GitHub markdown with ease!
 | Facebook¹ | `facebook.com/…/videos/ID`, `/watch/?v=ID`, `/reel/ID` | |
 | Twitch¹ | `clips.twitch.tv/…`, `twitch.tv/…/clip/…`, `twitch.tv/videos/ID` | |
 | Reddit¹ | `reddit.com/r/…/comments/ID/…`, `redd.it/ID`, `reddit.com/r/…/s/…` | |
-| Rednote (Xiaohongshu)² | `rednote.com/…/discovery/item/ID`, `xiaohongshu.com/explore/ID`, `xhslink.com/…` | |
 
 ¹ Needs API credentials on the server (see the [API README](apps/api/README.md#supported-services)).
-² Uses the preview image the note's page declares. Rednote can refuse servers with a login or captcha page; when it does, the API says so.
 
 Missing a service? [Open an issue](https://github.com/Snailedlt/Markdown-Videos/issues). New services are added in [`apps/api/src/providers.py`](apps/api/src/providers.py).
 

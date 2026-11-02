@@ -61,9 +61,6 @@
 | Facebook | `/facebook/{video_id}` | **Needs credentials** (below). Public videos and reels |
 | Twitch | `/url?url={twitch_link}` | **Needs credentials** (below). Clips and past broadcasts (not live streams) |
 | Reddit | `/reddit/{post_id}` | **Needs credentials** (below). The post's preview image; share links (`/r/…/s/…`) through `/url` |
-| Rednote (Xiaohongshu) | `/url?url={note_link}` | Keep the link's `xsec_token`; `xhslink.com` short links are resolved |
-
-Rednote has no public thumbnail API, so the thumbnail is the preview image the note's page declares for link previews (`og:image`), like chat apps use when they unfurl a link. The API identifies itself and doesn't try to get past logins or captchas: if a page redirects there (Rednote often does for servers), it answers **502** saying so.
 
 ### Services that need credentials
 

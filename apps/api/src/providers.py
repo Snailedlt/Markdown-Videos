@@ -18,7 +18,7 @@ from dataclasses import dataclass
 from functools import lru_cache
 from html import unescape as html_unescape
 from io import BytesIO
-from urllib.parse import quote, urljoin
+from urllib.parse import quote, urljoin, urlsplit
 
 import requests
 from fastapi import HTTPException
@@ -231,14 +231,6 @@ PROVIDERS += (
         id_pattern=r"[a-z0-9]{3,10}",
     ),
 )
-
-def _resolve_short_link(provider: Provider, url: str) -> str:
-    """Follow a share short link to the page it points to."""
-    res = _get(url if url.startswith("http") else f"https://{url}", headers=OEMBED_HEADERS, allow_redirects=True)
-    if res.status_code in NOT_FOUND_STATUSES:
-        raise VideoNotFound(provider, url)
-    return res.url
-
 
 def _rumble(provider: Provider, ref: str) -> Image.Image:
     return oembed_thumbnail("https://rumble.com/api/Media/oembed.json", ref, provider, ref)
@@ -497,11 +489,13 @@ PROVIDERS += (
     ),
 )
 
-# --- Page preview images (Rednote) ---------------------------------------------
-# Rednote has no public thumbnail API, so we read the preview image a
-# video page declares for link previews (og:image and friends), like chat apps
-# do when they unfurl a link. We identify ourselves and don't try to get past
-# logins or captchas: a page that sends us there is reported as a refusal.
+# --- Page preview images -------------------------------------------------------
+# For a service with no thumbnail API: read the preview image a video page
+# declares for link previews (og:image and friends), like chat apps do when
+# they unfurl a link. We identify ourselves and don't try to get past logins
+# or captchas: a page that sends us there is reported as a refusal.
+# No service uses this at the moment. Rednote did, but it sends servers to a
+# login or error page instead of the note.
 
 PAGE_HEADERS = {**OEMBED_HEADERS, "Accept": "text/html,application/xhtml+xml"}
 _META_IMAGE = [
@@ -514,9 +508,16 @@ _META_IMAGE = [
 
 
 def page_preview_image(provider: Provider, ref: str, page_url: str, still_there: typing.Callable[[str], bool]) -> Image.Image:
+    """The preview image of a video page.
+
+    `still_there` gets the URL we ended up on after redirects, without its query
+    string or fragment, and says whether it is still the video's page. The query
+    is left out because login and error pages often carry the original URL in
+    it (?redirectPath=...), which would make them look like the video's page.
+    """
     res = _get(page_url, headers=PAGE_HEADERS, allow_redirects=True)
     _check(res, provider, ref)
-    if not still_there(res.url):
+    if not still_there(urlsplit(res.url)._replace(query="", fragment="").geturl()):
         # Redirected to a login, captcha or home page instead of the video
         raise UpstreamError(provider, why=f"{provider.name} sent us to another page instead of the video, e.g. a login or captcha")
     head = res.content[:1_000_000].decode(getattr(res, "encoding", None) or "utf-8", errors="replace")
@@ -527,38 +528,6 @@ def page_preview_image(provider: Provider, ref: str, page_url: str, still_there:
             return _image(provider, ref, urljoin(res.url, image_url))
     raise VideoNotFound(provider, ref)
 
-
-def _rednote(provider: Provider, ref: str) -> Image.Image:
-    page_url = ref
-    if "xhslink.com" in ref:
-        page_url = _resolve_short_link(provider, ref)
-    note = re.search(r"/(?:explore|discovery/item)/([0-9a-f]{24})", page_url)
-    if not note:
-        # The short link led somewhere else (e.g. a login page)
-        raise UpstreamError(provider, why=f"{provider.name}'s short link didn't lead to a note")
-    return page_preview_image(provider, ref, page_url, lambda url: note.group(1) in url)
-
-
-PROVIDERS += (
-    Provider(
-        key="rednote",
-        name="Rednote",
-        patterns=(
-            # Notes usually need their xsec_token, so keep the query string
-            # Both domains (xiaohongshu.com and the newer rednote.com), with or
-            # without a language prefix (rednote.com/en/...)
-            re.compile(
-                r"^(?:https?://)?(?:www\.)?(?:xiaohongshu|rednote)\.com/(?:[a-z]{2}(?:-[a-z]{2,4})?/)?(?:explore|discovery/item)/[0-9a-f]{24}(?:\?[^#]*)?",
-                re.I,
-            ),
-            re.compile(r"^(?:https?://)?xhslink\.com/(?:[a-z]/)?[A-Za-z0-9]{4,20}/?", re.I),
-        ),
-        color=(255, 36, 66),
-        fetch=_rednote,
-        ref=lambda m: m.group(0) if m.group(0).startswith("http") else f"https://{m.group(0)}",
-        id_route=False,
-    ),
-)
 
 BY_KEY = {p.key: p for p in PROVIDERS}
 

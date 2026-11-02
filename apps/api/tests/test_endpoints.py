@@ -259,10 +259,3 @@ def test_twitch_live(url):
 def test_reddit_live():
     response = client.get("/url", params={"url": "https://www.reddit.com/r/videos/comments/6rrwyj/that_small_heart_attack/"})
     assert response.status_code == 200, response.text
-
-
-# Rednote's thumbnail is the page's preview image. A refusal (e.g. a captcha)
-# fails here with a 502 that says so.
-def test_rednote_live():
-    response = client.get("/url", params={"url": "https://www.xiaohongshu.com/explore/6411cf99000000001300b6d9"})
-    assert response.status_code == 200, response.text
