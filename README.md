@@ -21,13 +21,11 @@ Markdown Videos lets you embed Youtube videos into GitHub markdown with ease!
 |---|---|---|
 | YouTube | `youtu.be/ID`, `youtube.com/watch?v=ID`, Shorts, live, embed | ✅ |
 | Vimeo | `vimeo.com/ID` | |
-| TikTok | `tiktok.com/@user/video/ID`, `vm.tiktok.com/…` | |
 | Imgur | `imgur.com/ID`, `i.imgur.com/ID.mp4` / `.gifv` / `.gif` | |
 | Loom | `loom.com/share/ID` | |
 | Dailymotion | `dailymotion.com/video/ID`, `dai.ly/ID` | |
 | Streamable | `streamable.com/ID` | |
 | Rumble | `rumble.com/ID-title.html` | |
-| Bilibili | `bilibili.com/video/BV…`, `…/video/av…`, `b23.tv/…` | |
 | Instagram¹ | `instagram.com/p/…`, `/reel/…`, `/tv/…` | |
 | Facebook¹ | `facebook.com/…/videos/ID`, `/watch/?v=ID`, `/reel/ID` | |
 

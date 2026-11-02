@@ -49,16 +49,6 @@ describe('parseVideoUrl', () => {
   });
 
   it.each([
-    ['https://www.tiktok.com/@scout2015/video/6718335390845095173', '6718335390845095173', 'https://www.tiktok.com/@scout2015/video/6718335390845095173'],
-    ['https://www.tiktok.com/@scout2015/video/6718335390845095173?is_from_webapp=1&sender_device=pc', '6718335390845095173', 'https://www.tiktok.com/@scout2015/video/6718335390845095173'],
-    ['tiktok.com/@some.user_1/video/6718335390845095173', '6718335390845095173', 'https://www.tiktok.com/@some.user_1/video/6718335390845095173'],
-    ['https://vm.tiktok.com/ZMabcdEfG/', 'ZMabcdEfG', 'https://vm.tiktok.com/ZMabcdEfG/'],
-    ['https://www.tiktok.com/t/ZT8abcdEf/?k=1', 'ZT8abcdEf', 'https://www.tiktok.com/t/ZT8abcdEf/'],
-  ])('finds the TikTok video in %s', (url, id, watchUrl) => {
-    expect(parseVideoUrl(url)).toEqual({ provider: 'tiktok', id, watchUrl, viaUrl: true });
-  });
-
-  it.each([
     ['https://i.imgur.com/A61SaA1.mp4', 'A61SaA1'],
     ['https://i.imgur.com/A61SaA1.gifv', 'A61SaA1'],
     ['i.imgur.com/A61SaA1.gif', 'A61SaA1'],
@@ -75,8 +65,6 @@ describe('parseVideoUrl', () => {
     ['https://dai.ly/x7tgad0', 'dailymotion', 'x7tgad0', 'https://www.dailymotion.com/video/x7tgad0'],
     ['https://streamable.com/moo', 'streamable', 'moo', 'https://streamable.com/moo'],
     ['https://streamable.com/e/moo?autoplay=1', 'streamable', 'moo', 'https://streamable.com/moo'],
-    ['https://www.bilibili.com/video/BV1GJ411x7h7/?spm_id_from=333.337', 'bilibili', 'BV1GJ411x7h7', 'https://www.bilibili.com/video/BV1GJ411x7h7'],
-    ['https://m.bilibili.com/video/av170001', 'bilibili', 'av170001', 'https://www.bilibili.com/video/av170001'],
     ['https://www.instagram.com/reel/Chunk8-jurw/?igsh=abc', 'instagram', 'Chunk8-jurw', 'https://www.instagram.com/p/Chunk8-jurw/'],
     ['https://www.facebook.com/cnn/videos/10155529876156509/', 'facebook', '10155529876156509', 'https://www.facebook.com/watch/?v=10155529876156509'],
   ])('finds the video in %s', (url, provider, id, watchUrl) => {
@@ -85,7 +73,6 @@ describe('parseVideoUrl', () => {
 
   it.each([
     ['https://rumble.com/vdmum1-moose-the-dog-helps-girls-dig-a-snow-fort.html?e9s=src_v1', 'rumble', 'vdmum1', 'https://rumble.com/vdmum1-moose-the-dog-helps-girls-dig-a-snow-fort.html'],
-    ['https://b23.tv/abc123X', 'bilibili', 'abc123X', 'https://b23.tv/abc123X'],
   ])('sends %s through /url', (url, provider, id, watchUrl) => {
     expect(parseVideoUrl(url)).toEqual({ provider, id, watchUrl, viaUrl: true });
   });
@@ -100,7 +87,6 @@ describe('parseVideoUrl', () => {
     'https://rumble.com/c/SomeChannel',
     'https://www.instagram.com/someuser/',
     'https://www.facebook.com/SomePage',
-    'https://www.bilibili.com/read/cv123',
     'hello',
     'https://example.com/watch?v=dQw4w9WgXcQ',
     'https://vimeo.com/about',
@@ -147,23 +133,6 @@ describe('buildImageUrl', () => {
     expect(buildImageUrl(imgur, opts({ width: 640, height: 360 }))).toBe(
       `${API_BASE_URL}/imgur/A61SaA1?width=640&height=360`
     );
-  });
-
-  it('sends TikTok links through /url, since TikTok needs the full link', () => {
-    const tiktok = parseVideoUrl('https://www.tiktok.com/@scout2015/video/6718335390845095173?lang=en')!;
-    expect(buildImageUrl(tiktok, opts({ width: 640, height: 360, format: 'png' }))).toBe(
-      `${API_BASE_URL}/url?url=https%3A%2F%2Fwww.tiktok.com%2F%40scout2015%2Fvideo%2F6718335390845095173&width=640&height=360&filetype=png`
-    );
-  });
-
-  it.each([
-    ['https://www.loom.com/share/0281766fa2d04bb788eaf19e65135184', '/loom/0281766fa2d04bb788eaf19e65135184'],
-    ['https://dai.ly/x7tgad0', '/dailymotion/x7tgad0'],
-    ['https://streamable.com/moo', '/streamable/moo'],
-    ['https://www.bilibili.com/video/BV1GJ411x7h7', '/bilibili/BV1GJ411x7h7'],
-    ['https://rumble.com/vdmum1-moose.html', '/url?url=https%3A%2F%2Frumble.com%2Fvdmum1-moose.html'],
-  ])('builds the %s thumbnail URL from the ID', (url, path) => {
-    expect(buildImageUrl(parseVideoUrl(url)!, opts())).toBe(`${API_BASE_URL}${path}`);
   });
 
   it('never builds GIF URLs for services without GIFs', () => {

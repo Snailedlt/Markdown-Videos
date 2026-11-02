@@ -1,13 +1,11 @@
 export type Provider =
   | 'youtube'
   | 'vimeo'
-  | 'tiktok'
   | 'imgur'
   | 'loom'
   | 'dailymotion'
   | 'streamable'
   | 'rumble'
-  | 'bilibili'
   | 'instagram'
   | 'facebook';
 
@@ -59,18 +57,6 @@ type Rule = {
 // the full link (not just an ID) set `viaUrl` and go through /url?url=...
 const RULES: Rule[] = [
   {
-    provider: 'tiktok',
-    // TikTok IDs are 19 digits; the ID must end so a half-typed link doesn't match
-    re: /^(?:https?:\/\/)?(?:www\.|m\.)?tiktok\.com\/@([\w.-]+)\/video\/(\d{19,21})(?=[/?#]|$)/i,
-    video: (m) => ({ id: m[2], watchUrl: `https://www.tiktok.com/@${m[1]}/video/${m[2]}`, viaUrl: true }),
-  },
-  {
-    provider: 'tiktok',
-    // Short share links: the API resolves them, so keep the link as it is
-    re: /^(?:https?:\/\/)?(?:(?:vm|vt)\.tiktok\.com|(?:www\.)?tiktok\.com\/t)\/([A-Za-z0-9]+)\/?(?:[?#].*)?$/i,
-    video: (m, value) => ({ id: m[1], watchUrl: asLink(value), viaUrl: true }),
-  },
-  {
     provider: 'imgur',
     re: /^(?:https?:\/\/)?i\.imgur\.com\/([A-Za-z0-9]{5,10})\.(?:mp4|gifv|webm|gif|jpe?g|png)(?:[?#].*)?$/i,
     link: (id) => `https://imgur.com/${id}`,
@@ -100,16 +86,6 @@ const RULES: Rule[] = [
     // Page and embed IDs differ, so Rumble goes through /url with the page link
     re: /^(?:https?:\/\/)?(?:www\.)?rumble\.com\/(?:embed\/)?(v[0-9a-z]{3,10})(?:-[\w-]*\.html|\/)?(?:[?#].*)?$/i,
     video: (m, value) => ({ id: m[1], watchUrl: asLink(value), viaUrl: true }),
-  },
-  {
-    provider: 'bilibili',
-    re: /^(?:https?:\/\/)?(?:www\.|m\.)?bilibili\.com\/video\/(BV[0-9A-Za-z]{10}|av\d{1,12})(?=[/?#]|$)/i,
-    link: (id) => `https://www.bilibili.com/video/${id}`,
-  },
-  {
-    provider: 'bilibili',
-    re: /^(?:https?:\/\/)?b23\.tv\/([0-9A-Za-z]{5,12})\/?(?:[?#].*)?$/i,
-    video: (m) => ({ id: m[1], watchUrl: `https://b23.tv/${m[1]}`, viaUrl: true }),
   },
   {
     provider: 'instagram',
@@ -197,18 +173,16 @@ export function toHtml(title: string, src: string, href: string, width: number, 
 export const PROVIDER_LABEL: Record<Provider, string> = {
   youtube: 'YouTube',
   vimeo: 'Vimeo',
-  tiktok: 'TikTok',
   imgur: 'Imgur',
   loom: 'Loom',
   dailymotion: 'Dailymotion',
   streamable: 'Streamable',
   rumble: 'Rumble',
-  bilibili: 'Bilibili',
   instagram: 'Instagram',
   facebook: 'Facebook',
 };
 
-/** "YouTube, Vimeo, TikTok or Imgur" */
+/** "YouTube, Vimeo, Imgur, …" */
 export const SUPPORTED_SERVICES = (() => {
   const names = Object.values(PROVIDER_LABEL);
   return `${names.slice(0, -1).join(', ')} or ${names[names.length - 1]}`;
