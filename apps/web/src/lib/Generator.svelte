@@ -499,10 +499,6 @@
     background: color-mix(in srgb, #ff4500 14%, transparent);
     color: #e03d00;
   }
-  .detected.rednote {
-    background: color-mix(in srgb, #ff2442 14%, transparent);
-    color: #e01b37;
-  }
   .detected.vimeo {
     background: color-mix(in srgb, #1ab7ea 18%, transparent);
     color: #1590bb;

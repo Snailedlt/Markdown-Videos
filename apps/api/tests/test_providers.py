@@ -532,52 +532,28 @@ def test_wrong_credentials_are_a_502(upstream, oauth, monkeypatch):
     assert "Reddit answered 401" in response.json()["detail"]
 
 
-# --- Rednote (page preview images) ---------------------------------------------
+# --- Page preview images ---------------------------------------------------------
+# No service uses this right now, so these call it with an example service.
 
+EXAMPLE = providers.Provider(key="example", name="Example", patterns=(), color=(0, 0, 0), fetch=lambda p, r: None)
+VIDEO_PAGE = "https://video.example.test/watch/abc123"
 PAGE = """<html><head><title>x</title>
 <meta property="og:title" content="A video">
-<meta property="og:image" content="https://puui.qpic.cn/vpic_cover/q326831cny0/q326831cny0_hz.jpg/1280?a=1&amp;b=2">
+<meta property="og:image" content="https://img.example.test/covers/abc123.jpg?a=1&amp;b=2">
 </head><body></body></html>"""
 
 
-@pytest.mark.parametrize(
-    "url, expected",
-    [
-        (
-            "https://www.xiaohongshu.com/discovery/item/674051740000000007027a15?xsec_token=CBge",
-            ("rednote", "https://www.xiaohongshu.com/discovery/item/674051740000000007027a15?xsec_token=CBge"),
-        ),
-        (
-            "https://www.rednote.com/en/discovery/item/6a151ded0000000008026217",
-            ("rednote", "https://www.rednote.com/en/discovery/item/6a151ded0000000008026217"),
-        ),
-        ("rednote.com/explore/6a151ded0000000008026217", ("rednote", "https://rednote.com/explore/6a151ded0000000008026217")),
-        ("http://xhslink.com/a/AbCd1234", ("rednote", "http://xhslink.com/a/AbCd1234")),
-    ],
-)
-def test_recognises_page_preview_links(url, expected):
-    provider, ref = providers.match(url)
-    assert (provider.key, ref) == expected
+def preview():
+    return providers.page_preview_image(EXAMPLE, "abc123", VIDEO_PAGE, lambda url: url.endswith("/watch/abc123"))
 
 
-@pytest.mark.parametrize(
-    "url", ["https://www.xiaohongshu.com/", "https://www.xiaohongshu.com/user/profile/abc", "https://www.rednote.com/en/user/profile/abc"]
-)
-def test_ignores_non_video_pages(url):
-    assert providers.match(url) is None
-
-
-NOTE = "https://www.xiaohongshu.com/explore/6411cf99000000001300b6d9"
-
-
-def test_rednote_reads_the_pages_preview_image(upstream):
+def test_reads_the_pages_preview_image(upstream):
     routes, calls = upstream
-    routes[NOTE] = FakeResponse(content=PAGE.encode(), url=NOTE)
-    routes["https://puui.qpic.cn/"] = FakeResponse(content=jpeg((1280, 720)))
-    response = client.get("/url", params={"url": NOTE})
-    assert response.status_code == 200
+    routes[VIDEO_PAGE] = FakeResponse(content=PAGE.encode(), url=VIDEO_PAGE)
+    routes["https://img.example.test/"] = FakeResponse(content=jpeg((1280, 720)))
+    assert preview().size == (1280, 720)
     # HTML entities in the content attribute are decoded
-    assert calls[1] == "https://puui.qpic.cn/vpic_cover/q326831cny0/q326831cny0_hz.jpg/1280?a=1&b=2"
+    assert calls[1] == "https://img.example.test/covers/abc123.jpg?a=1&b=2"
 
 
 @pytest.mark.parametrize(
@@ -590,33 +566,35 @@ def test_rednote_reads_the_pages_preview_image(upstream):
 )
 def test_preview_image_variants(upstream, tag):
     routes, calls = upstream
-    routes[NOTE] = FakeResponse(content=f"<head>{tag}</head>".encode(), url=NOTE)
+    routes[VIDEO_PAGE] = FakeResponse(content=f"<head>{tag}</head>".encode(), url=VIDEO_PAGE)
     routes["https://img.example.test/"] = FakeResponse(content=jpeg((1280, 720)))
-    routes["https://www.xiaohongshu.com/a.jpg"] = FakeResponse(content=jpeg((1280, 720)))
-    assert client.get("/url", params={"url": NOTE}).status_code == 200
-    assert calls[1] in ("https://img.example.test/a.jpg", "https://www.xiaohongshu.com/a.jpg")
+    routes["https://video.example.test/a.jpg"] = FakeResponse(content=jpeg((1280, 720)))
+    preview()
+    assert calls[1] in ("https://img.example.test/a.jpg", "https://video.example.test/a.jpg")
 
 
-def test_page_without_a_preview_image_is_a_404(upstream):
+def test_page_without_a_preview_image_is_not_found(upstream):
     routes, _ = upstream
-    routes[NOTE] = FakeResponse(content=b"<html><head></head></html>", url=NOTE)
-    assert client.get("/url", params={"url": NOTE}).status_code == 404
+    routes[VIDEO_PAGE] = FakeResponse(content=b"<html><head></head></html>", url=VIDEO_PAGE)
+    with pytest.raises(providers.VideoNotFound):
+        preview()
 
 
-def test_redirect_to_a_login_page_is_a_refusal_not_a_404(upstream):
-    routes, _ = upstream
-    routes[NOTE] = FakeResponse(content=PAGE.encode(), url="https://www.xiaohongshu.com/website-login/captcha?redirect=x")
-    response = client.get("/url", params={"url": NOTE})
-    assert response.status_code == 502
-    assert "sent us to another page instead of the video" in response.json()["detail"]
-
-
-def test_rednote_short_links_are_resolved(upstream):
+@pytest.mark.parametrize(
+    "landed_on",
+    [
+        "https://video.example.test/login",
+        # Login and error pages often carry the original URL in the query
+        # string. That must not count as still being on the video's page.
+        "https://video.example.test/404?redirectPath=https%3A%2F%2Fvideo.example.test%2Fwatch%2Fabc123",
+        "https://video.example.test/login?redirectPath=https://video.example.test/watch/abc123",
+    ],
+)
+def test_redirect_away_from_the_video_is_a_refusal(upstream, landed_on):
     routes, calls = upstream
-    note = "https://www.xiaohongshu.com/discovery/item/674051740000000007027a15?xsec_token=abc"
-    routes["http://xhslink.com/"] = FakeResponse(url=note)
-    routes["https://xhslink.com/"] = FakeResponse(url=note)
-    routes[note] = FakeResponse(content=PAGE.encode(), url=note)
-    routes["https://puui.qpic.cn/"] = FakeResponse(content=jpeg((1080, 1440)))
-    assert client.get("/url", params={"url": "http://xhslink.com/a/AbCd1234"}).status_code == 200
-    assert calls[1] == note
+    # The page we're sent to has a preview image too (usually the site's logo)
+    routes[VIDEO_PAGE] = FakeResponse(content=PAGE.encode(), url=landed_on)
+    with pytest.raises(providers.UpstreamError) as refused:
+        preview()
+    assert "sent us to another page instead of the video" in refused.value.detail
+    assert len(calls) == 1  # the logo is never downloaded

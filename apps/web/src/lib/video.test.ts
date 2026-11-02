@@ -78,18 +78,6 @@ describe('parseVideoUrl', () => {
     ['https://www.twitch.tv/some_streamer/clip/FaintLightGullWholeWheat?filter=clips', 'twitch', 'FaintLightGullWholeWheat', 'https://clips.twitch.tv/FaintLightGullWholeWheat'],
     ['https://www.twitch.tv/videos/635475444', 'twitch', '635475444', 'https://www.twitch.tv/videos/635475444'],
     ['https://www.reddit.com/r/videos/s/AbCdEf1234?utm=x', 'reddit', 'AbCdEf1234', 'https://www.reddit.com/r/videos/s/AbCdEf1234'],
-    [
-      'https://www.xiaohongshu.com/discovery/item/674051740000000007027a15?xsec_token=CBge',
-      'rednote',
-      '674051740000000007027a15',
-      'https://www.xiaohongshu.com/discovery/item/674051740000000007027a15?xsec_token=CBge',
-    ],
-    [
-      'https://www.rednote.com/en/discovery/item/6a151ded0000000008026217',
-      'rednote',
-      '6a151ded0000000008026217',
-      'https://www.rednote.com/en/discovery/item/6a151ded0000000008026217',
-    ],
   ])('sends %s through /url', (url, provider, id, watchUrl) => {
     expect(parseVideoUrl(url)).toEqual({ provider, id, watchUrl, viaUrl: true });
   });
@@ -107,8 +95,7 @@ describe('parseVideoUrl', () => {
     'https://clips.twitch.tv/embed',
     'https://www.twitch.tv/some_streamer',
     'https://www.reddit.com/r/videos/',
-    'https://www.xiaohongshu.com/user/profile/abc',
-    'https://www.rednote.com/en/user/profile/abc',
+    'https://www.xiaohongshu.com/explore/6411cf99000000001300b6d9',
     'hello',
     'https://example.com/watch?v=dQw4w9WgXcQ',
     'https://vimeo.com/about',
