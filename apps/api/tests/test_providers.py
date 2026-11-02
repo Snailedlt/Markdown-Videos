@@ -383,3 +383,150 @@ def test_meta_errors(upstream, meta_credentials, status, code, expected):
     routes, _ = upstream
     routes["https://graph.facebook.com/"] = FakeResponse(status=status, data={"error": {"code": code}})
     assert client.get("/instagram/C1a2B3c4D5e").status_code == expected
+
+
+# --- Twitch, Reddit (app-only OAuth; need credentials) -------------------------------
+
+
+@pytest.fixture
+def oauth(upstream, monkeypatch):
+    """Twitch and Reddit credentials plus a fake token endpoint."""
+    from src import config
+
+    for name, value in {
+        "twitch_client_id": "tw-id",
+        "twitch_client_secret": "tw-secret",
+        "reddit_client_id": "rd-id",
+        "reddit_client_secret": "rd-secret",
+    }.items():
+        monkeypatch.setattr(config.settings, name, value)
+    providers._tokens.clear()
+    tokens = []
+
+    def fake_post(url, **kwargs):
+        tokens.append(url)
+        return FakeResponse(data={"access_token": f"token-{len(tokens)}", "expires_in": 3600})
+
+    monkeypatch.setattr(providers, "_post", fake_post)
+    routes, calls = upstream
+    return routes, calls, tokens
+
+
+@pytest.mark.parametrize(
+    "url, expected",
+    [
+        ("https://clips.twitch.tv/FaintLightGullWholeWheat", ("twitch", "clip/FaintLightGullWholeWheat")),
+        ("https://www.twitch.tv/some_streamer/clip/FaintLightGullWholeWheat-AbC?filter=clips", ("twitch", "clip/FaintLightGullWholeWheat-AbC")),
+        ("https://clips.twitch.tv/embed?clip=FaintLightGullWholeWheat&parent=x", ("twitch", "clip/FaintLightGullWholeWheat")),
+        ("https://www.twitch.tv/videos/635475444", ("twitch", "video/635475444")),
+        ("https://www.reddit.com/r/videos/comments/6rrwyj/that_small_heart_attack/", ("reddit", "6rrwyj")),
+        ("https://old.reddit.com/comments/6RRWYJ", ("reddit", "6rrwyj")),
+        ("https://redd.it/6rrwyj", ("reddit", "6rrwyj")),
+        ("https://www.reddit.com/r/videos/s/AbCdEf1234?utm=x", ("reddit", "https://www.reddit.com/r/videos/s/AbCdEf1234")),
+    ],
+)
+def test_recognises_twitch_and_reddit_links(url, expected):
+    provider, ref = providers.match(url)
+    assert (provider.key, ref) == expected
+
+
+@pytest.mark.parametrize(
+    "url", ["https://clips.twitch.tv/embed", "https://www.twitch.tv/some_streamer", "https://www.reddit.com/r/videos/"]
+)
+def test_ignores_twitch_and_reddit_pages(url):
+    assert providers.match(url) is None
+
+
+@pytest.mark.parametrize(
+    "url, needs",
+    [
+        ("https://www.twitch.tv/videos/635475444", "TWITCH_CLIENT_ID and TWITCH_CLIENT_SECRET"),
+        ("https://redd.it/6rrwyj", "REDDIT_CLIENT_ID and REDDIT_CLIENT_SECRET"),
+    ],
+)
+def test_twitch_and_reddit_say_when_they_are_not_set_up(upstream, monkeypatch, url, needs):
+    from src import config
+
+    for name in ("twitch_client_id", "twitch_client_secret", "reddit_client_id", "reddit_client_secret"):
+        monkeypatch.setattr(config.settings, name, "")
+    response = client.get("/url", params={"url": url})
+    assert response.status_code == 501
+    assert needs in response.json()["detail"]
+
+
+def test_twitch_clip_thumbnail_and_token_reuse(oauth):
+    routes, calls, tokens = oauth
+    routes["https://api.twitch.tv/helix/clips"] = FakeResponse(
+        data={"data": [{"thumbnail_url": "https://clips-media-assets2.twitch.tv/x-preview-480x272.jpg"}]}
+    )
+    routes["https://clips-media-assets2.twitch.tv/"] = FakeResponse(content=jpeg((480, 272)))
+    for _ in range(2):
+        assert client.get("/url", params={"url": "https://clips.twitch.tv/FaintLightGullWholeWheat"}).status_code == 200
+    assert calls[0] == "https://api.twitch.tv/helix/clips?id=FaintLightGullWholeWheat"
+    assert tokens == ["https://id.twitch.tv/oauth2/token"]  # the app token is cached
+
+
+def test_twitch_video_fills_in_the_thumbnail_size(oauth):
+    routes, calls, _ = oauth
+    routes["https://api.twitch.tv/helix/videos"] = FakeResponse(
+        data={"data": [{"thumbnail_url": "https://static-cdn.jtvnw.net/cf_vods/x/thumb0-%{width}x%{height}.jpg"}]}
+    )
+    routes["https://static-cdn.jtvnw.net/"] = FakeResponse(content=jpeg((1280, 720)))
+    assert client.get("/url", params={"url": "https://www.twitch.tv/videos/635475444"}).status_code == 200
+    assert calls[1] == "https://static-cdn.jtvnw.net/cf_vods/x/thumb0-1280x720.jpg"
+
+
+def test_twitch_refreshes_an_expired_token(oauth):
+    routes, calls, tokens = oauth
+    answers = iter([FakeResponse(status=401), FakeResponse(data={"data": [{"thumbnail_url": "https://cdn.test/t.jpg"}]})])
+    routes["https://api.twitch.tv/"] = lambda url: next(answers)
+    routes["https://cdn.test/"] = FakeResponse(content=jpeg((1280, 720)))
+    assert client.get("/url", params={"url": "https://www.twitch.tv/videos/635475444"}).status_code == 200
+    assert len(tokens) == 2
+
+
+@pytest.mark.parametrize("data", [{"data": []}, {"data": [{"thumbnail_url": ""}]}])
+def test_missing_or_processing_twitch_video_is_a_404(oauth, data):
+    routes, _, _ = oauth
+    routes["https://api.twitch.tv/"] = FakeResponse(data=data)
+    assert client.get("/url", params={"url": "https://www.twitch.tv/videos/635475444"}).status_code == 404
+
+
+def test_reddit_preview_image(oauth):
+    routes, calls, tokens = oauth
+    routes["https://oauth.reddit.com/by_id/t3_6rrwyj"] = FakeResponse(
+        data={"data": {"children": [{"data": {"preview": {"images": [{"source": {"url": "https://preview.redd.it/a.jpg?s=1"}}]}}}]}}
+    )
+    routes["https://preview.redd.it/"] = FakeResponse(content=jpeg((1280, 720)))
+    response = client.get("/reddit/6rrwyj")
+    assert response.status_code == 200
+    assert calls == ["https://oauth.reddit.com/by_id/t3_6rrwyj?raw_json=1", "https://preview.redd.it/a.jpg?s=1"]
+    assert tokens == ["https://www.reddit.com/api/v1/access_token"]
+
+
+def test_reddit_share_links_are_followed(oauth):
+    routes, calls, _ = oauth
+    routes["https://www.reddit.com/r/videos/s/"] = FakeResponse(url="https://www.reddit.com/r/videos/comments/6rrwyj/x/")
+    routes["https://oauth.reddit.com/"] = FakeResponse(
+        data={"data": {"children": [{"data": {"thumbnail": "https://b.thumbs.redditmedia.com/t.jpg"}}]}}
+    )
+    routes["https://b.thumbs.redditmedia.com/"] = FakeResponse(content=jpeg((140, 78)))
+    assert client.get("/url", params={"url": "https://www.reddit.com/r/videos/s/AbCdEf1234"}).status_code == 200
+    assert calls[1] == "https://oauth.reddit.com/by_id/t3_6rrwyj?raw_json=1"
+
+
+@pytest.mark.parametrize(
+    "children", [[], [{"data": {"thumbnail": "self"}}], [{"data": {"thumbnail": "nsfw"}}]]
+)
+def test_reddit_posts_without_an_image_are_a_404(oauth, children):
+    routes, _, _ = oauth
+    routes["https://oauth.reddit.com/"] = FakeResponse(data={"data": {"children": children}})
+    assert client.get("/reddit/6rrwyj").status_code == 404
+
+
+def test_wrong_credentials_are_a_502(upstream, oauth, monkeypatch):
+    monkeypatch.setattr(providers, "_post", lambda url, **kw: FakeResponse(status=401))
+    providers._tokens.clear()
+    response = client.get("/reddit/6rrwyj")
+    assert response.status_code == 502
+    assert "Reddit answered 401" in response.json()["detail"]

@@ -67,12 +67,17 @@ describe('parseVideoUrl', () => {
     ['https://streamable.com/e/moo?autoplay=1', 'streamable', 'moo', 'https://streamable.com/moo'],
     ['https://www.instagram.com/reel/Chunk8-jurw/?igsh=abc', 'instagram', 'Chunk8-jurw', 'https://www.instagram.com/p/Chunk8-jurw/'],
     ['https://www.facebook.com/cnn/videos/10155529876156509/', 'facebook', '10155529876156509', 'https://www.facebook.com/watch/?v=10155529876156509'],
+    ['https://old.reddit.com/r/videos/comments/6RRWYJ/that_small_heart_attack/', 'reddit', '6rrwyj', 'https://redd.it/6rrwyj'],
+    ['https://redd.it/6rrwyj', 'reddit', '6rrwyj', 'https://redd.it/6rrwyj'],
   ])('finds the video in %s', (url, provider, id, watchUrl) => {
     expect(parseVideoUrl(url)).toEqual({ provider, id, watchUrl });
   });
 
   it.each([
     ['https://rumble.com/vdmum1-moose-the-dog-helps-girls-dig-a-snow-fort.html?e9s=src_v1', 'rumble', 'vdmum1', 'https://rumble.com/vdmum1-moose-the-dog-helps-girls-dig-a-snow-fort.html'],
+    ['https://www.twitch.tv/some_streamer/clip/FaintLightGullWholeWheat?filter=clips', 'twitch', 'FaintLightGullWholeWheat', 'https://clips.twitch.tv/FaintLightGullWholeWheat'],
+    ['https://www.twitch.tv/videos/635475444', 'twitch', '635475444', 'https://www.twitch.tv/videos/635475444'],
+    ['https://www.reddit.com/r/videos/s/AbCdEf1234?utm=x', 'reddit', 'AbCdEf1234', 'https://www.reddit.com/r/videos/s/AbCdEf1234'],
   ])('sends %s through /url', (url, provider, id, watchUrl) => {
     expect(parseVideoUrl(url)).toEqual({ provider, id, watchUrl, viaUrl: true });
   });
@@ -87,6 +92,9 @@ describe('parseVideoUrl', () => {
     'https://rumble.com/c/SomeChannel',
     'https://www.instagram.com/someuser/',
     'https://www.facebook.com/SomePage',
+    'https://clips.twitch.tv/embed',
+    'https://www.twitch.tv/some_streamer',
+    'https://www.reddit.com/r/videos/',
     'hello',
     'https://example.com/watch?v=dQw4w9WgXcQ',
     'https://vimeo.com/about',

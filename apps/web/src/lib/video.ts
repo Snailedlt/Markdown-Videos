@@ -7,7 +7,9 @@ export type Provider =
   | 'streamable'
   | 'rumble'
   | 'instagram'
-  | 'facebook';
+  | 'facebook'
+  | 'twitch'
+  | 'reddit';
 
 export type ParsedVideo = {
   provider: Provider;
@@ -97,6 +99,38 @@ const RULES: Rule[] = [
     re: /^(?:https?:\/\/)?(?:www\.|m\.|web\.)?facebook\.com\/(?:[\w.-]+\/videos\/(?:[\w.-]+\/)?|watch\/?\?(?:[^#]*&)?v=|reel\/|video\.php\?(?:[^#]*&)?v=)(\d{8,20})(?=[/?#&]|$)/i,
     link: (id) => `https://www.facebook.com/watch/?v=${id}`,
   },
+  // Twitch clips and videos share one service, so they go through /url
+  ...[
+    /^(?:https?:\/\/)?clips\.twitch\.tv\/(?:embed\?(?:[^#]*&)?clip=)?(?!embed(?:[/?#]|$))([\w-]{5,100})(?=[/?#&]|$)/i,
+    /^(?:https?:\/\/)?(?:www\.|m\.)?twitch\.tv\/\w+\/clip\/([\w-]{5,100})(?=[/?#]|$)/i,
+  ].map(
+    (re): Rule => ({
+      provider: 'twitch',
+      re,
+      video: (m) => ({ id: m[1], watchUrl: `https://clips.twitch.tv/${m[1]}`, viaUrl: true }),
+    })
+  ),
+  {
+    provider: 'twitch',
+    re: /^(?:https?:\/\/)?(?:www\.|m\.)?twitch\.tv\/videos\/(\d{6,15})(?=[/?#]|$)/i,
+    video: (m) => ({ id: m[1], watchUrl: `https://www.twitch.tv/videos/${m[1]}`, viaUrl: true }),
+  },
+  ...[
+    /^(?:https?:\/\/)?(?:www\.|old\.|new\.|np\.|m\.)?reddit\.com\/(?:r\/\w+\/)?comments\/([a-z0-9]{5,10})(?=[/?#]|$)/i,
+    /^(?:https?:\/\/)?redd\.it\/([a-z0-9]{5,10})\/?(?:[?#].*)?$/i,
+  ].map(
+    (re): Rule => ({
+      provider: 'reddit',
+      re,
+      video: (m) => ({ id: m[1].toLowerCase(), watchUrl: `https://redd.it/${m[1].toLowerCase()}` }),
+    })
+  ),
+  {
+    provider: 'reddit',
+    // Share links (reddit.com/r/<sub>/s/<code>): the API follows them to the post
+    re: /^(?:https?:\/\/)?(?:www\.)?reddit\.com\/r\/\w+\/s\/([A-Za-z0-9]{6,20})\/?(?:[?#].*)?$/i,
+    video: (m, value) => ({ id: m[1], watchUrl: asLink(value), viaUrl: true }),
+  },
 ];
 
 /** Parse a video link (or a bare YouTube video id) into its parts. */
@@ -180,6 +214,8 @@ export const PROVIDER_LABEL: Record<Provider, string> = {
   rumble: 'Rumble',
   instagram: 'Instagram',
   facebook: 'Facebook',
+  twitch: 'Twitch',
+  reddit: 'Reddit',
 };
 
 /** "YouTube, Vimeo, Imgur, …" */

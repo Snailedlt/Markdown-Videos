@@ -25,6 +25,12 @@ class Settings(BaseSettings):
     meta_app_id: str = ""
     meta_client_token: str = ""
     meta_access_token: str = ""
+    # Twitch: an app from https://dev.twitch.tv/console/apps (client credentials)
+    twitch_client_id: str = ""
+    twitch_client_secret: str = ""
+    # Reddit: a "script" or "web" app from https://www.reddit.com/prefs/apps
+    reddit_client_id: str = ""
+    reddit_client_secret: str = ""
     model_config = SettingsConfigDict(env_file=".env")
 
 

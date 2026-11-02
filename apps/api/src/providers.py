@@ -11,6 +11,8 @@ Adding a service = adding one Provider to PROVIDERS (and a test).
 from __future__ import annotations
 
 import re
+import threading
+import time
 import typing
 from dataclasses import dataclass
 from functools import lru_cache
@@ -334,6 +336,163 @@ PROVIDERS += (
         fetch=_facebook,
         id_pattern=r"\d{8,20}",
         missing_credentials=_meta_missing,
+    ),
+)
+
+# --- App-only OAuth tokens (Twitch, Reddit) ---------------------------------------
+
+_tokens: typing.Dict[str, typing.Tuple[str, float]] = {}
+_tokens_lock = threading.Lock()
+
+
+def _post(url: str, **kwargs) -> requests.Response:
+    return util._session.post(url, timeout=util.REQUEST_TIMEOUT_SECONDS, **kwargs)
+
+
+def _app_token(provider: Provider, fetch: typing.Callable[[], requests.Response], refresh: bool = False) -> str:
+    """A cached client-credentials token, fetched again shortly before it expires."""
+    with _tokens_lock:
+        cached = _tokens.get(provider.key)
+        if cached and not refresh and cached[1] > time.time() + 60:
+            return cached[0]
+        res = fetch()
+        if res.status_code >= 400:
+            # Wrong client ID/secret, or the service refusing us
+            raise UpstreamError(provider, res.status_code)
+        body = res.json()
+        token = body["access_token"]
+        _tokens[provider.key] = (token, time.time() + float(body.get("expires_in", 3600)))
+        return token
+
+
+# Twitch ----------------------------------------------------------------------------
+
+
+def _twitch_missing() -> typing.Optional[str]:
+    if _setting("twitch_client_id") and _setting("twitch_client_secret"):
+        return None
+    return "TWITCH_CLIENT_ID and TWITCH_CLIENT_SECRET"
+
+
+def _twitch_token(provider: Provider, refresh: bool = False) -> str:
+    return _app_token(
+        provider,
+        lambda: _post(
+            "https://id.twitch.tv/oauth2/token",
+            data={
+                "client_id": _setting("twitch_client_id"),
+                "client_secret": _setting("twitch_client_secret"),
+                "grant_type": "client_credentials",
+            },
+        ),
+        refresh,
+    )
+
+
+def _twitch(provider: Provider, ref: str) -> Image.Image:
+    kind, _, ident = ref.partition("/")  # "clip/<slug>" or "video/<id>"
+    url = f"https://api.twitch.tv/helix/{'clips' if kind == 'clip' else 'videos'}?id={quote(ident, safe='')}"
+    for attempt in range(2):
+        headers = {
+            "Client-Id": _setting("twitch_client_id"),
+            "Authorization": f"Bearer {_twitch_token(provider, refresh=attempt > 0)}",
+        }
+        res = _get(url, headers=headers)
+        if res.status_code != 401:
+            break
+    _check(res, provider, ref)
+    items = res.json().get("data") or []
+    # Videos have a templated URL; it's empty while a video is still processing
+    thumbnail_url = (items[0].get("thumbnail_url") if items else "") or ""
+    if not thumbnail_url:
+        raise VideoNotFound(provider, ref)
+    return _image(provider, ref, thumbnail_url.replace("%{width}", "1280").replace("%{height}", "720"))
+
+
+# Reddit ----------------------------------------------------------------------------
+
+# Reddit asks API clients for a descriptive User-Agent
+REDDIT_USER_AGENT = "web:markdown-videos:1.0 (by /u/Snailedlt; +https://github.com/Snailedlt/Markdown-Videos)"
+
+
+def _reddit_missing() -> typing.Optional[str]:
+    if _setting("reddit_client_id") and _setting("reddit_client_secret"):
+        return None
+    return "REDDIT_CLIENT_ID and REDDIT_CLIENT_SECRET"
+
+
+def _reddit_token(provider: Provider, refresh: bool = False) -> str:
+    return _app_token(
+        provider,
+        lambda: _post(
+            "https://www.reddit.com/api/v1/access_token",
+            auth=(_setting("reddit_client_id"), _setting("reddit_client_secret")),
+            data={"grant_type": "client_credentials"},
+            headers={"User-Agent": REDDIT_USER_AGENT},
+        ),
+        refresh,
+    )
+
+
+def _reddit(provider: Provider, ref: str) -> Image.Image:
+    post_id = ref
+    if ref.startswith("https://"):
+        # A share link (reddit.com/r/<sub>/s/<code>): follow it to the post
+        target = _get(ref, headers={"User-Agent": REDDIT_USER_AGENT}, allow_redirects=True).url
+        found = re.search(r"/comments/(?P<id>[a-z0-9]{5,10})", target, re.I)
+        if not found:
+            raise VideoNotFound(provider, ref)
+        post_id = found.group("id")
+    for attempt in range(2):
+        headers = {
+            "Authorization": f"bearer {_reddit_token(provider, refresh=attempt > 0)}",
+            "User-Agent": REDDIT_USER_AGENT,
+        }
+        res = _get(f"https://oauth.reddit.com/by_id/t3_{post_id}?raw_json=1", headers=headers)
+        if res.status_code != 401:
+            break
+    _check(res, provider, ref)
+    children = (res.json().get("data") or {}).get("children") or []
+    if not children:
+        raise VideoNotFound(provider, ref)
+    post = children[0].get("data", {})
+    images = (post.get("preview") or {}).get("images") or []
+    thumbnail_url = images[0]["source"]["url"] if images else post.get("thumbnail", "")
+    if not str(thumbnail_url).startswith("https://"):
+        # Text posts have no image ("self", "default", "nsfw" placeholders)
+        raise VideoNotFound(provider, ref)
+    return _image(provider, ref, thumbnail_url)
+
+
+PROVIDERS += (
+    Provider(
+        key="twitch",
+        name="Twitch",
+        patterns=(
+            re.compile(r"^(?:https?://)?clips\.twitch\.tv/(?:embed\?(?:[^#]*&)?clip=)?(?!embed(?:[/?#]|$))(?P<clip>[\w-]{5,100})(?=[/?#&]|$)", re.I),
+            re.compile(r"^(?:https?://)?(?:www\.|m\.)?twitch\.tv/[\w]+/clip/(?P<clip>[\w-]{5,100})(?=[/?#]|$)", re.I),
+            re.compile(r"^(?:https?://)?(?:www\.|m\.)?twitch\.tv/videos/(?P<video>\d{6,15})(?=[/?#]|$)", re.I),
+        ),
+        color=(145, 70, 255),
+        fetch=_twitch,
+        ref=lambda m: f"clip/{m.group('clip')}" if m.groupdict().get("clip") else f"video/{m.group('video')}",
+        # Clips and videos share one service, so Twitch goes through /url
+        id_route=False,
+        missing_credentials=_twitch_missing,
+    ),
+    Provider(
+        key="reddit",
+        name="Reddit",
+        patterns=(
+            re.compile(r"^(?:https?://)?(?:www\.|old\.|new\.|np\.|m\.)?reddit\.com/(?:r/\w+/)?comments/(?P<id>[a-z0-9]{5,10})(?=[/?#]|$)", re.I),
+            re.compile(r"^(?:https?://)?redd\.it/(?P<id>[a-z0-9]{5,10})/?(?:[?#].*)?$", re.I),
+            re.compile(r"^(?:https?://)?(?:www\.)?reddit\.com/r/\w+/s/(?P<share>[A-Za-z0-9]{6,20})/?(?:[?#].*)?$", re.I),
+        ),
+        color=(255, 69, 0),
+        fetch=_reddit,
+        ref=lambda m: m.group("id").lower() if m.groupdict().get("id") else f"https://www.reddit.com{m.group(0)[m.group(0).index('/r/'):].split('?')[0]}",
+        id_pattern=r"[a-z0-9]{5,10}",
+        missing_credentials=_reddit_missing,
     ),
 )
 
