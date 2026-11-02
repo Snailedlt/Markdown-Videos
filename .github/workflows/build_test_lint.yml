@@ -66,13 +66,16 @@ jobs:
             echo "api=$api" >> "$GITHUB_OUTPUT"
             echo "Website checks: $web · API checks: $api" >> "$GITHUB_STEP_SUMMARY"
 
+        # Only the website needs pnpm. Setting it up (with its cache) in a job
+        # that never installs anything fails the job when the cache is saved.
+        # (The coverage summary uses the runner's preinstalled Node.)
         - uses: pnpm/action-setup@v4.1.0
-          if: ${{ steps.run.outputs.web == 'true' || steps.run.outputs.api == 'true' }}
+          if: ${{ steps.run.outputs.web == 'true' }}
           with:
             version: 9.0.6
 
         - name: Setup Node.js environment
-          if: ${{ steps.run.outputs.web == 'true' || steps.run.outputs.api == 'true' }}
+          if: ${{ steps.run.outputs.web == 'true' }}
           uses: actions/setup-node@v4
           with:
             node-version: "22"
