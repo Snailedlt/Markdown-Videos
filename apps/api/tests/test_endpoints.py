@@ -195,3 +195,19 @@ def test_imgur_thumbnail_live():
 def test_imgur_missing_video_live():
     response = client.get("/imgur/zzzzzzz")
     assert response.status_code == 404, response.text
+
+
+# Live checks for Loom, Dailymotion and Streamable, using the example videos
+# from each service's own developer documentation.
+@pytest.mark.parametrize(
+    "path",
+    [
+        "/loom/0281766fa2d04bb788eaf19e65135184",
+        "/dailymotion/x7tgad0",
+        "/streamable/moo",
+    ],
+)
+def test_more_services_live(path):
+    response = client.get(path)
+    assert response.status_code == 200, response.text
+    assert Image.open(io.BytesIO(response.content)).size == (default_img_width, default_img_height)

@@ -175,3 +175,98 @@ def test_play_button_is_drawn_in_the_service_colour():
     r, g, b, a = button.getpixel((6, 24))
     assert (r, g, b) == pytest.approx((27, 183, 110), abs=3) and a > 200
     assert button.getpixel((36, 24))[:3] == (255, 255, 255)  # the triangle
+
+
+# --- Loom, Dailymotion, Streamable -------------------------------------------------
+
+LOOM_ID = "0281766fa2d04bb788eaf19e65135184"
+
+
+@pytest.mark.parametrize(
+    "url, expected",
+    [
+        (f"https://www.loom.com/share/{LOOM_ID}", ("loom", LOOM_ID)),
+        (f"https://www.loom.com/share/My-demo-video-{LOOM_ID}?sid=abc", ("loom", LOOM_ID)),
+        (f"loom.com/embed/{LOOM_ID}", ("loom", LOOM_ID)),
+        ("https://www.dailymotion.com/video/x7tgad0", ("dailymotion", "x7tgad0")),
+        ("https://www.dailymotion.com/video/x7tgad0_some-title", ("dailymotion", "x7tgad0")),
+        ("https://dai.ly/x7tgad0", ("dailymotion", "x7tgad0")),
+        ("https://www.dailymotion.com/embed/video/x7tgad0?autoplay=1", ("dailymotion", "x7tgad0")),
+        ("https://geo.dailymotion.com/player/xabc1.html?video=x7tgad0", ("dailymotion", "x7tgad0")),
+        ("https://streamable.com/moo", ("streamable", "moo")),
+        ("https://streamable.com/e/moo?autoplay=1", ("streamable", "moo")),
+    ],
+)
+def test_recognises_more_links(url, expected):
+    provider, ref = providers.match(url)
+    assert (provider.key, ref) == expected
+
+
+@pytest.mark.parametrize(
+    "url",
+    [
+        "https://www.loom.com/share/abc",
+        "https://www.loom.com/looms/videos",
+        "https://www.dailymotion.com/user/someone",
+        "https://streamable.com/login",
+        "https://streamable.com/upload",
+        "https://streamable.com/",
+    ],
+)
+def test_ignores_more_non_video_links(url):
+    assert providers.match(url) is None
+
+
+def test_loom_thumbnail(upstream):
+    routes, calls = upstream
+    routes["https://www.loom.com/v1/oembed"] = FakeResponse(
+        data={"thumbnail_url": f"https://cdn.loom.com/sessions/thumbnails/{LOOM_ID}-00001.gif"}
+    )
+    routes["https://cdn.loom.com/"] = FakeResponse(content=jpeg((1280, 720)))
+    response = client.get(f"/loom/{LOOM_ID}")
+    assert response.status_code == 200
+    assert calls[0] == (
+        "https://www.loom.com/v1/oembed?url=https%3A%2F%2Fwww.loom.com%2Fshare%2F"
+        f"{LOOM_ID}&format=json"
+    )
+
+
+def test_dailymotion_thumbnail(upstream):
+    routes, calls = upstream
+    routes["https://api.dailymotion.com/video/x7tgad0"] = FakeResponse(
+        data={"thumbnail_720_url": "https://s1.dmcdn.net/v/abc/x720"}
+    )
+    routes["https://s1.dmcdn.net/"] = FakeResponse(content=jpeg((1280, 720)))
+    response = client.get("/url", params={"url": "https://dai.ly/x7tgad0"})
+    assert response.status_code == 200
+    assert calls == [
+        "https://api.dailymotion.com/video/x7tgad0?fields=thumbnail_720_url",
+        "https://s1.dmcdn.net/v/abc/x720",
+    ]
+
+
+def test_missing_dailymotion_video_is_a_404(upstream):
+    routes, _ = upstream
+    routes["https://api.dailymotion.com/"] = FakeResponse(status=404, data={"error": {"code": 404}})
+    response = client.get("/dailymotion/xmissing1")
+    assert response.status_code == 404
+    assert "No Dailymotion video found" in response.json()["detail"]
+
+
+def test_streamable_thumbnail_with_protocol_relative_url(upstream):
+    routes, calls = upstream
+    routes["https://api.streamable.com/oembed.json"] = FakeResponse(
+        data={"thumbnail_url": "//cdn-cf-east.streamable.com/image/moo.jpg?Expires=1"}
+    )
+    routes["https://cdn-cf-east.streamable.com/"] = FakeResponse(content=jpeg((1280, 720)))
+    response = client.get("/streamable/moo?width=640&height=360")
+    assert response.status_code == 200
+    assert Image.open(io.BytesIO(response.content)).size == (640, 360)
+    assert calls[1] == "https://cdn-cf-east.streamable.com/image/moo.jpg?Expires=1"
+
+
+@pytest.mark.parametrize(
+    "path", ["/loom/not-hex", "/dailymotion/7tgad0", "/streamable/has-dash"]
+)
+def test_malformed_ids_are_rejected(path):
+    assert client.get(path).status_code == 422

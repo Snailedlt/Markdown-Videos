@@ -130,6 +130,38 @@ def _imgur(provider: Provider, video_id: str) -> Image.Image:
     return Image.open(BytesIO(res.content))
 
 
+def _loom(provider: Provider, video_id: str) -> Image.Image:
+    return oembed_thumbnail(
+        "https://www.loom.com/v1/oembed", f"https://www.loom.com/share/{video_id}", provider, video_id
+    )
+
+
+def _dailymotion(provider: Provider, video_id: str) -> Image.Image:
+    # Dailymotion's public Data API needs no key and answers 404 for missing
+    # videos (its /thumbnail/ redirect would serve a placeholder instead)
+    res = _get(
+        f"https://api.dailymotion.com/video/{video_id}?fields=thumbnail_720_url",
+        headers=OEMBED_HEADERS,
+    )
+    if res.status_code in (400, 403, 404, 410):
+        raise VideoNotFound(provider, video_id)
+    res.raise_for_status()
+    thumbnail_url = res.json().get("thumbnail_720_url")
+    if not thumbnail_url:
+        raise VideoNotFound(provider, video_id)
+    return _image(provider, video_id, thumbnail_url)
+
+
+def _streamable(provider: Provider, video_id: str) -> Image.Image:
+    return oembed_thumbnail(
+        "https://api.streamable.com/oembed.json", f"https://streamable.com/{video_id}", provider, video_id
+    )
+
+
+# Streamable video IDs are short, so these site pages must not count as videos
+_STREAMABLE_PAGES = r"(?!(?:login|signup|upload|pricing|settings|about|blog|terms|privacy|documentation|clipper|tools|enterprise)\b)"
+
+
 PROVIDERS: typing.Tuple[Provider, ...] = (
     Provider(
         key="imgur",
@@ -141,6 +173,42 @@ PROVIDERS: typing.Tuple[Provider, ...] = (
         color=(27, 183, 110),
         fetch=_imgur,
         id_pattern=r"[A-Za-z0-9]{5,10}",
+    ),
+)
+
+PROVIDERS += (
+    Provider(
+        key="loom",
+        name="Loom",
+        patterns=(
+            # loom.com/share/<id> or loom.com/share/<title-slug>-<id>
+            re.compile(r"^(?:https?://)?(?:www\.)?loom\.com/(?:share|embed)/(?:[\w-]*-)?(?P<id>[0-9a-f]{32})(?=[/?#]|$)", re.I),
+        ),
+        color=(98, 93, 245),
+        fetch=_loom,
+        id_pattern=r"[0-9a-f]{32}",
+    ),
+    Provider(
+        key="dailymotion",
+        name="Dailymotion",
+        patterns=(
+            re.compile(r"^(?:https?://)?(?:www\.)?dailymotion\.com/(?:embed/)?video/(?P<id>x[a-z0-9]{4,12})(?=[/?#_]|$)", re.I),
+            re.compile(r"^(?:https?://)?dai\.ly/(?P<id>x[a-z0-9]{4,12})(?=[/?#]|$)", re.I),
+            re.compile(r"^(?:https?://)?geo\.dailymotion\.com/player(?:/[\w-]+)?\.html\?(?:[^#]*&)?video=(?P<id>x[a-z0-9]{4,12})", re.I),
+        ),
+        color=(0, 102, 220),
+        fetch=_dailymotion,
+        id_pattern=r"x[a-z0-9]{4,12}",
+    ),
+    Provider(
+        key="streamable",
+        name="Streamable",
+        patterns=(
+            re.compile(r"^(?:https?://)?(?:www\.)?streamable\.com/(?:[eos]/)?" + _STREAMABLE_PAGES + r"(?P<id>[a-z0-9]{3,10})(?=[/?#]|$)", re.I),
+        ),
+        color=(15, 144, 250),
+        fetch=_streamable,
+        id_pattern=r"[a-z0-9]{3,10}",
     ),
 )
 

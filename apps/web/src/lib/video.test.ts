@@ -58,8 +58,24 @@ describe('parseVideoUrl', () => {
   });
 
   it.each([
+    ['https://www.loom.com/share/0281766fa2d04bb788eaf19e65135184', 'loom', '0281766fa2d04bb788eaf19e65135184', 'https://www.loom.com/share/0281766fa2d04bb788eaf19e65135184'],
+    ['https://www.loom.com/share/My-demo-0281766fa2d04bb788eaf19e65135184?sid=1', 'loom', '0281766fa2d04bb788eaf19e65135184', 'https://www.loom.com/share/0281766fa2d04bb788eaf19e65135184'],
+    ['https://www.dailymotion.com/video/x7tgad0', 'dailymotion', 'x7tgad0', 'https://www.dailymotion.com/video/x7tgad0'],
+    ['https://www.dailymotion.com/video/x7tgad0_some-title', 'dailymotion', 'x7tgad0', 'https://www.dailymotion.com/video/x7tgad0'],
+    ['https://dai.ly/x7tgad0', 'dailymotion', 'x7tgad0', 'https://www.dailymotion.com/video/x7tgad0'],
+    ['https://streamable.com/moo', 'streamable', 'moo', 'https://streamable.com/moo'],
+    ['https://streamable.com/e/moo?autoplay=1', 'streamable', 'moo', 'https://streamable.com/moo'],
+  ])('finds the video in %s', (url, provider, id, watchUrl) => {
+    expect(parseVideoUrl(url)).toEqual({ provider, id, watchUrl });
+  });
+
+  it.each([
     '',
     '   ',
+    'https://www.loom.com/share/abc',
+    'https://www.dailymotion.com/user/someone',
+    'https://streamable.com/login',
+    'https://streamable.com/upload',
     'hello',
     'https://example.com/watch?v=dQw4w9WgXcQ',
     'https://vimeo.com/about',

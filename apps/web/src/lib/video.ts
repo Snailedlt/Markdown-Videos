@@ -1,4 +1,4 @@
-export type Provider = 'youtube' | 'vimeo' | 'imgur';
+export type Provider = 'youtube' | 'vimeo' | 'imgur' | 'loom' | 'dailymotion' | 'streamable';
 
 export type ParsedVideo = {
   provider: Provider;
@@ -34,6 +34,15 @@ const IMGUR_REGEXES = [
   /^(?:https?:\/\/)?(?:www\.|m\.)?imgur\.com\/([A-Za-z0-9]{5,10})(?:[?#].*)?$/i,
 ];
 
+const LOOM_REGEX = /^(?:https?:\/\/)?(?:www\.)?loom\.com\/(?:share|embed)\/(?:[\w-]*-)?([0-9a-f]{32})(?=[/?#]|$)/i;
+const DAILYMOTION_REGEXES = [
+  /^(?:https?:\/\/)?(?:www\.)?dailymotion\.com\/(?:embed\/)?video\/(x[a-z0-9]{4,12})(?=[/?#_]|$)/i,
+  /^(?:https?:\/\/)?dai\.ly\/(x[a-z0-9]{4,12})(?=[/?#]|$)/i,
+  /^(?:https?:\/\/)?geo\.dailymotion\.com\/player(?:\/[\w-]+)?\.html\?(?:[^#]*&)?video=(x[a-z0-9]{4,12})/i,
+];
+const STREAMABLE_REGEX =
+  /^(?:https?:\/\/)?(?:www\.)?streamable\.com\/(?:[eos]\/)?(?!(?:login|signup|upload|pricing|settings|about|blog|terms|privacy|documentation|clipper|tools|enterprise)\b)([a-z0-9]{3,10})(?=[/?#]|$)/i;
+
 /** Parse a video link (or a bare YouTube video id) into its parts. */
 export function parseVideoUrl(input: string): ParsedVideo | null {
   const value = input.trim();
@@ -54,6 +63,17 @@ export function parseVideoUrl(input: string): ParsedVideo | null {
     const imgur = value.match(re);
     if (imgur) return { provider: 'imgur', id: imgur[1], watchUrl: `https://imgur.com/${imgur[1]}` };
   }
+
+  const loom = value.match(LOOM_REGEX);
+  if (loom) return { provider: 'loom', id: loom[1], watchUrl: `https://www.loom.com/share/${loom[1]}` };
+
+  for (const re of DAILYMOTION_REGEXES) {
+    const dm = value.match(re);
+    if (dm) return { provider: 'dailymotion', id: dm[1], watchUrl: `https://www.dailymotion.com/video/${dm[1]}` };
+  }
+
+  const streamable = value.match(STREAMABLE_REGEX);
+  if (streamable) return { provider: 'streamable', id: streamable[1], watchUrl: `https://streamable.com/${streamable[1]}` };
 
   return null;
 }
@@ -104,9 +124,12 @@ export const PROVIDER_LABEL: Record<Provider, string> = {
   youtube: 'YouTube',
   vimeo: 'Vimeo',
   imgur: 'Imgur',
+  loom: 'Loom',
+  dailymotion: 'Dailymotion',
+  streamable: 'Streamable',
 };
 
-/** "YouTube, Vimeo or Imgur" */
+/** "YouTube, Vimeo, Imgur, …" */
 export const SUPPORTED_SERVICES = (() => {
   const names = Object.values(PROVIDER_LABEL);
   return `${names.slice(0, -1).join(', ')} or ${names[names.length - 1]}`;
