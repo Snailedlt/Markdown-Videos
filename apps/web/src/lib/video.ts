@@ -1,4 +1,4 @@
-export type Provider = 'youtube' | 'vimeo';
+export type Provider = 'youtube' | 'vimeo' | 'tiktok' | 'imgur';
 
 export type ParsedVideo = {
   provider: Provider;
@@ -28,7 +28,16 @@ const VIMEO_REGEX =
   /^(?:https?:\/\/)?(?:www\.)?(?:player\.)?vimeo\.com\/(?:[a-z]*\/)*(?:.*\/)?([0-9]{6,11})(?:[?#/].*)?$/i;
 const YOUTUBE_ID_REGEX = /^[A-Za-z0-9_-]{11}$/;
 
-/** Parse a YouTube/Vimeo link (or a bare YouTube video id) into its parts. */
+// Kept in sync with apps/api/src/providers.py
+// TikTok IDs are 19 digits; the ID must end so a half-typed link doesn't match
+const TIKTOK_REGEX = /^(?:https?:\/\/)?(?:www\.|m\.)?tiktok\.com\/@([\w.-]+)\/video\/(\d{19,21})(?=[/?#]|$)/i;
+const TIKTOK_SHORT_REGEX = /^(?:https?:\/\/)?(?:(?:vm|vt)\.tiktok\.com|(?:www\.)?tiktok\.com\/t)\/([A-Za-z0-9]+)\/?(?:[?#].*)?$/i;
+const IMGUR_REGEXES = [
+  /^(?:https?:\/\/)?i\.imgur\.com\/([A-Za-z0-9]{5,10})\.(?:mp4|gifv|webm|gif|jpe?g|png)(?:[?#].*)?$/i,
+  /^(?:https?:\/\/)?(?:www\.|m\.)?imgur\.com\/([A-Za-z0-9]{5,10})(?:[?#].*)?$/i,
+];
+
+/** Parse a video link (or a bare YouTube video id) into its parts. */
 export function parseVideoUrl(input: string): ParsedVideo | null {
   const value = input.trim();
   if (!value) return null;
@@ -44,6 +53,21 @@ export function parseVideoUrl(input: string): ParsedVideo | null {
     return { provider: 'vimeo', id: vimeo[1], watchUrl: `https://vimeo.com/${vimeo[1]}` };
   }
 
+  const tiktok = value.match(TIKTOK_REGEX);
+  if (tiktok) {
+    return { provider: 'tiktok', id: tiktok[2], watchUrl: `https://www.tiktok.com/@${tiktok[1]}/video/${tiktok[2]}` };
+  }
+  const tiktokShort = value.match(TIKTOK_SHORT_REGEX);
+  if (tiktokShort) {
+    // Short share links: the API resolves them, so keep the link as it is
+    return { provider: 'tiktok', id: tiktokShort[1], watchUrl: value.replace(/^(?!https?:\/\/)/, 'https://').split('?')[0] };
+  }
+
+  for (const re of IMGUR_REGEXES) {
+    const imgur = value.match(re);
+    if (imgur) return { provider: 'imgur', id: imgur[1], watchUrl: `https://imgur.com/${imgur[1]}` };
+  }
+
   return null;
 }
 
@@ -54,10 +78,18 @@ export const DEFAULT_OPTIONS: EmbedOptions = {
   duration: 500,
 };
 
+/** Only YouTube has animated GIFs. */
+export const supportsGif = (provider: Provider) => provider === 'youtube';
+
+/** TikTok thumbnails need the full link, so they go through /url?url=... */
+const NEEDS_URL_ENDPOINT: Provider[] = ['tiktok'];
+
 /** Build the thumbnail image URL, omitting params that equal the API defaults. */
 export function buildImageUrl(video: ParsedVideo, opts: EmbedOptions): string {
-  const isGif = opts.format === 'gif' && video.provider === 'youtube';
+  const isGif = opts.format === 'gif' && supportsGif(video.provider);
   const params = new URLSearchParams();
+  const viaUrl = NEEDS_URL_ENDPOINT.includes(video.provider);
+  if (viaUrl) params.set('url', video.watchUrl);
   if (opts.width !== DEFAULT_OPTIONS.width) params.set('width', String(opts.width));
   if (opts.height !== DEFAULT_OPTIONS.height) params.set('height', String(opts.height));
   if (isGif) {
@@ -66,6 +98,7 @@ export function buildImageUrl(video: ParsedVideo, opts: EmbedOptions): string {
     params.set('filetype', opts.format);
   }
   const query = params.toString();
+  if (viaUrl) return `${API_BASE_URL}/url?${query}`;
   return `${API_BASE_URL}/${video.provider}/${video.id}${isGif ? '.gif' : ''}${query ? `?${query}` : ''}`;
 }
 
@@ -89,4 +122,12 @@ export function toHtml(title: string, src: string, href: string, width: number, 
 export const PROVIDER_LABEL: Record<Provider, string> = {
   youtube: 'YouTube',
   vimeo: 'Vimeo',
+  tiktok: 'TikTok',
+  imgur: 'Imgur',
 };
+
+/** "YouTube, Vimeo, TikTok or Imgur" */
+export const SUPPORTED_SERVICES = (() => {
+  const names = Object.values(PROVIDER_LABEL);
+  return `${names.slice(0, -1).join(', ')} or ${names[names.length - 1]}`;
+})();

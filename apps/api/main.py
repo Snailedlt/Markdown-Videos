@@ -1,9 +1,9 @@
-from src import util, config
+from src import util, config, providers
 
 from concurrent.futures import ThreadPoolExecutor
 from functools import lru_cache
 from io import BytesIO
-from fastapi import Depends, FastAPI, HTTPException, Query, Response
+from fastapi import Depends, FastAPI, HTTPException, Path, Query, Response
 from fastapi.middleware.cors import CORSMiddleware
 from typing_extensions import Annotated
 from api_analytics.fastapi import Analytics
@@ -18,7 +18,7 @@ def get_settings():
 app = FastAPI(
     title=get_settings().app_name,
     description=get_settings().app_description,
-    version="0.1.0",
+    version="0.2.0",
     terms_of_service="https://choosealicense.com/licenses/mit/",
     contact=get_settings().contact,
     license_info={
@@ -144,10 +144,39 @@ async def info(settings: Annotated[config.Settings, Depends(get_settings)]):
     }
 
 
+def _provider_endpoint(provider: providers.Provider):
+    def endpoint(
+        video_id: str = Path(pattern=f"^{provider.id_pattern}$"),
+        width: Width = 320,
+        height: Height = 180,
+        filetype: util.Supported_Filetype = util.Supported_Filetype.JPEG,
+    ) -> Response:
+        image = providers.thumbnail(provider, video_id, width, height)
+        return image_response(image, filetype.value)
+
+    endpoint.__name__ = f"{provider.key}_thumbnail"
+    return endpoint
+
+
+# /imgur/{video_id}, ... for services whose thumbnails can be found from the ID
+for _provider in providers.PROVIDERS:
+    if _provider.id_route:
+        app.add_api_route(
+            f"/{_provider.key}/{{video_id}}",
+            _provider_endpoint(_provider),
+            methods=["GET"],
+            tags=[_provider.name],
+            summary=f"{_provider.name} thumbnail",
+        )
+
+
+SUPPORTED_SERVICES = "YouTube, Vimeo, " + ", ".join(p.name for p in providers.PROVIDERS)
+
+
 @app.get(
     "/url",
     tags=["URL"],
-    description="Get a thumbnail from a URL (YouTube and Vimeo only)",
+    description=f"Get a thumbnail from a video link ({SUPPORTED_SERVICES})",
 )
 def url_to_thumbnail(
     url: str = "https://youtu.be/dQw4w9WgXcQ",
@@ -163,14 +192,18 @@ def url_to_thumbnail(
         video_id = util.get_video_id_by_url(url, util.URL_Regex.VIMEO)
         if video_id is not None:
             return vimeo_thumbnail(video_id, width, height, filetype)
-        else:
-            raise HTTPException(
-                status_code=400,
-                detail=(
-                    f"{url} is an unsupported or invalid url, make sure you're using a"
-                    " valid Youtube or Vimeo URL."
-                ),
-            )
+        matched = providers.match(url)
+        if matched is not None:
+            provider, video_id = matched
+            image = providers.thumbnail(provider, video_id, width, height)
+            return image_response(image, filetype.value)
+        raise HTTPException(
+            status_code=400,
+            detail=(
+                f"{url} is an unsupported or invalid url. Supported services:"
+                f" {SUPPORTED_SERVICES}."
+            ),
+        )
     except HTTPException:
         raise
     except Exception:
@@ -180,8 +213,8 @@ def url_to_thumbnail(
                 "attempted url": url,
                 "found video_id": video_id,
                 "message": (
-                    f"{url} is not supported, is invalid or was parsed incorrectly,"
-                    " make sure you're using a valid Youtube or Vimeo URL. Here's the"
+                    f"{url} is not supported, is invalid or was parsed incorrectly."
+                    f" Supported services: {SUPPORTED_SERVICES}. Here's the"
                     f" video_id that was parsed from the url: {video_id}. If you"
                     " think this is a mistake, please open an issue here:"
                     " https://github.com/Snailedlt/Markdown-Videos/issues"

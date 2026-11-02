@@ -82,7 +82,7 @@ describe('Generator', () => {
     render(Generator);
     await user.type(screen.getByLabelText('Video URL'), 'https://example.com/video');
 
-    expect(screen.getByText(/doesn’t look like a YouTube or Vimeo link/)).toBeInTheDocument();
+    expect(screen.getByText(/doesn’t look like a YouTube, Vimeo, TikTok or Imgur link/)).toBeInTheDocument();
     expect(screen.getByLabelText('Video URL')).toHaveAttribute('aria-invalid', 'true');
     expect(preview()).toBeNull();
   });
@@ -93,6 +93,10 @@ describe('Generator', () => {
     const gif = screen.getByRole('radio', { name: 'Animated GIF' });
 
     await user.type(screen.getByLabelText('Video URL'), 'https://vimeo.com/76979871');
+    expect(gif).toBeDisabled();
+
+    await user.clear(screen.getByLabelText('Video URL'));
+    await user.type(screen.getByLabelText('Video URL'), 'https://i.imgur.com/A61SaA1.mp4');
     expect(gif).toBeDisabled();
 
     await user.clear(screen.getByLabelText('Video URL'));
@@ -149,6 +153,17 @@ describe('Generator', () => {
 
     expect(screen.getByLabelText('Video URL')).toHaveValue('https://youtu.be/dQw4w9WgXcQ');
     expect(screen.getByLabelText(/Title/)).toHaveValue('Definitely not a rickroll');
+  });
+
+  it('shows TikTok thumbnails through the /url endpoint', async () => {
+    const user = userEvent.setup();
+    render(Generator);
+    await user.type(screen.getByLabelText('Video URL'), 'https://www.tiktok.com/@scout2015/video/6718335390845095173');
+
+    expect(screen.getByText('TikTok')).toBeInTheDocument();
+    const src = `${API}/url?url=https%3A%2F%2Fwww.tiktok.com%2F%40scout2015%2Fvideo%2F6718335390845095173`;
+    expect(preview()!.getAttribute('src')).toBe(src);
+    expect(snippet()).toBe(`[![Watch the video](${src})](https://www.tiktok.com/@scout2015/video/6718335390845095173)`);
   });
 
   it('reads and writes the ?video= query parameter', async () => {

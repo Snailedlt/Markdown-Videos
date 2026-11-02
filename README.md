@@ -17,8 +17,14 @@ Markdown Videos lets you embed Youtube videos into GitHub markdown with ease!
 
 ## Supported video services
 
-- [x] Youtube
-- [x] Vimeo
+| Service | Link examples | Animated GIF |
+|---|---|---|
+| YouTube | `youtu.be/ID`, `youtube.com/watch?v=ID`, Shorts, live, embed | ✅ |
+| Vimeo | `vimeo.com/ID` | |
+| TikTok | `tiktok.com/@user/video/ID`, `vm.tiktok.com/…` | |
+| Imgur | `imgur.com/ID`, `i.imgur.com/ID.mp4` / `.gifv` / `.gif` | |
+
+Missing a service? [Open an issue](https://github.com/Snailedlt/Markdown-Videos/issues). New services are added in [`apps/api/src/providers.py`](apps/api/src/providers.py).
 
 ---
 

@@ -177,3 +177,29 @@ def test_url_endpoint(url, expected_video_id):
 
     # Check the size of the image
     assert image.size == (default_img_width, default_img_height)
+
+
+# Live checks against the services added in src/providers.py. These hit the
+# real services (like the YouTube and Vimeo tests above), so they also catch
+# a service changing its thumbnail URLs or blocking our requests.
+IMGUR_VIDEO_ID = "A61SaA1"  # a public Imgur video (.mp4)
+TIKTOK_VIDEO_URL = "https://www.tiktok.com/@scout2015/video/6718335390845095173"  # TikTok's oEmbed docs example
+
+
+def test_imgur_thumbnail_live():
+    response = client.get(f"/imgur/{IMGUR_VIDEO_ID}")
+    assert response.status_code == 200, response.text
+    assert response.headers["content-type"] == "image/jpeg"
+    assert Image.open(io.BytesIO(response.content)).size == (default_img_width, default_img_height)
+
+
+def test_imgur_missing_video_live():
+    response = client.get("/imgur/zzzzzzz")
+    assert response.status_code == 404, response.text
+
+
+def test_tiktok_thumbnail_live():
+    response = client.get("/url", params={"url": TIKTOK_VIDEO_URL})
+    assert response.status_code == 200, response.text
+    assert response.headers["content-type"] == "image/jpeg"
+    assert Image.open(io.BytesIO(response.content)).size == (default_img_width, default_img_height)
