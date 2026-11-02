@@ -2,6 +2,7 @@
   import { onMount, tick, untrack } from 'svelte';
   import { Link2, X, ClipboardPaste, FileText, ImageOff, LoaderCircle, ExternalLink } from '@lucide/svelte';
   import CopyButton from './CopyButton.svelte';
+  import { highlight } from './highlight';
   import {
     API_BASE_URL,
     DEFAULT_OPTIONS,
@@ -14,8 +15,8 @@
   } from './video';
 
   const EXAMPLES = [
-    { label: 'youtu.be link', url: 'https://youtu.be/8lGpZkjnkt4' },
-    { label: 'youtube.com link', url: 'https://www.youtube.com/watch?v=aqz-KE-bpKQ' },
+    { label: 'youtu.be link', url: 'https://youtu.be/dQw4w9WgXcQ', title: 'Definitely not a rickroll' },
+    { label: 'youtube.com link', url: 'https://www.youtube.com/watch?v=8lGpZkjnkt4' },
     { label: 'Vimeo link', url: 'https://vimeo.com/76979871' },
   ];
 
@@ -141,8 +142,12 @@
     title = '';
   }
 
-  async function useExample(url: string) {
+  async function useExample(url: string, exampleTitle?: string) {
     setUrl(url);
+    if (exampleTitle) {
+      title = exampleTitle;
+      titleTouched = true;
+    }
     await tick();
     inputEl?.focus();
   }
@@ -175,7 +180,7 @@
       inputmode="url"
       autocomplete="off"
       spellcheck="false"
-      placeholder="Paste a YouTube or Vimeo link…"
+      placeholder="Paste a link, e.g. https://youtu.be/dQw4w9WgXcQ"
       aria-invalid={invalid}
       aria-describedby="url-help"
     />
@@ -200,7 +205,7 @@
     {:else}
       <span class="muted">Try an example:</span>
       {#each EXAMPLES as ex}
-        <button type="button" class="chip" onclick={() => useExample(ex.url)}>{ex.label}</button>
+        <button type="button" class="chip" onclick={() => useExample(ex.url, ex.title)}>{ex.label}</button>
       {/each}
     {/if}
   </p>
@@ -357,7 +362,7 @@
           {/each}
         </div>
         <div class="code-wrap" id="code-panel" role="tabpanel" aria-labelledby="tab-{tab}">
-          <pre><code>{snippets[tab]}</code></pre>
+          <pre><code>{@html highlight(snippets[tab], tab)}</code></pre>
         </div>
         <div class="output-foot">
           <p class="muted small">{activeTab.hint}</p>

@@ -19,12 +19,27 @@
   --focus: #e5202e55;
   --shadow-sm: 0 1px 2px rgb(16 18 24 / 0.06);
   --shadow-md: 0 1px 2px rgb(16 18 24 / 0.04), 0 8px 24px -6px rgb(16 18 24 / 0.12);
+  --t-punct: #8a909c;
+  --t-alt: #0f7b4a;
+  --t-host: #7a3fd1;
+  --t-param: #b55a00;
+  --t-key: #0b63c5;
+  --t-value: #0f7b4a;
+  --t-tag: #d1243b;
+  --yt: #e5202e;
+  --vimeo: #1590bb;
+  --purple: #7a3fd1;
+  --green: #15803d;
+  --amber: #b45309;
+  --blue: #0b63c5;
+  --dot: #d8dbe1;
   --radius-sm: 8px;
   --radius: 12px;
   --radius-lg: 18px;
-  --font-sans: Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial,
-    sans-serif;
-  --font-mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace;
+  --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica,
+    Arial, sans-serif;
+  --font-display: 'Bricolage Grotesque', 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
 
   color-scheme: light;
   font-family: var(--font-sans);
@@ -55,6 +70,20 @@
     --danger: #ff6b6b;
     --danger-soft: #2d1416;
     --focus: #ff3b4766;
+    --t-punct: #6d7380;
+    --t-alt: #7ee2a8;
+    --t-host: #c4a3ff;
+    --t-param: #ffb86b;
+    --t-key: #79b8ff;
+    --t-value: #7ee2a8;
+    --t-tag: #ff7b8a;
+    --yt: #ff4d58;
+    --vimeo: #4cc7f2;
+    --purple: #b794ff;
+    --green: #4ade80;
+    --amber: #fbbf24;
+    --blue: #60a5fa;
+    --dot: #23272e;
     --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.4);
     --shadow-md: 0 1px 2px rgb(0 0 0 / 0.3), 0 12px 32px -8px rgb(0 0 0 / 0.6);
     color-scheme: dark;
@@ -79,6 +108,20 @@
   --danger: #ff6b6b;
   --danger-soft: #2d1416;
   --focus: #ff3b4766;
+  --t-punct: #6d7380;
+  --t-alt: #7ee2a8;
+  --t-host: #c4a3ff;
+  --t-param: #ffb86b;
+  --t-key: #79b8ff;
+  --t-value: #7ee2a8;
+  --t-tag: #ff7b8a;
+  --yt: #ff4d58;
+  --vimeo: #4cc7f2;
+  --purple: #b794ff;
+  --green: #4ade80;
+  --amber: #fbbf24;
+  --blue: #60a5fa;
+  --dot: #23272e;
   --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.4);
   --shadow-md: 0 1px 2px rgb(0 0 0 / 0.3), 0 12px 32px -8px rgb(0 0 0 / 0.6);
   color-scheme: dark;
@@ -115,7 +158,9 @@ a:hover {
 h1,
 h2,
 h3 {
-  line-height: 1.15;
+  font-family: var(--font-display);
+  text-wrap: balance;
+  line-height: 1.1;
   letter-spacing: -0.02em;
   margin: 0;
 }
@@ -175,4 +220,38 @@ button {
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+/* Syntax highlighting (see src/lib/highlight.ts) */
+.t-punct,
+.t-proto {
+  color: var(--t-punct);
+}
+.t-bang,
+.t-ext {
+  color: var(--accent);
+  font-weight: 700;
+}
+.t-alt,
+.t-value,
+.t-string {
+  color: var(--t-value);
+}
+.t-host {
+  color: var(--t-host);
+}
+.t-path {
+  color: var(--text);
+}
+.t-param {
+  color: var(--t-param);
+  font-style: italic;
+}
+.t-key,
+.t-attr {
+  color: var(--t-key);
+}
+.t-tag {
+  color: var(--t-tag);
+  font-weight: 600;
 }
