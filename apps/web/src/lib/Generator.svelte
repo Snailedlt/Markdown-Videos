@@ -461,10 +461,6 @@
     color: var(--accent);
     white-space: nowrap;
   }
-  .detected.tiktok {
-    background: color-mix(in srgb, var(--text) 10%, transparent);
-    color: var(--text);
-  }
   .detected.imgur {
     background: color-mix(in srgb, #1bb76e 18%, transparent);
     color: #13945a;
@@ -484,10 +480,6 @@
   .detected.rumble {
     background: color-mix(in srgb, #85c742 20%, transparent);
     color: #4f8a14;
-  }
-  .detected.bilibili {
-    background: color-mix(in srgb, #00a1d6 16%, transparent);
-    color: #0086b3;
   }
   .detected.instagram {
     background: color-mix(in srgb, #e1306c 15%, transparent);

@@ -53,12 +53,10 @@
 | YouTube | `/youtube/{video_id}`, `/youtube/{video_id}.gif` | The only service with animated GIFs |
 | Vimeo | `/vimeo/{video_id}` | |
 | Imgur | `/imgur/{video_id}` | Videos, GIFs and images (`imgur.com/ID`, `i.imgur.com/ID.mp4`). Not albums or galleries. |
-| TikTok | `/url?url={tiktok_link}` | Needs the full link (`tiktok.com/@user/video/ID` or a `vm.tiktok.com` short link) |
 | Loom | `/loom/{video_id}` | The 32-character ID from `loom.com/share/…` |
 | Dailymotion | `/dailymotion/{video_id}` | IDs start with `x` (`dailymotion.com/video/x7tgad0`, `dai.ly/x7tgad0`) |
 | Streamable | `/streamable/{video_id}` | `streamable.com/ID` |
 | Rumble | `/url?url={rumble_link}` | Needs the page link (`rumble.com/v…-title.html`); page and embed IDs differ |
-| Bilibili | `/bilibili/{video_id}` | BV or av IDs (`bilibili.com/video/BV1GJ411x7h7`); `b23.tv` short links through `/url` |
 | Instagram | `/instagram/{shortcode}` | **Needs credentials** (below). Posts, reels and IGTV |
 | Facebook | `/facebook/{video_id}` | **Needs credentials** (below). Public videos and reels |
 | Twitch | `/url?url={twitch_link}` | **Needs credentials** (below). Clips and past broadcasts (not live streams) |
@@ -81,7 +79,7 @@ Instagram, Facebook, Twitch and Reddit only offer thumbnails through authenticat
 
 **Reddit:** create a "web app" at [reddit.com/prefs/apps](https://www.reddit.com/prefs/apps) and set `REDDIT_CLIENT_ID` (the string under the app name) and `REDDIT_CLIENT_SECRET`. Reddit's API terms apply; app-only access is read-only.
 
-Every service also works through `/url?url={link}`. Thumbnails from the newer services (everything except YouTube and Vimeo) keep their shape: frames with a different aspect ratio, such as vertical TikToks, sit on a blurred copy of themselves instead of being stretched.
+Every service also works through `/url?url={link}`. Thumbnails from the newer services (everything except YouTube and Vimeo) keep their shape: frames with a different aspect ratio, such as vertical videos, sit on a blurred copy of themselves instead of being stretched.
 
 ## Documentation
 For the full documentation see the Swagger and ReDoc docs

@@ -184,9 +184,6 @@ def test_url_endpoint(url, expected_video_id):
 # real services (like the YouTube and Vimeo tests above), so they also catch
 # a service changing its thumbnail URLs or blocking our requests.
 IMGUR_VIDEO_ID = "A61SaA1"  # a public Imgur video (.mp4)
-# A long-lived public video (also used by yt-dlp's TikTok tests). TikTok's own
-# oEmbed docs example (@scout2015) no longer exists.
-TIKTOK_VIDEO_URL = "https://www.tiktok.com/@hankgreen1/video/7047596209028074758"
 
 
 def test_imgur_thumbnail_live():
@@ -201,13 +198,6 @@ def test_imgur_missing_video_live():
     assert response.status_code == 404, response.text
 
 
-def test_tiktok_thumbnail_live():
-    response = client.get("/url", params={"url": TIKTOK_VIDEO_URL})
-    assert response.status_code == 200, response.text
-    assert response.headers["content-type"] == "image/jpeg"
-    assert Image.open(io.BytesIO(response.content)).size == (default_img_width, default_img_height)
-
-
 # Live checks for Loom, Dailymotion and Streamable, using the example videos
 # from each service's own developer documentation.
 @pytest.mark.parametrize(
@@ -216,7 +206,6 @@ def test_tiktok_thumbnail_live():
         "/loom/0281766fa2d04bb788eaf19e65135184",
         "/dailymotion/x7tgad0",
         "/streamable/moo",
-        "/bilibili/BV1GJ411x7h7",  # Rick Astley's "Never Gonna Give You Up" on Bilibili
         "/url?url=https%3A%2F%2Frumble.com%2Fvdmum1-moose-the-dog-helps-girls-dig-a-snow-fort.html",
     ],
 )

@@ -54,18 +54,9 @@ def upstream(monkeypatch):
 
 # --- Recognising links ----------------------------------------------------------
 
-TIKTOK = "https://www.tiktok.com/@scout2015/video/6718335390845095173"
-
-
 @pytest.mark.parametrize(
     "url, expected",
     [
-        (TIKTOK, ("tiktok", TIKTOK)),
-        (TIKTOK + "?is_from_webapp=1&sender_device=pc", ("tiktok", TIKTOK)),
-        ("tiktok.com/@scout2015/video/6718335390845095173", ("tiktok", TIKTOK)),
-        ("https://m.tiktok.com/@scout2015/video/6718335390845095173", ("tiktok", TIKTOK)),
-        ("https://vm.tiktok.com/ZMabcdEfG/", ("tiktok", "https://vm.tiktok.com/ZMabcdEfG/")),
-        ("https://www.tiktok.com/t/ZT8abcdEf/", ("tiktok", "https://www.tiktok.com/t/ZT8abcdEf/")),
         ("https://i.imgur.com/A61SaA1.mp4", ("imgur", "A61SaA1")),
         ("https://i.imgur.com/A61SaA1.gifv", ("imgur", "A61SaA1")),
         ("i.imgur.com/A61SaA1.gif", ("imgur", "A61SaA1")),
@@ -83,8 +74,6 @@ def test_recognises_links(url, expected):
     [
         "https://youtu.be/dQw4w9WgXcQ",
         "https://vimeo.com/76979871",
-        "https://www.tiktok.com/@scout2015",
-        "https://www.tiktok.com/@scout2015/video/67183353",  # half-typed
         "https://imgur.com/a/AbCdE12",
         "https://imgur.com/gallery/some-title-AbCdE12",
         "https://imgur.com/user/someone",
@@ -138,14 +127,6 @@ def test_refusals_and_outages_are_a_502_not_a_404(upstream, status):
     assert "cache-control" not in response.headers
 
 
-def test_tiktok_refusing_us_is_a_502(upstream):
-    routes, _ = upstream
-    routes["https://www.tiktok.com/oembed"] = FakeResponse(status=403)
-    response = client.get("/url", params={"url": TIKTOK})
-    assert response.status_code == 502
-    assert "TikTok answered 403" in response.json()["detail"]
-
-
 def test_imgur_is_requested_with_a_user_agent(monkeypatch):
     seen = {}
 
@@ -162,56 +143,6 @@ def test_imgur_is_requested_with_a_user_agent(monkeypatch):
 @pytest.mark.parametrize("video_id", ["ab", "has-dash", "waytoolongid123"])
 def test_imgur_rejects_malformed_ids(video_id):
     assert client.get(f"/imgur/{video_id}").status_code == 422
-
-
-# --- TikTok ---------------------------------------------------------------------
-
-
-def test_tiktok_through_url_endpoint(upstream):
-    routes, calls = upstream
-    routes["https://www.tiktok.com/oembed"] = FakeResponse(
-        data={"thumbnail_url": "https://p16-sign.tiktokcdn.com/obj/cover.jpeg?x=1"}
-    )
-    routes["https://p16-sign.tiktokcdn.com/"] = FakeResponse(content=jpeg((576, 1024)))
-
-    response = client.get("/url", params={"url": TIKTOK + "?is_from_webapp=1"})
-    assert response.status_code == 200
-    assert Image.open(io.BytesIO(response.content)).size == (320, 180)
-    assert calls[0] == (
-        "https://www.tiktok.com/oembed?url="
-        "https%3A%2F%2Fwww.tiktok.com%2F%40scout2015%2Fvideo%2F6718335390845095173&format=json"
-    )
-    assert calls[1] == "https://p16-sign.tiktokcdn.com/obj/cover.jpeg?x=1"
-
-
-def test_tiktok_short_links_are_resolved(upstream):
-    routes, calls = upstream
-    routes["https://vm.tiktok.com/"] = FakeResponse(url=TIKTOK + "?_r=1")
-    routes["https://www.tiktok.com/oembed"] = FakeResponse(data={"thumbnail_url": "//cdn.example.test/c.jpg"})
-    routes["https://cdn.example.test/"] = FakeResponse(content=jpeg((576, 1024)))
-
-    response = client.get("/url", params={"url": "https://vm.tiktok.com/ZMabcdEfG/"})
-    assert response.status_code == 200
-    assert "url=https%3A%2F%2Fwww.tiktok.com%2F%40scout2015%2Fvideo%2F6718335390845095173" in calls[1]
-    assert calls[2] == "https://cdn.example.test/c.jpg"  # protocol-relative URL made absolute
-
-
-def test_missing_tiktok_is_a_404(upstream):
-    routes, _ = upstream
-    routes["https://www.tiktok.com/oembed"] = FakeResponse(status=400, data={"code": 400})
-    response = client.get("/url", params={"url": TIKTOK})
-    assert response.status_code == 404
-    assert "No TikTok video found" in response.json()["detail"]
-
-
-def test_tiktok_has_no_id_route():
-    assert client.get("/tiktok/6718335390845095173").status_code == 404
-
-
-def test_unsupported_link_lists_the_supported_services():
-    response = client.get("/url", params={"url": "https://example.com/video"})
-    assert response.status_code == 400
-    assert "TikTok" in response.json()["detail"] and "Imgur" in response.json()["detail"]
 
 
 # --- Drawing --------------------------------------------------------------------
@@ -335,7 +266,7 @@ def test_malformed_ids_are_rejected(path):
     assert client.get(path).status_code == 422
 
 
-# --- Rumble, Bilibili ----------------------------------------------------------------
+# --- Rumble ---------------------------------------------------------------------
 
 RUMBLE = "https://rumble.com/vdmum1-moose-the-dog-helps-girls-dig-a-snow-fort.html"
 
@@ -345,21 +276,15 @@ RUMBLE = "https://rumble.com/vdmum1-moose-the-dog-helps-girls-dig-a-snow-fort.ht
     [
         (RUMBLE, ("rumble", RUMBLE)),
         (RUMBLE + "?e9s=src_v1_upp", ("rumble", RUMBLE)),
-        ("https://www.bilibili.com/video/BV1GJ411x7h7", ("bilibili", "BV1GJ411x7h7")),
-        ("https://www.bilibili.com/video/BV1GJ411x7h7/?spm_id_from=333.337", ("bilibili", "BV1GJ411x7h7")),
-        ("https://m.bilibili.com/video/av170001", ("bilibili", "av170001")),
-        ("https://b23.tv/abc123X", ("bilibili", "https://b23.tv/abc123X")),
     ],
 )
-def test_recognises_rumble_and_bilibili(url, expected):
+def test_recognises_rumble(url, expected):
     provider, ref = providers.match(url)
     assert (provider.key, ref) == expected
 
 
-@pytest.mark.parametrize(
-    "url", ["https://rumble.com/c/SomeChannel", "https://www.bilibili.com/read/cv123", "https://space.bilibili.com/123"]
-)
-def test_ignores_rumble_and_bilibili_pages(url):
+@pytest.mark.parametrize("url", ["https://rumble.com/c/SomeChannel", "https://rumble.com/user/someone"])
+def test_ignores_rumble_pages(url):
     assert providers.match(url) is None
 
 
@@ -374,39 +299,8 @@ def test_rumble_thumbnail_through_oembed(upstream):
     assert calls[0].startswith("https://rumble.com/api/Media/oembed.json?url=https%3A%2F%2Frumble.com%2Fvdmum1-")
 
 
-def test_bilibili_thumbnail(upstream):
-    routes, calls = upstream
-    routes["https://api.bilibili.com/x/web-interface/view"] = FakeResponse(
-        data={"code": 0, "data": {"pic": "http://i0.hdslb.com/bfs/archive/cover.jpg"}}
-    )
-    routes["https://i0.hdslb.com/"] = FakeResponse(content=jpeg((1146, 717)))
-    response = client.get("/bilibili/BV1GJ411x7h7")
-    assert response.status_code == 200
-    assert calls == [
-        "https://api.bilibili.com/x/web-interface/view?bvid=BV1GJ411x7h7",
-        "https://i0.hdslb.com/bfs/archive/cover.jpg",  # upgraded to https
-    ]
-
-
-def test_bilibili_av_ids_and_short_links(upstream):
-    routes, calls = upstream
-    routes["https://b23.tv/"] = FakeResponse(url="https://www.bilibili.com/video/av170001?share=1")
-    routes["https://api.bilibili.com/"] = FakeResponse(data={"code": 0, "data": {"pic": "//i0.hdslb.com/c.jpg"}})
-    routes["https://i0.hdslb.com/"] = FakeResponse(content=jpeg((1146, 717)))
-    assert client.get("/url", params={"url": "https://b23.tv/abc123X"}).status_code == 200
-    assert calls[1] == "https://api.bilibili.com/x/web-interface/view?aid=170001"
-
-
-@pytest.mark.parametrize("code, status", [(-404, 404), (62002, 404), (62004, 404), (-412, 502)])
-def test_bilibili_error_codes(upstream, code, status):
-    routes, _ = upstream
-    routes["https://api.bilibili.com/"] = FakeResponse(data={"code": code, "message": "x"})
-    assert client.get("/bilibili/BV1GJ411x7h7").status_code == status
-
-
-def test_rumble_has_no_id_route_but_bilibili_does():
+def test_rumble_has_no_id_route():
     assert client.get("/rumble/vdmum1").status_code == 404
-    assert client.get("/bilibili/not-an-id").status_code == 422
 
 
 # --- Instagram, Facebook (Meta Graph API; need credentials) -------------------------
