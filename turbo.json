@@ -40,6 +40,14 @@
         "test": {},
         "test:verbose": {
             "cache": false
+        },
+        "test:coverage": {
+            "cache": false,
+            "outputs": [
+                "coverage/**",
+                "coverage.xml",
+                "coverage.json"
+            ]
         }
     }
 }

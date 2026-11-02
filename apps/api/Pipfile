@@ -8,6 +8,7 @@ PIPENV_VENV_IN_PROJECT = 1
 dev = "uvicorn main:app --reload"
 start = "uvicorn main:app"
 test = "pytest"
+coverage = "pytest --cov --cov-report=term-missing --cov-report=xml --cov-report=json"
 lint = "ruff ."
 
 [packages]
@@ -16,6 +17,7 @@ pillow = "==13.0.0"
 requests = "==2.34.2"
 uvicorn = {extras = ["standard"], version = "*"}
 pytest = "==9.2.0"
+pytest-cov = "==7.1.0"
 httpx = "==0.28.1"
 ruff = "==0.17.3"
 fastapi-analytics = "==1.2.5"

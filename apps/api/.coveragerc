@@ -1,0 +1,9 @@
+# Coverage settings live here rather than in pyproject.toml: Vercel's Python
+# builder installs dependencies from pyproject.toml whenever one exists.
+[run]
+source = .
+omit =
+    tests/*
+
+[report]
+skip_empty = true

@@ -53,8 +53,24 @@ jobs:
         - name: Build
           run: pnpm build
 
-        - name: Test
-          run: pnpm test:verbose
+        - name: Test (with coverage)
+          run: pnpm test:coverage
+
+        - name: Coverage summary
+          if: ${{ !cancelled() }}
+          run: node .github/scripts/coverage-summary.mjs
+
+        # Optional: upload to Codecov (https://about.codecov.io). Needs the
+        # Codecov GitHub app and a CODECOV_TOKEN secret; without them this step
+        # is skipped or reports the problem without failing the build.
+        - name: Upload coverage to Codecov
+          if: ${{ matrix.python-version == '3.13' && !cancelled() }}
+          continue-on-error: true
+          uses: codecov/codecov-action@v7
+          with:
+            token: ${{ secrets.CODECOV_TOKEN }}
+            files: ./apps/api/coverage.xml,./apps/web/coverage/lcov.info
+            fail_ci_if_error: false
 
         - name: Lint web
           run: pnpm --filter web lint
