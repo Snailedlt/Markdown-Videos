@@ -13,7 +13,11 @@ jobs:
       runs-on: ubuntu-latest
       strategy:
         matrix:
-          python-version: ["3.10", "3.12", "3.13"]
+          python-version: ["3.11", "3.13", "3.14"]
+      env:
+        # Make pipenv use this job's Python. Pipfile only asks for "3", so
+        # otherwise pipenv picks the newest interpreter on the runner.
+        PIPENV_PYTHON: ${{ matrix.python-version }}
 
       steps:
         - name: Check out code

@@ -54,7 +54,7 @@ Wanna work only with the python or javascript stuff? check out [Additional info]
 
 ### Prerequisites
 
-- [python](https://www.python.org/downloads/) 3.10 or higher
+- [python](https://www.python.org/downloads/) 3.11 or higher
 - [pipenv](https://pipenv.pypa.io/en/latest/)
 - [pnpm](https://pnpm.io/installation)
 - [node](https://nodejs.org/en) 20.19 or higher

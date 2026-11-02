@@ -11,20 +11,20 @@ test = "pytest"
 lint = "ruff ."
 
 [packages]
-fastapi = "==0.115.12"
-pillow = "==11.2.1"
-requests = "==2.32.3"
+fastapi = "==0.162.0"
+pillow = "==13.0.0"
+requests = "==2.34.2"
 uvicorn = {extras = ["standard"], version = "*"}
-pytest = "==8.3.5"
+pytest = "==9.2.0"
 httpx = "==0.28.1"
-ruff = "==0.11.6"
-fastapi-analytics = "==1.2.2"
-python-dotenv = "==1.1.0"
-pydantic-settings = "==2.9.1"
+ruff = "==0.17.3"
+fastapi-analytics = "==1.2.5"
+python-dotenv = "==1.2.4"
+pydantic-settings = "==2.16.2"
 
 [dev-packages]
 
 [requires]
-python_version = "3" # >=3.10 required
+python_version = "3" # >=3.11 required
 # TODO: Change this to minimum >=3.9 if pipenv ever starts supporting minimum python version
 
