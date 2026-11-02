@@ -1,0 +1,82 @@
+<!doctype html>
+<!--
+  Source for public/og-image.png, the image shown in link previews (1200x630).
+  Regenerate it with: node scripts/og-image.mjs
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Instrument+Sans:wght@400..700&family=JetBrains+Mono:wght@400..700&display=block" />
+<style>
+  :root {
+    --bg: #fbfbfc; --text: #16181d; --muted: #5b6270; --faint: #8a909c; --border: #e4e6ea;
+    --accent: #e5202e; --code: #f6f8fa; --dot: #d8dbe1;
+    --t-alt: #0f7b4a; --t-host: #7a3fd1; --t-param: #b55a00;
+  }
+  * { box-sizing: border-box; margin: 0; }
+  html, body { width: 1200px; height: 630px; overflow: hidden; }
+  body {
+    background: var(--bg);
+    background-image: radial-gradient(var(--dot) 1.2px, transparent 1.2px);
+    background-size: 22px 22px;
+    font-family: 'Instrument Sans', sans-serif;
+    color: var(--text);
+    display: grid;
+    grid-template-columns: 1fr 470px;
+    gap: 56px;
+    align-items: center;
+    padding: 0 72px;
+  }
+  .brand { display: flex; align-items: center; gap: 14px; font: 700 30px/1 'Bricolage Grotesque', sans-serif; letter-spacing: -0.01em; }
+  .brand svg { width: 64px; height: 36px; }
+  h1 { margin-top: 34px; font: 800 74px/1.02 'Bricolage Grotesque', sans-serif; letter-spacing: -0.035em; }
+  .md { font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 0.82em; letter-spacing: -0.04em; }
+  .md-mark { color: var(--faint); }
+  .accent { color: var(--accent); }
+  p { margin-top: 26px; font-size: 27px; line-height: 1.4; color: var(--muted); max-width: 580px; }
+  .card {
+    background: #fff; border: 1px solid var(--border); border-radius: 22px; padding: 18px;
+    box-shadow: 0 2px 4px rgb(16 18 24 / 0.05), 0 24px 48px -12px rgb(16 18 24 / 0.22);
+    transform: rotate(1.5deg);
+  }
+  .thumb {
+    position: relative; aspect-ratio: 16 / 9; border-radius: 12px; overflow: hidden;
+    background:
+      radial-gradient(120% 90% at 20% 15%, #ffb4a2 0%, transparent 55%),
+      radial-gradient(90% 90% at 85% 80%, #7a3fd1 0%, transparent 60%),
+      linear-gradient(135deg, #f15a3a, #b8205a 55%, #3b1d7a);
+  }
+  .thumb::after { content: ''; position: absolute; inset: 0; background: linear-gradient(transparent 55%, rgb(0 0 0 / 0.35)); }
+  .play {
+    position: absolute; left: 50%; top: 50%; width: 104px; height: 72px; transform: translate(-50%, -50%);
+    background: var(--accent); border-radius: 20px; display: grid; place-items: center; z-index: 1;
+    box-shadow: 0 8px 24px rgb(0 0 0 / 0.3);
+  }
+  .play::before { content: ''; margin-left: 6px; border-left: 30px solid #fff; border-top: 18px solid transparent; border-bottom: 18px solid transparent; }
+  .snippet {
+    margin-top: 16px; background: var(--code); border: 1px solid var(--border); border-radius: 12px;
+    padding: 14px 16px; font: 500 17px/1.45 'JetBrains Mono', monospace; color: var(--faint); word-break: break-all;
+  }
+  .snippet .alt { color: var(--t-alt); }
+  .snippet .host { color: var(--t-host); }
+  .snippet .param { color: var(--t-param); }
+</style>
+</head>
+<body>
+  <div>
+    <div class="brand">
+      <svg viewBox="0 0 16000 9000" aria-hidden="true">
+        <path fill="#e5202e" d="M11305 4502c3,94 -64,193 -293,325l-4542 2622c-156,90 -291,105 -373,60 -82,-44 -134,-151 -134,-416l0 -5245c0,-179 54,-304 134,-353 80,-49 199,-40 428,92l4542 2623c156,89 236,199 238,292z" />
+        <path fill="#16181d" d="M13986 1345l0 6310c0,156 -127,283 -283,283l-2074 0c-156,0 -283,-127 -283,-283l0 -496c0,-157 127,-283 283,-283l1212 0 0 -4752 -1212 0c-156,0 -283,-126 -283,-283l0 -496c0,-156 127,-283 283,-283l2074 0c156,0 283,127 283,283zm-11972 6310l0 -6310c0,-156 127,-283 283,-283l2074 0c156,0 283,127 283,283l0 496c0,157 -127,283 -283,283l-1212 0 0 4752 1212 0c156,0 283,126 283,283l0 496c0,156 -127,283 -283,283l-2074 0c-156,0 -283,-127 -283,-283z" />
+      </svg>
+      Markdown Videos
+    </div>
+    <h1>Put <span class="md"><span class="md-mark">![</span><span class="accent">videos</span><span class="md-mark">]</span></span><br />in your Markdown</h1>
+    <p>Turn a YouTube, Vimeo or Loom link into a clickable thumbnail for GitHub READMEs, websites and docs.</p>
+  </div>
+  <div class="card">
+    <div class="thumb"><div class="play"></div></div>
+    <div class="snippet">[![<span class="alt">Watch the video</span>](https://<span class="host">markdown-videos-api.jorgenkh.no</span>/youtube/<span class="param">dQw4w9WgXcQ</span>)](https://youtu.be/<span class="param">dQw4w9WgXcQ</span>)</div>
+  </div>
+</body>
+</html>

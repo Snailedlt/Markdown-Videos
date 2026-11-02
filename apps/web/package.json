@@ -1,14 +1,14 @@
 {
   "name": "web",
   "private": true,
-  "version": "0.7.0",
+  "version": "0.8.0",
   "engines": {
     "node": ">=20.19.0"
   },
   "type": "module",
   "scripts": {
     "dev": "pnpm with-env vite",
-    "build": "pnpm with-env vite build",
+    "build": "pnpm with-env vite build && pnpm with-env node scripts/prerender.mjs",
     "preview": "vite preview",
     "test": "vitest run",
     "test:verbose": "vitest run --reporter=verbose",
