@@ -461,10 +461,6 @@
     color: var(--accent);
     white-space: nowrap;
   }
-  .detected.tiktok {
-    background: color-mix(in srgb, var(--text) 10%, transparent);
-    color: var(--text);
-  }
   .detected.imgur {
     background: color-mix(in srgb, #1bb76e 18%, transparent);
     color: #13945a;

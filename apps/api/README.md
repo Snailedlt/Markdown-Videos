@@ -53,9 +53,8 @@
 | YouTube | `/youtube/{video_id}`, `/youtube/{video_id}.gif` | The only service with animated GIFs |
 | Vimeo | `/vimeo/{video_id}` | |
 | Imgur | `/imgur/{video_id}` | Videos, GIFs and images (`imgur.com/ID`, `i.imgur.com/ID.mp4`). Not albums or galleries. |
-| TikTok | `/url?url={tiktok_link}` | Needs the full link (`tiktok.com/@user/video/ID` or a `vm.tiktok.com` short link) |
 
-Every service also works through `/url?url={link}`. Thumbnails from the newer services (Imgur, TikTok) keep their shape: frames with a different aspect ratio, such as vertical TikToks, sit on a blurred copy of themselves instead of being stretched.
+Every service also works through `/url?url={link}`. Thumbnails from the newer services (such as Imgur) keep their shape: frames with a different aspect ratio, such as vertical videos, sit on a blurred copy of themselves instead of being stretched.
 
 ## Documentation
 For the full documentation see the Swagger and ReDoc docs

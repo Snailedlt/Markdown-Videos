@@ -54,18 +54,9 @@ def upstream(monkeypatch):
 
 # --- Recognising links ----------------------------------------------------------
 
-TIKTOK = "https://www.tiktok.com/@scout2015/video/6718335390845095173"
-
-
 @pytest.mark.parametrize(
     "url, expected",
     [
-        (TIKTOK, ("tiktok", TIKTOK)),
-        (TIKTOK + "?is_from_webapp=1&sender_device=pc", ("tiktok", TIKTOK)),
-        ("tiktok.com/@scout2015/video/6718335390845095173", ("tiktok", TIKTOK)),
-        ("https://m.tiktok.com/@scout2015/video/6718335390845095173", ("tiktok", TIKTOK)),
-        ("https://vm.tiktok.com/ZMabcdEfG/", ("tiktok", "https://vm.tiktok.com/ZMabcdEfG/")),
-        ("https://www.tiktok.com/t/ZT8abcdEf/", ("tiktok", "https://www.tiktok.com/t/ZT8abcdEf/")),
         ("https://i.imgur.com/A61SaA1.mp4", ("imgur", "A61SaA1")),
         ("https://i.imgur.com/A61SaA1.gifv", ("imgur", "A61SaA1")),
         ("i.imgur.com/A61SaA1.gif", ("imgur", "A61SaA1")),
@@ -83,8 +74,6 @@ def test_recognises_links(url, expected):
     [
         "https://youtu.be/dQw4w9WgXcQ",
         "https://vimeo.com/76979871",
-        "https://www.tiktok.com/@scout2015",
-        "https://www.tiktok.com/@scout2015/video/67183353",  # half-typed
         "https://imgur.com/a/AbCdE12",
         "https://imgur.com/gallery/some-title-AbCdE12",
         "https://imgur.com/user/someone",
@@ -138,14 +127,6 @@ def test_refusals_and_outages_are_a_502_not_a_404(upstream, status):
     assert "cache-control" not in response.headers
 
 
-def test_tiktok_refusing_us_is_a_502(upstream):
-    routes, _ = upstream
-    routes["https://www.tiktok.com/oembed"] = FakeResponse(status=403)
-    response = client.get("/url", params={"url": TIKTOK})
-    assert response.status_code == 502
-    assert "TikTok answered 403" in response.json()["detail"]
-
-
 def test_imgur_is_requested_with_a_user_agent(monkeypatch):
     seen = {}
 
@@ -164,54 +145,10 @@ def test_imgur_rejects_malformed_ids(video_id):
     assert client.get(f"/imgur/{video_id}").status_code == 422
 
 
-# --- TikTok ---------------------------------------------------------------------
-
-
-def test_tiktok_through_url_endpoint(upstream):
-    routes, calls = upstream
-    routes["https://www.tiktok.com/oembed"] = FakeResponse(
-        data={"thumbnail_url": "https://p16-sign.tiktokcdn.com/obj/cover.jpeg?x=1"}
-    )
-    routes["https://p16-sign.tiktokcdn.com/"] = FakeResponse(content=jpeg((576, 1024)))
-
-    response = client.get("/url", params={"url": TIKTOK + "?is_from_webapp=1"})
-    assert response.status_code == 200
-    assert Image.open(io.BytesIO(response.content)).size == (320, 180)
-    assert calls[0] == (
-        "https://www.tiktok.com/oembed?url="
-        "https%3A%2F%2Fwww.tiktok.com%2F%40scout2015%2Fvideo%2F6718335390845095173&format=json"
-    )
-    assert calls[1] == "https://p16-sign.tiktokcdn.com/obj/cover.jpeg?x=1"
-
-
-def test_tiktok_short_links_are_resolved(upstream):
-    routes, calls = upstream
-    routes["https://vm.tiktok.com/"] = FakeResponse(url=TIKTOK + "?_r=1")
-    routes["https://www.tiktok.com/oembed"] = FakeResponse(data={"thumbnail_url": "//cdn.example.test/c.jpg"})
-    routes["https://cdn.example.test/"] = FakeResponse(content=jpeg((576, 1024)))
-
-    response = client.get("/url", params={"url": "https://vm.tiktok.com/ZMabcdEfG/"})
-    assert response.status_code == 200
-    assert "url=https%3A%2F%2Fwww.tiktok.com%2F%40scout2015%2Fvideo%2F6718335390845095173" in calls[1]
-    assert calls[2] == "https://cdn.example.test/c.jpg"  # protocol-relative URL made absolute
-
-
-def test_missing_tiktok_is_a_404(upstream):
-    routes, _ = upstream
-    routes["https://www.tiktok.com/oembed"] = FakeResponse(status=400, data={"code": 400})
-    response = client.get("/url", params={"url": TIKTOK})
-    assert response.status_code == 404
-    assert "No TikTok video found" in response.json()["detail"]
-
-
-def test_tiktok_has_no_id_route():
-    assert client.get("/tiktok/6718335390845095173").status_code == 404
-
-
 def test_unsupported_link_lists_the_supported_services():
     response = client.get("/url", params={"url": "https://example.com/video"})
     assert response.status_code == 400
-    assert "TikTok" in response.json()["detail"] and "Imgur" in response.json()["detail"]
+    assert "Imgur" in response.json()["detail"]
 
 
 # --- Drawing --------------------------------------------------------------------
