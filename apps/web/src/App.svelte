@@ -71,8 +71,8 @@
   ];
 
   const params = [
-    { name: 'width', type: 'int', def: '320', desc: 'Width in pixels', only: '' },
-    { name: 'height', type: 'int', def: '180', desc: 'Height in pixels', only: '' },
+    { name: 'width', type: 'int', def: '320', desc: 'Width in pixels, up to 1920', only: '' },
+    { name: 'height', type: 'int', def: '180', desc: 'Height in pixels, up to 1080', only: '' },
     { name: 'filetype', type: 'str', def: 'jpeg', desc: 'jpeg, png or webp', only: 'Still images' },
     { name: 'duration', type: 'int', def: '500', desc: 'Milliseconds per frame', only: 'GIF only' },
   ];

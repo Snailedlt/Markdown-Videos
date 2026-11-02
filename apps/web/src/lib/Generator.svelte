@@ -73,13 +73,37 @@
   });
   const activeTab = $derived(TABS.find((t) => t.id === tab)!);
 
-  // Reset preview state whenever the image changes
-  $effect.pre(() => {
-    errorText = '';
-    imgState = src ? 'loading' : 'idle';
+  // Every distinct preview URL is a (metered) API call, so only load the preview
+  // once the settings have stopped changing, e.g. while dragging the GIF slider.
+  // A new video shows straight away; the snippets always update instantly.
+  const PREVIEW_DELAY_MS = 400;
+  let previewSrc = $state('');
+  $effect(() => {
+    const next = src;
+    const sameVideo = untrack(() => previewSrc).split('?')[0].replace(/\.gif$/, '') === next.split('?')[0].replace(/\.gif$/, '');
+    if (!next || !sameVideo) {
+      previewSrc = next;
+      return;
+    }
+    const timer = setTimeout(() => (previewSrc = next), PREVIEW_DELAY_MS);
+    return () => clearTimeout(timer);
   });
 
-  async function onImgError() {
+  // Reset preview state whenever the previewed image changes
+  $effect.pre(() => {
+    errorText = '';
+    imgState = previewSrc ? 'loading' : 'idle';
+  });
+
+  // Ignore events from an image that has already been replaced by a newer one
+  const isCurrent = (e: Event) => (e.currentTarget as HTMLImageElement).getAttribute('src') === previewSrc;
+
+  function onImgLoad(e: Event) {
+    if (isCurrent(e)) imgState = 'loaded';
+  }
+
+  async function onImgError(e: Event) {
+    if (!isCurrent(e)) return;
     imgState = 'error';
     errorText = 'We couldn’t create a thumbnail for this video.';
     if (!video) return;
@@ -231,13 +255,13 @@
               <span>Your thumbnail will appear here</span>
             </div>
           {:else}
-            {#key src}
+            {#key previewSrc}
               <a {href} target="_blank" rel="noreferrer" class="thumb-link" class:hidden={imgState === 'error'}>
                 <img
-                  {src}
+                  src={previewSrc}
                   {alt}
                   title={alt}
-                  onload={() => (imgState = 'loaded')}
+                  onload={onImgLoad}
                   onerror={onImgError}
                   class:ready={imgState === 'loaded'}
                 />
