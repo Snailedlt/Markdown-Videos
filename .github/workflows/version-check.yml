@@ -12,9 +12,12 @@ jobs:
     name: Version bumped
     runs-on: ubuntu-latest
     timeout-minutes: 5
+    # Label changes only matter when they add or remove skip-version-check
     if: >-
       ${{ github.event.pull_request.user.login != 'dependabot[bot]' &&
-          !contains(github.event.pull_request.labels.*.name, 'skip-version-check') }}
+          !contains(github.event.pull_request.labels.*.name, 'skip-version-check') &&
+          ((github.event.action != 'labeled' && github.event.action != 'unlabeled') ||
+           github.event.label.name == 'skip-version-check') }}
     steps:
       - uses: actions/checkout@v4
         with:
