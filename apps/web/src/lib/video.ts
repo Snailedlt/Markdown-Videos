@@ -1,7 +1,6 @@
 export type Provider =
   | 'youtube'
   | 'vimeo'
-  | 'tiktok'
   | 'imgur'
   | 'loom'
   | 'dailymotion'
@@ -56,18 +55,6 @@ type Rule = {
 // Kept in sync with apps/api/src/providers.py. Services whose thumbnails need
 // the full link (not just an ID) set `viaUrl` and go through /url?url=...
 const RULES: Rule[] = [
-  {
-    provider: 'tiktok',
-    // TikTok IDs are 19 digits; the ID must end so a half-typed link doesn't match
-    re: /^(?:https?:\/\/)?(?:www\.|m\.)?tiktok\.com\/@([\w.-]+)\/video\/(\d{19,21})(?=[/?#]|$)/i,
-    video: (m) => ({ id: m[2], watchUrl: `https://www.tiktok.com/@${m[1]}/video/${m[2]}`, viaUrl: true }),
-  },
-  {
-    provider: 'tiktok',
-    // Short share links: the API resolves them, so keep the link as it is
-    re: /^(?:https?:\/\/)?(?:(?:vm|vt)\.tiktok\.com|(?:www\.)?tiktok\.com\/t)\/([A-Za-z0-9]+)\/?(?:[?#].*)?$/i,
-    video: (m, value) => ({ id: m[1], watchUrl: asLink(value), viaUrl: true }),
-  },
   {
     provider: 'imgur',
     re: /^(?:https?:\/\/)?i\.imgur\.com\/([A-Za-z0-9]{5,10})\.(?:mp4|gifv|webm|gif|jpe?g|png)(?:[?#].*)?$/i,
@@ -185,7 +172,6 @@ export function toHtml(title: string, src: string, href: string, width: number, 
 export const PROVIDER_LABEL: Record<Provider, string> = {
   youtube: 'YouTube',
   vimeo: 'Vimeo',
-  tiktok: 'TikTok',
   imgur: 'Imgur',
   loom: 'Loom',
   dailymotion: 'Dailymotion',
@@ -194,7 +180,7 @@ export const PROVIDER_LABEL: Record<Provider, string> = {
   bilibili: 'Bilibili',
 };
 
-/** "YouTube, Vimeo, TikTok or Imgur" */
+/** "YouTube, Vimeo, Imgur, …" */
 export const SUPPORTED_SERVICES = (() => {
   const names = Object.values(PROVIDER_LABEL);
   return `${names.slice(0, -1).join(', ')} or ${names[names.length - 1]}`;
