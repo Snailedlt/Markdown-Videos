@@ -23,7 +23,7 @@ export const API_BASE_URL: string = (
 
 // Kept in sync with apps/api/src/util.py (URL_Regex)
 const YOUTUBE_REGEX =
-  /^(?:(?:https?:\/\/(?:www\.)?(?:m\.)?youtube\.com))\/(?:(?:oembed\?url=https?%3A\/\/(?:www\.)youtube.com\/watch\?(?:v%3D)([A-Za-z0-9_-]{11}))|(?:attribution_link\?a=.*watch(?:%3Fv%3D|%3Fv%3D)([A-Za-z0-9_-]{11}))).*|(?:https?:)?(?:\/\/)?(?:(?:www\.|m\.)?youtube(?:-nocookie)?\.com\/(?:(?:watch)?\?(?:app=desktop&)?(?:feature=\w*&)?v=|embed\/|v\/|e\/|shorts\/|live\/)|youtu\.be\/)([A-Za-z0-9_-]{11}).*$/i;
+  /^(?:(?:https?:\/\/(?:www\.)?(?:m\.)?youtube\.com))\/(?:(?:oembed\?url=https?%3A\/\/(?:www\.)youtube.com\/watch\?(?:v%3D)([A-Za-z0-9_-]{11}))|(?:attribution_link\?a=.*watch(?:%3Fv%3D|%3Fv%3D)([A-Za-z0-9_-]{11}))).*|(?:https?:)?(?:\/\/)?(?:(?:www\.|m\.|music\.)?youtube(?:-nocookie)?\.com\/(?:(?:watch)?\?(?:[^#]*?&)?v=|embed\/|v\/|e\/|shorts\/|live\/)|youtu\.be\/)([A-Za-z0-9_-]{11}).*$/i;
 const VIMEO_REGEX =
   /^(?:https?:\/\/)?(?:www\.)?(?:player\.)?vimeo\.com\/(?:[a-z]*\/)*(?:.*\/)?([0-9]{6,11})(?:[?#/].*)?$/i;
 const YOUTUBE_ID_REGEX = /^[A-Za-z0-9_-]{11}$/;
