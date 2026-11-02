@@ -2,7 +2,7 @@
 
 Created using `npm init vite`
 
-Powered by Svelte, Vite, TypeScript, SCSS and the [Markdown-Videos api](http://markdown-videos-api.jorgenkh.no/)
+Powered by Svelte, Vite, TypeScript and the [Markdown-Videos api](http://markdown-videos-api.jorgenkh.no/)
 
 ## Recommended IDE Setup
 
@@ -32,3 +32,16 @@ lint
 ```sh
 pnpm lint
 ```
+
+## Testing
+
+Tests use [Vitest](https://vitest.dev/) with [Testing Library](https://testing-library.com/docs/svelte-testing-library/intro) in a jsdom browser environment. They live next to the code they test (`src/**/*.test.ts`).
+
+```sh
+pnpm test        # run once
+pnpm test:watch  # re-run on changes
+```
+
+- `src/lib/video.test.ts`: link parsing (including `?si=` links), image URLs and the Markdown/HTML snippets
+- `src/lib/highlight.test.ts`: the syntax highlighter keeps the text intact and never lets code inject markup
+- `src/lib/Generator.test.ts`: the generator itself: paste a link, see the thumbnail and code, switch tabs, copy, errors and options
