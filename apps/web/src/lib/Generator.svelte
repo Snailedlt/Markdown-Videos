@@ -14,9 +14,9 @@
   } from './video';
 
   const EXAMPLES = [
-    { label: 'YouTube video', url: 'https://youtu.be/8lGpZkjnkt4' },
-    { label: 'YouTube Short', url: 'https://www.youtube.com/shorts/aqz-KE-bpKQ' },
-    { label: 'Vimeo', url: 'https://vimeo.com/76979871' },
+    { label: 'youtu.be link', url: 'https://youtu.be/8lGpZkjnkt4' },
+    { label: 'youtube.com link', url: 'https://www.youtube.com/watch?v=aqz-KE-bpKQ' },
+    { label: 'Vimeo link', url: 'https://vimeo.com/76979871' },
   ];
 
   const SIZES = [
