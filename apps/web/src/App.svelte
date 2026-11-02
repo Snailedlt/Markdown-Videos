@@ -38,7 +38,7 @@
   ];
 
   const steps = [
-    { title: 'Paste a link', text: 'From YouTube, Vimeo, Loom, TikTok, Imgur, Dailymotion or Streamable. We find the video for you.' },
+    { title: 'Paste a link', text: 'From YouTube, Vimeo, Loom, Imgur, Dailymotion or Streamable. We find the video for you.' },
     { title: 'Tweak it', text: 'Pick a size, a still image or an animated GIF, and add a title for screen readers.' },
     { title: 'Copy & paste', text: 'Grab the Markdown or HTML snippet and drop it wherever you need it.' },
   ];
@@ -70,7 +70,7 @@
     },
     {
       path: '/url?url={video_url}',
-      desc: 'Thumbnail from any supported link, including TikTok',
+      desc: 'Thumbnail from any supported link',
       badges: [{ label: 'Any link', color: 'var(--purple)' }],
     },
   ];
@@ -116,7 +116,7 @@
         in your Markdown
       </h1>
       <p class="lead">
-        Turn a YouTube, Vimeo, Loom or TikTok link (and more) into a clickable thumbnail with a play button, ready for GitHub READMEs, websites
+        Turn a YouTube, Vimeo or Loom link (and more) into a clickable thumbnail with a play button, ready for GitHub READMEs, websites
         and docs.
       </p>
       <div class="generator-wrap">

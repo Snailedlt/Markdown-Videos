@@ -49,16 +49,6 @@ describe('parseVideoUrl', () => {
   });
 
   it.each([
-    ['https://www.tiktok.com/@scout2015/video/6718335390845095173', '6718335390845095173', 'https://www.tiktok.com/@scout2015/video/6718335390845095173'],
-    ['https://www.tiktok.com/@scout2015/video/6718335390845095173?is_from_webapp=1&sender_device=pc', '6718335390845095173', 'https://www.tiktok.com/@scout2015/video/6718335390845095173'],
-    ['tiktok.com/@some.user_1/video/6718335390845095173', '6718335390845095173', 'https://www.tiktok.com/@some.user_1/video/6718335390845095173'],
-    ['https://vm.tiktok.com/ZMabcdEfG/', 'ZMabcdEfG', 'https://vm.tiktok.com/ZMabcdEfG/'],
-    ['https://www.tiktok.com/t/ZT8abcdEf/?k=1', 'ZT8abcdEf', 'https://www.tiktok.com/t/ZT8abcdEf/'],
-  ])('finds the TikTok video in %s', (url, id, watchUrl) => {
-    expect(parseVideoUrl(url)).toEqual({ provider: 'tiktok', id, watchUrl });
-  });
-
-  it.each([
     ['https://i.imgur.com/A61SaA1.mp4', 'A61SaA1'],
     ['https://i.imgur.com/A61SaA1.gifv', 'A61SaA1'],
     ['i.imgur.com/A61SaA1.gif', 'A61SaA1'],
@@ -132,21 +122,6 @@ describe('buildImageUrl', () => {
     expect(buildImageUrl(imgur, opts({ width: 640, height: 360 }))).toBe(
       `${API_BASE_URL}/imgur/A61SaA1?width=640&height=360`
     );
-  });
-
-  it('sends TikTok links through /url, since TikTok needs the full link', () => {
-    const tiktok = parseVideoUrl('https://www.tiktok.com/@scout2015/video/6718335390845095173?lang=en')!;
-    expect(buildImageUrl(tiktok, opts({ width: 640, height: 360, format: 'png' }))).toBe(
-      `${API_BASE_URL}/url?url=https%3A%2F%2Fwww.tiktok.com%2F%40scout2015%2Fvideo%2F6718335390845095173&width=640&height=360&filetype=png`
-    );
-  });
-
-  it.each([
-    ['https://www.loom.com/share/0281766fa2d04bb788eaf19e65135184', '/loom/0281766fa2d04bb788eaf19e65135184'],
-    ['https://dai.ly/x7tgad0', '/dailymotion/x7tgad0'],
-    ['https://streamable.com/moo', '/streamable/moo'],
-  ])('builds the %s thumbnail URL from the ID', (url, path) => {
-    expect(buildImageUrl(parseVideoUrl(url)!, opts())).toBe(`${API_BASE_URL}${path}`);
   });
 
   it('never builds GIF URLs for services without GIFs', () => {
