@@ -1,10 +1,19 @@
-export type Provider = 'youtube' | 'vimeo' | 'imgur' | 'loom' | 'dailymotion' | 'streamable';
+export type Provider =
+  | 'youtube'
+  | 'vimeo'
+  | 'imgur'
+  | 'loom'
+  | 'dailymotion'
+  | 'streamable'
+  | 'rumble';
 
 export type ParsedVideo = {
   provider: Provider;
   id: string;
   /** Canonical, shareable link to the video */
   watchUrl: string;
+  /** The thumbnail needs the full link, so it goes through /url?url=... */
+  viaUrl?: boolean;
 };
 
 export type Format = 'jpeg' | 'png' | 'webp' | 'gif';
@@ -28,20 +37,55 @@ const VIMEO_REGEX =
   /^(?:https?:\/\/)?(?:www\.)?(?:player\.)?vimeo\.com\/(?:[a-z]*\/)*(?:.*\/)?([0-9]{6,11})(?:[?#/].*)?$/i;
 const YOUTUBE_ID_REGEX = /^[A-Za-z0-9_-]{11}$/;
 
-// Kept in sync with apps/api/src/providers.py
-const IMGUR_REGEXES = [
-  /^(?:https?:\/\/)?i\.imgur\.com\/([A-Za-z0-9]{5,10})\.(?:mp4|gifv|webm|gif|jpe?g|png)(?:[?#].*)?$/i,
-  /^(?:https?:\/\/)?(?:www\.|m\.)?imgur\.com\/([A-Za-z0-9]{5,10})(?:[?#].*)?$/i,
-];
+/** A link as https://, without its query string (unless `keepQuery`). */
+const asLink = (value: string, keepQuery = false) => {
+  const link = value.replace(/^(?!https?:\/\/)/, 'https://');
+  return keepQuery ? link : link.split(/[?#]/)[0];
+};
 
-const LOOM_REGEX = /^(?:https?:\/\/)?(?:www\.)?loom\.com\/(?:share|embed)\/(?:[\w-]*-)?([0-9a-f]{32})(?=[/?#]|$)/i;
-const DAILYMOTION_REGEXES = [
-  /^(?:https?:\/\/)?(?:www\.)?dailymotion\.com\/(?:embed\/)?video\/(x[a-z0-9]{4,12})(?=[/?#_]|$)/i,
-  /^(?:https?:\/\/)?dai\.ly\/(x[a-z0-9]{4,12})(?=[/?#]|$)/i,
-  /^(?:https?:\/\/)?geo\.dailymotion\.com\/player(?:\/[\w-]+)?\.html\?(?:[^#]*&)?video=(x[a-z0-9]{4,12})/i,
+type Rule = {
+  provider: Provider;
+  re: RegExp;
+  /** Build the parsed video from the match. Defaults to: id = first group, link = `link(id)`. */
+  video?: (m: RegExpMatchArray, value: string) => Omit<ParsedVideo, 'provider'>;
+  link?: (id: string) => string;
+};
+
+// Kept in sync with apps/api/src/providers.py. Services whose thumbnails need
+// the full link (not just an ID) set `viaUrl` and go through /url?url=...
+const RULES: Rule[] = [
+  {
+    provider: 'imgur',
+    re: /^(?:https?:\/\/)?i\.imgur\.com\/([A-Za-z0-9]{5,10})\.(?:mp4|gifv|webm|gif|jpe?g|png)(?:[?#].*)?$/i,
+    link: (id) => `https://imgur.com/${id}`,
+  },
+  {
+    provider: 'imgur',
+    re: /^(?:https?:\/\/)?(?:www\.|m\.)?imgur\.com\/([A-Za-z0-9]{5,10})(?:[?#].*)?$/i,
+    link: (id) => `https://imgur.com/${id}`,
+  },
+  {
+    provider: 'loom',
+    re: /^(?:https?:\/\/)?(?:www\.)?loom\.com\/(?:share|embed)\/(?:[\w-]*-)?([0-9a-f]{32})(?=[/?#]|$)/i,
+    link: (id) => `https://www.loom.com/share/${id}`,
+  },
+  ...[
+    /^(?:https?:\/\/)?(?:www\.)?dailymotion\.com\/(?:embed\/)?video\/(x[a-z0-9]{4,12})(?=[/?#_]|$)/i,
+    /^(?:https?:\/\/)?dai\.ly\/(x[a-z0-9]{4,12})(?=[/?#]|$)/i,
+    /^(?:https?:\/\/)?geo\.dailymotion\.com\/player(?:\/[\w-]+)?\.html\?(?:[^#]*&)?video=(x[a-z0-9]{4,12})/i,
+  ].map((re): Rule => ({ provider: 'dailymotion', re, link: (id) => `https://www.dailymotion.com/video/${id}` })),
+  {
+    provider: 'streamable',
+    re: /^(?:https?:\/\/)?(?:www\.)?streamable\.com\/(?:[eos]\/)?(?!(?:login|signup|upload|pricing|settings|about|blog|terms|privacy|documentation|clipper|tools|enterprise)\b)([a-z0-9]{3,10})(?=[/?#]|$)/i,
+    link: (id) => `https://streamable.com/${id}`,
+  },
+  {
+    provider: 'rumble',
+    // Page and embed IDs differ, so Rumble goes through /url with the page link
+    re: /^(?:https?:\/\/)?(?:www\.)?rumble\.com\/(?:embed\/)?(v[0-9a-z]{3,10})(?:-[\w-]*\.html|\/)?(?:[?#].*)?$/i,
+    video: (m, value) => ({ id: m[1], watchUrl: asLink(value), viaUrl: true }),
+  },
 ];
-const STREAMABLE_REGEX =
-  /^(?:https?:\/\/)?(?:www\.)?streamable\.com\/(?:[eos]\/)?(?!(?:login|signup|upload|pricing|settings|about|blog|terms|privacy|documentation|clipper|tools|enterprise)\b)([a-z0-9]{3,10})(?=[/?#]|$)/i;
 
 /** Parse a video link (or a bare YouTube video id) into its parts. */
 export function parseVideoUrl(input: string): ParsedVideo | null {
@@ -59,21 +103,12 @@ export function parseVideoUrl(input: string): ParsedVideo | null {
     return { provider: 'vimeo', id: vimeo[1], watchUrl: `https://vimeo.com/${vimeo[1]}` };
   }
 
-  for (const re of IMGUR_REGEXES) {
-    const imgur = value.match(re);
-    if (imgur) return { provider: 'imgur', id: imgur[1], watchUrl: `https://imgur.com/${imgur[1]}` };
+  for (const rule of RULES) {
+    const m = value.match(rule.re);
+    if (!m) continue;
+    if (rule.video) return { provider: rule.provider, ...rule.video(m, value) };
+    return { provider: rule.provider, id: m[1], watchUrl: rule.link ? rule.link(m[1]) : asLink(value) };
   }
-
-  const loom = value.match(LOOM_REGEX);
-  if (loom) return { provider: 'loom', id: loom[1], watchUrl: `https://www.loom.com/share/${loom[1]}` };
-
-  for (const re of DAILYMOTION_REGEXES) {
-    const dm = value.match(re);
-    if (dm) return { provider: 'dailymotion', id: dm[1], watchUrl: `https://www.dailymotion.com/video/${dm[1]}` };
-  }
-
-  const streamable = value.match(STREAMABLE_REGEX);
-  if (streamable) return { provider: 'streamable', id: streamable[1], watchUrl: `https://streamable.com/${streamable[1]}` };
 
   return null;
 }
@@ -92,6 +127,8 @@ export const supportsGif = (provider: Provider) => provider === 'youtube';
 export function buildImageUrl(video: ParsedVideo, opts: EmbedOptions): string {
   const isGif = opts.format === 'gif' && supportsGif(video.provider);
   const params = new URLSearchParams();
+  const viaUrl = video.viaUrl === true;
+  if (viaUrl) params.set('url', video.watchUrl);
   if (opts.width !== DEFAULT_OPTIONS.width) params.set('width', String(opts.width));
   if (opts.height !== DEFAULT_OPTIONS.height) params.set('height', String(opts.height));
   if (isGif) {
@@ -100,6 +137,7 @@ export function buildImageUrl(video: ParsedVideo, opts: EmbedOptions): string {
     params.set('filetype', opts.format);
   }
   const query = params.toString();
+  if (viaUrl) return `${API_BASE_URL}/url?${query}`;
   return `${API_BASE_URL}/${video.provider}/${video.id}${isGif ? '.gif' : ''}${query ? `?${query}` : ''}`;
 }
 
@@ -127,6 +165,7 @@ export const PROVIDER_LABEL: Record<Provider, string> = {
   loom: 'Loom',
   dailymotion: 'Dailymotion',
   streamable: 'Streamable',
+  rumble: 'Rumble',
 };
 
 /** "YouTube, Vimeo, Imgur, …" */

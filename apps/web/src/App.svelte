@@ -38,7 +38,7 @@
   ];
 
   const steps = [
-    { title: 'Paste a link', text: 'From YouTube, Vimeo, Loom, Imgur, Dailymotion or Streamable. We find the video for you.' },
+    { title: 'Paste a link', text: 'From YouTube, Vimeo, Loom, Rumble and more. We find the video for you.' },
     { title: 'Tweak it', text: 'Pick a size, a still image or an animated GIF, and add a title for screen readers.' },
     { title: 'Copy & paste', text: 'Grab the Markdown or HTML snippet and drop it wherever you need it.' },
   ];
@@ -70,7 +70,7 @@
     },
     {
       path: '/url?url={video_url}',
-      desc: 'Thumbnail from any supported link',
+      desc: 'Thumbnail from any supported link and Rumble',
       badges: [{ label: 'Any link', color: 'var(--purple)' }],
     },
   ];

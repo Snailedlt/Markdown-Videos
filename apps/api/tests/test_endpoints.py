@@ -205,6 +205,7 @@ def test_imgur_missing_video_live():
         "/loom/0281766fa2d04bb788eaf19e65135184",
         "/dailymotion/x7tgad0",
         "/streamable/moo",
+        "/url?url=https%3A%2F%2Frumble.com%2Fvdmum1-moose-the-dog-helps-girls-dig-a-snow-fort.html",
     ],
 )
 def test_more_services_live(path):

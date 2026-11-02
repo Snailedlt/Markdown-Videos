@@ -70,12 +70,19 @@ describe('parseVideoUrl', () => {
   });
 
   it.each([
+    ['https://rumble.com/vdmum1-moose-the-dog-helps-girls-dig-a-snow-fort.html?e9s=src_v1', 'rumble', 'vdmum1', 'https://rumble.com/vdmum1-moose-the-dog-helps-girls-dig-a-snow-fort.html'],
+  ])('sends %s through /url', (url, provider, id, watchUrl) => {
+    expect(parseVideoUrl(url)).toEqual({ provider, id, watchUrl, viaUrl: true });
+  });
+
+  it.each([
     '',
     '   ',
     'https://www.loom.com/share/abc',
     'https://www.dailymotion.com/user/someone',
     'https://streamable.com/login',
     'https://streamable.com/upload',
+    'https://rumble.com/c/SomeChannel',
     'hello',
     'https://example.com/watch?v=dQw4w9WgXcQ',
     'https://vimeo.com/about',

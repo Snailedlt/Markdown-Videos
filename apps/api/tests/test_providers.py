@@ -270,3 +270,40 @@ def test_streamable_thumbnail_with_protocol_relative_url(upstream):
 )
 def test_malformed_ids_are_rejected(path):
     assert client.get(path).status_code == 422
+
+
+# --- Rumble ---------------------------------------------------------------------
+
+RUMBLE = "https://rumble.com/vdmum1-moose-the-dog-helps-girls-dig-a-snow-fort.html"
+
+
+@pytest.mark.parametrize(
+    "url, expected",
+    [
+        (RUMBLE, ("rumble", RUMBLE)),
+        (RUMBLE + "?e9s=src_v1_upp", ("rumble", RUMBLE)),
+    ],
+)
+def test_recognises_rumble(url, expected):
+    provider, ref = providers.match(url)
+    assert (provider.key, ref) == expected
+
+
+@pytest.mark.parametrize("url", ["https://rumble.com/c/SomeChannel", "https://rumble.com/user/someone"])
+def test_ignores_rumble_pages(url):
+    assert providers.match(url) is None
+
+
+def test_rumble_thumbnail_through_oembed(upstream):
+    routes, calls = upstream
+    routes["https://rumble.com/api/Media/oembed.json"] = FakeResponse(
+        data={"thumbnail_url": "https://sp.rmbl.ws/s8/1/a/b/c/d/x.OvCc.1.jpg"}
+    )
+    routes["https://sp.rmbl.ws/"] = FakeResponse(content=jpeg((1280, 720)))
+    response = client.get("/url", params={"url": RUMBLE})
+    assert response.status_code == 200
+    assert calls[0].startswith("https://rumble.com/api/Media/oembed.json?url=https%3A%2F%2Frumble.com%2Fvdmum1-")
+
+
+def test_rumble_has_no_id_route():
+    assert client.get("/rumble/vdmum1").status_code == 404

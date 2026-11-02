@@ -25,6 +25,7 @@ Markdown Videos lets you embed Youtube videos into GitHub markdown with ease!
 | Loom | `loom.com/share/ID` | |
 | Dailymotion | `dailymotion.com/video/ID`, `dai.ly/ID` | |
 | Streamable | `streamable.com/ID` | |
+| Rumble | `rumble.com/ID-title.html` | |
 
 Missing a service? [Open an issue](https://github.com/Snailedlt/Markdown-Videos/issues). New services are added in [`apps/api/src/providers.py`](apps/api/src/providers.py).
 

@@ -212,6 +212,35 @@ PROVIDERS += (
     ),
 )
 
+def _resolve_short_link(provider: Provider, url: str) -> str:
+    """Follow a share short link to the page it points to."""
+    res = _get(url if url.startswith("http") else f"https://{url}", headers=OEMBED_HEADERS, allow_redirects=True)
+    if res.status_code in NOT_FOUND_STATUSES:
+        raise VideoNotFound(provider, url)
+    return res.url
+
+
+def _rumble(provider: Provider, ref: str) -> Image.Image:
+    return oembed_thumbnail("https://rumble.com/api/Media/oembed.json", ref, provider, ref)
+
+
+PROVIDERS += (
+    Provider(
+        key="rumble",
+        name="Rumble",
+        patterns=(
+            # rumble.com/v5abc12-some-title.html and rumble.com/embed/v4xyz9/
+            re.compile(r"^(?:https?://)?(?:www\.)?rumble\.com/(?:embed/)?(?P<id>v[0-9a-z]{3,10})(?:-[\w-]*\.html|/)?(?:[?#].*)?$", re.I),
+        ),
+        color=(133, 199, 66),
+        fetch=_rumble,
+        # Rumble's oEmbed wants the page link; page and embed IDs differ, so
+        # Rumble videos go through /url?url=...
+        ref=lambda m: m.group(0).split("?")[0] if m.group(0).startswith("http") else f"https://{m.group(0).split('?')[0]}",
+        id_route=False,
+    ),
+)
+
 BY_KEY = {p.key: p for p in PROVIDERS}
 
 
