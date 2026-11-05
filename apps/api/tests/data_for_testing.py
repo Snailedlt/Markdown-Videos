@@ -300,6 +300,16 @@ active_youtube_array_url_formats = [
     ("https://www.youtube.com/shorts/j9rZxAF3C0I?app=desktop", "j9rZxAF3C0I"),
     ("https://youtube.com/shorts/j9rZxAF3C0I?app=desktop", "j9rZxAF3C0I"),
     ("https://m.youtube.com/shorts/j9rZxAF3C0I?app=desktop", "j9rZxAF3C0I"),
+    # YouTube's share tracking parameter (?si=) must not end up in the ID (#202)
+    ("https://youtu.be/dQw4w9WgXcQ?si=Xb3k9-AbCdEfGhIj", "dQw4w9WgXcQ"),
+    ("https://youtu.be/dQw4w9WgXcQ?si=Xb3k9-AbCdEfGhIj&t=42", "dQw4w9WgXcQ"),
+    ("https://www.youtube.com/watch?v=dQw4w9WgXcQ&si=Xb3k9-AbCdEfGhIj", "dQw4w9WgXcQ"),
+    ("https://www.youtube.com/watch?si=Xb3k9-AbCdEfGhIj&v=dQw4w9WgXcQ", "dQw4w9WgXcQ"),
+    ("https://m.youtube.com/watch?feature=shared&si=abc&v=dQw4w9WgXcQ", "dQw4w9WgXcQ"),
+    ("https://youtube.com/shorts/j9rZxAF3C0I?si=Xb3k9-AbCdEfGhIj", "j9rZxAF3C0I"),
+    ("https://www.youtube.com/embed/dQw4w9WgXcQ?si=Xb3k9-AbCdEfGhIj", "dQw4w9WgXcQ"),
+    ("https://www.youtube.com/live/dQw4w9WgXcQ?si=Xb3k9-AbCdEfGhIj", "dQw4w9WgXcQ"),
+    ("https://music.youtube.com/watch?v=dQw4w9WgXcQ&si=Xb3k9-AbCdEfGhIj", "dQw4w9WgXcQ"),
 ]
 
 active_vimeo_array_url_formats = [
