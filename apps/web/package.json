@@ -24,6 +24,7 @@
     "vite": "^8.3.5"
   },
   "dependencies": {
-    "@lucide/svelte": "^1.66.0"
+    "@lucide/svelte": "^1.66.0",
+    "@vercel/analytics": "^2.0.1"
   }
 }
