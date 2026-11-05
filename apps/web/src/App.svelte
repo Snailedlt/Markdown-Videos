@@ -8,7 +8,7 @@
   import { highlight } from './lib/highlight';
 
   const REPO = 'https://github.com/Snailedlt/Markdown-Videos';
-  const ANALYTICS = 'https://www.apianalytics.dev/dashboard/fb1f330ea13b4f4c91a8de83895e56e3';
+  const ANALYTICS = 'https://www.apianalytics.dev/dashboard/fb1f330ea13b4f4c91a8de83895e56e3?period=all+time';
 
   const useCases = [
     {
